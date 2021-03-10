@@ -1,0 +1,109 @@
+.all-projecs h2 {
+    color: #FFF;
+    font-family: 'Graduate', sans-serif;
+    margin-top: 50px;
+    text-align: left;
+    font-size: 40px;
+    margin-left: 5vw;
+}
+
+.project h3 {
+    color: #FFF;
+    font-family: 'Graduate', sans-serif;
+    margin-top: 50px;
+    font-size: 30px;
+}
+.project .video {
+    width: 50%;
+    overflow: hidden;
+    border-radius: 10px;    
+    --plyr-color-main: #58a6ff;
+    margin: 30px auto;
+    border: 3px solid #58a6ff;
+}
+
+.project p {
+    color: #FFF;
+    padding: 20px;
+    max-width: 70%;
+    font-size: 18px;
+    margin: 0 auto 50px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.btns {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 300px;
+}
+
+.btns .btn {
+    position: relative;
+    float: left;
+    border-right-width: 0;
+    border-radius: 0;
+    border: 1px solid;
+    border-color: #30363d;
+    color: #58a6ff;
+
+    background-color: #21262d;
+    box-shadow: 0 0 transparent, 0 0 transparent;
+    transition: .2s cubic-bezier(.3,0,.5,1);
+    transition-property: color, background-color, border-color;
+
+    
+    padding: 5px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    
+    appearance: none;
+    text-decoration: none;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+.btns .btn:hover {
+    color: #58a6ff;
+    background-color: #30363d;
+    border-color: #58a6ff;
+    box-shadow: 0 1px 0 rgba(1,4,9,0.1), inset 0 1px 0 rgba(240,246,252,0.03);
+}
+
+.btns .btn:active {
+    color: #f0f6fc;
+    background-color: #0d419d;
+    border-color: rgb(240 246 252 / 10%);
+    box-shadow: 0 0 transparent;
+}
+
+.btns .btn:disabled,.btns .btn.disabled, .btns .btn[disabled] {
+    color: rgb(88 166 255 / 50%);
+    background-color: #0d1117;
+    border-color: #30363d;
+    box-shadow: none;
+    cursor: default;
+}
+
+.btns .btn.previous {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.btns .btn.next {
+    border-right-width: 1px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+
+@media (max-width:900px) {
+    .project .video {
+        width: 95%;
+    }
+}

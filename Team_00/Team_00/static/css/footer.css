@@ -1,0 +1,68 @@
+.wow-div {
+    width: 100%;
+    height: 100px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    background-color: #000;
+}
+
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    background-color: #080808;
+}
+
+.footer-links {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 20px 50px;
+}
+
+.footer-links .left-links {
+    display: flex;
+    width: auto;
+    min-width: 20%;
+    justify-content: flex-start;
+    order: 1;
+}
+
+.footer-links a {
+    text-decoration: none;
+    align-items: center;
+    font-family: 'Graduate', sans-serif;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 20px;
+    line-height: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    display: flex;
+    height: 100%;
+    padding: 0;
+    margin-right: 30px;
+}
+
+.footer-links a:hover {
+    color: #FFF;
+}
+
+.right-links {
+    display: flex;
+    width: auto;
+    min-width: 20%;
+    justify-content: flex-end;
+    order: 1;
+}
+
+.center-cp {
+    display: flex;
+    width: auto;
+    min-width: 20%;
+    justify-content: center;
+    order: 1;
+    color: #FFF;
+    font-size: 22px;
+    font-family: 'Graduate', sans-serif;
+    text-transform: uppercase;
+}

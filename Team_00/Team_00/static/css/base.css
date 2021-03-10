@@ -1,0 +1,39 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h2,h3,h4 {
+    text-transform: uppercase;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #111;
+    border-radius: 20px;
+}
+
+::selection {
+    background: #FFF;
+    color: #000;
+}
+
+body {
+    width: 100%;
+    background-color: #000;
+    text-align: center;
+    overflow-x: hidden;
+}
+
+/* Video Player Font Style */
+.plyr__menu__container .plyr__control > span {
+    font-family: 'Roboto', sans-serif;
+}

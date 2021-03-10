@@ -1,0 +1,23 @@
+body {
+    min-height: 0;
+}
+
+.error-title {
+    color: #FFF;
+    font-family: 'Graduate', sans-serif;
+    margin-top: 100px;
+    margin-bottom: 50px;
+    font-size: 10vw;
+}
+
+.back-link {
+    color: #58a6ff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    text-decoration: none;
+    transition: all 500ms;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
