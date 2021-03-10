@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% load static %}
+
+{% block style_tags %}
+  <link href="{% static 'css/home.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+<header>
+    <span class="logo-base">00<span class="team-span">Team</span></span>
+</header>
+
+<div class="conects">
+    <div class="about">
+        <h2>About</h2>
+        <p>Nothing ...</p>
+    </div>
+
+    <div class="projects">
+        <h2>Projects</h2>
+        {% if last_project %}
+        <div class="last-project">
+            <h3>{{ last_project.name }}</h3>
+            <div class="video">
+                <video id="player" controls data-poster="{{ last_project.thumbnail }}">
+                    <source src="{{ last_project.video }}" type="video/mp4" />
+                </video>
+                <script>new Plyr('#player');</script>
+            </div>
+            <p>{{ last_project.description }}</p>
+            <a href="/projects/">See More Projects 	&gt;&gt;&gt;</a>
+        </div>
+        {% else %}
+        <h3 class="no-project">Noting for Now</h3>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
