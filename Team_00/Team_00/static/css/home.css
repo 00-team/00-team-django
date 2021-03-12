@@ -1,23 +1,16 @@
-header {
+.header-home {
     width: 100%;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     user-select: none;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-.logo-base {
-    font-size: 40vh;
-    color: #FFF;
-    font-family: 'Graduate', sans-serif;
-    display: grid
-}
-
-.logo-base .team-span {
-    font-size: 15vh;
-    text-transform: uppercase;
-}
 
 .conects {
     position: relative;

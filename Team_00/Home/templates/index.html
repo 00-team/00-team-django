@@ -8,14 +8,12 @@
 
 
 {% block content %}
-<header>
-    <span class="logo-base">00<span class="team-span">Team</span></span>
-</header>
+<header class="header-home" style="background-image: url({% static 'images/header-bg.png' %});"></header>
 
 <div class="conects">
     <div class="about">
         <h2>About</h2>
-        <p>Nothing ...</p>
+        <p>A Team of Creators ...</p>
     </div>
 
     <div class="projects">
@@ -33,7 +31,7 @@
             <a href="/projects/">See More Projects 	&gt;&gt;&gt;</a>
         </div>
         {% else %}
-        <h3 class="no-project">Noting for Now</h3>
+        <h3 class="no-project">Noting so far</h3>
         {% endif %}
     </div>
 </div>
