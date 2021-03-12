@@ -3,7 +3,7 @@ show_slide();
 
 function show_slide() {
     let slides = document.getElementsByClassName("slide");
-    if (!slides) return;
+    if (slides.length == 0) return;
     if (slides.length == 1) {
         $(".btn").attr("disabled", "disabled");
     } else {

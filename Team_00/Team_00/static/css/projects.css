@@ -101,6 +101,14 @@
     border-bottom-right-radius: 6px;
 }
 
+.all-projecs .no-project {
+    padding: 20px;
+    font-size: 18px;
+    margin-left: 15vw;
+    text-align: left;
+    color: #FFF;
+    font-family: 'Roboto', sans-serif;
+}
 
 @media (max-width:900px) {
     .project .video {

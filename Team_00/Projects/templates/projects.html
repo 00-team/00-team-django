@@ -10,7 +10,8 @@
 
 <div class="all-projecs">
     <h2>00 Team Projects</h2>
-
+    
+    {% if projects %}
     {% for p in projects %}
     <div class="slide project">
         <h3>{{ p.name }}</h3>
@@ -27,6 +28,9 @@
         <a class="btn previous">Previous</a>
         <a class="btn next">Next</a>
     </div>
+    {% else %}
+    <h3 class="no-project">Noting so far</h3>
+    {% endif %}
 </div>
 
 {% endblock content %}
