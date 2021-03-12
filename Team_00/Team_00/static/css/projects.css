@@ -1,7 +1,7 @@
 .all-projecs h2 {
     color: #FFF;
     font-family: 'Graduate', sans-serif;
-    margin-top: 50px;
+    padding-top: 50px;
     text-align: left;
     font-size: 40px;
     margin-left: 5vw;
@@ -10,7 +10,7 @@
 .project h3 {
     color: #FFF;
     font-family: 'Graduate', sans-serif;
-    margin-top: 50px;
+    padding-top: 50px;
     font-size: 30px;
 }
 .project .video {
