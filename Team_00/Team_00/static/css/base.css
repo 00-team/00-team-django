@@ -47,6 +47,7 @@ body {
 
 .content {
     padding-top: 60px;
+    min-height: 100vh;
 }
 
 @media (max-width:1000px) {.content {padding-top:0}}
