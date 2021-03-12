@@ -26,6 +26,7 @@
     <!-- Local Styles -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/menu-bar.css' %}">
 
     {% block style_tags %}{% endblock style_tags %}
 
@@ -48,7 +49,10 @@
     {% block script_head_tags %}{% endblock script_head_tags %}
 </head>
 <body>
-    {% block content %}{% endblock content %}
+    {% include "menu-bar.html" %}
+    <section class="content">
+        {% block content %}{% endblock content %}
+    </section>
     {% include "footer.html" %}
     {% block script_body_tags %}{% endblock script_body_tags %}
 </body>
