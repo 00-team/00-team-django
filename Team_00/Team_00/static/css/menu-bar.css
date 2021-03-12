@@ -66,7 +66,6 @@
 
 
 /* span */
-
 .base-menu .btn-bar span {
     background-color: #FFF;
     display: block;
@@ -87,18 +86,17 @@
 }
 
 .base-menu .btn-bar span:before {top: 5px}
-
 .base-menu .btn-bar span:after {top: -5px}
 
 .base-menu.active .btn-bar span:after {
     top: 0;
     transform: rotate(45deg);
 }
-
 .base-menu.active .btn-bar span:before {
     top: 0;
     transform: rotate(-45deg);
 }
+
 
 .base-menu.active .menu-bar {
     transform: translateX(0);
@@ -132,7 +130,6 @@
 
     .menu-bar .tree-link .link {
         text-align: left;
-        /* padding: 20px 0 10px 23px; */
         margin: 25px 0 0 23px;
     }
 
