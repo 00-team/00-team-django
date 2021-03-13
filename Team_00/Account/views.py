@@ -2,40 +2,41 @@ import requests
 
 from django.shortcuts import render
 
+from django.template import loader
+
 from django.utils.crypto import get_random_string
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.decorators.http import require_GET
 
-
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 
+from django.conf import settings
+GOOGLE = settings.GOOGLE
+
+from django.contrib.auth import login, logout
+
+from django.contrib.auth.models import User
+from .models import UserAccount
+
 
 @require_GET
 def authorize(request):
-    session = request.session
+    if request.user.is_authenticated:
+        return HttpResponseRedirect("/account/")
 
     google_auth = "https://accounts.google.com/o/oauth2/v2/auth"
-    
-    redirect_uri = "http://localhost:8000/account/login/google_callback/"
     scope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
-    client_id = "367011827533-a5csretcdjb5fojbs8m189qvejrp2vn0.apps.googleusercontent.com"
 
     state = get_random_string(length=20)
     request.session["google_state"] = state
 
-    url = google_auth + f"?redirect_uri={redirect_uri}&response_type=code&scope={scope}&state={state}&client_id={client_id}"
+    url = google_auth + f"?redirect_uri={GOOGLE['redirect_uri']}&response_type=code&scope={scope}&state={state}&client_id={GOOGLE['client_id']}"
 
     return HttpResponseRedirect(url)
-
-    # if request.session.get("user_token"):
-    #     return HttpResponseRedirect("/profile/")
-    # else:
-    #     twitch_app = KeplerAppsConfig.objects.get(name="Twitch")
-
 
 
 @require_GET
@@ -43,35 +44,26 @@ def google_callback(request):
     if request.GET.get("state") != request.session.get("google_state"):
         return HttpResponse("Error 403, state not True")
     
-    if "error" in request.GET:
-        error_text = request.GET["error"] 
-        return HttpResponse(f"<h1>{error_text}</h1>")
-    
     if "code" in request.GET:
-        google_token = "https://oauth2.googleapis.com/token"
         code = request.GET["code"]
-        client_id = "367011827533-a5csretcdjb5fojbs8m189qvejrp2vn0.apps.googleusercontent.com"
-        client_secret = "-DC6As08B_PdkbyofQXJpUPq"
-        redirect_uri = "http://localhost:8000/account/login/google_callback/"
 
-        url = google_token + f"?code={code}&client_id={client_id}&client_secret={client_secret}&redirect_uri={redirect_uri}&grant_type=authorization_code"
+        url = f"https://oauth2.googleapis.com/token?code={code}&client_id={GOOGLE['client_id']}&client_secret={GOOGLE['client_secret']}&redirect_uri={GOOGLE['redirect_uri']}&grant_type=authorization_code"
 
         response = requests.post(url)
         if response.status_code != 200:
             return HttpResponse("Error get google token")
         
         response = response.json()
-
-        access_token = response["access_token"]
+        access_token = response.get("access_token")
 
         url = f"https://www.googleapis.com/oauth2/v2/userinfo?access_token={access_token}"
 
         response = requests.get(url)
         if response.status_code != 200:
-            return HttpResponse("Error get email")
+            return HttpResponse("Error get user info")
         
         response = response.json()
-        if not response["verified_email"]:
+        if not response.get("verified_email"):
             return HttpResponse("Error 403 we need verified email google account for sing-up you")
 
         email = response.get("email")
@@ -79,6 +71,61 @@ def google_callback(request):
         name = response.get("name")
         locale = response.get("locale")
 
-        return JsonResponse(response.json())
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)            
+        else:
+            username = email.replace("@", "-")
+            username = username.replace(".", "-")
+            user = User.objects.create_user(username, email, get_random_string(length=16))
+            user.save()
 
 
+        if UserAccount.objects.filter(user=user).exists():
+            user_account = UserAccount.objects.get(user=user)
+            user_account.picture = picture
+            user_account.name = name
+            user_account.locale = locale
+            user_account.save()
+        else:
+            user_account = UserAccount.objects.create(
+                user=user,
+                picture=picture,
+                name=name,
+                locale=locale)
+            
+            user_account.save()
+        
+        login(request, user)
+        return HttpResponseRedirect("/account/")
+
+    else:
+        return HttpResponse("WTF: ")
+
+
+@require_GET
+def logout_user(request):
+    logout(request)
+    return HttpResponseRedirect("/")
+
+
+@require_GET
+def account(request):
+    user = request.user
+    c = {}
+    if user.is_authenticated:
+        if not UserAccount.objects.filter(user=user).exists():
+            return HttpResponseRedirect("/account/login/google/")
+
+        user_account = UserAccount.objects.get(user=user)
+        c["user_data"] = {
+            "email": user.email,
+            "username": user.username,
+            "name": user_account.name,
+            "picture": user_account.picture
+        }
+        template = loader.get_template("account.html")
+        return HttpResponse(template.render(c, request))
+    else:
+        return HttpResponseRedirect("/account/login/google/")
+
+    
