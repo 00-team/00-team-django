@@ -22,10 +22,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ""
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
+GOOGLE = {
+    "client_id": "",
+    "client_secret": "",
+    "redirect_uri": "http://localhost:8000/account/login/google_callback/"
+}
 
 # Application definition
 
@@ -39,6 +44,7 @@ INSTALLED_APPS = [
 
     "Home.apps.HomeConfig",
     "Projects.apps.ProjectsConfig",
+    "Account.apps.AccountConfig"
 ]
 
 MIDDLEWARE = [
@@ -120,12 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+# STATIC_ROOT = BASE_DIR / "Team_00/static"
 
 STATICFILES_DIRS = [
     BASE_DIR / "Team_00/static"
 ]
-
-# APPEND_SLASH=False
 
 MEDIA_ROOT = BASE_DIR / "Team_00/media"
 MEDIA_URL = "/media/"
