@@ -30,7 +30,11 @@
             </li>
 
             <li class="link">
-                <a href="/login/">Login</a>
+            {% if user.is_authenticated %}
+                <a href="/account/">Account</a>
+            {% else %}
+                <a href="/account/login/google/">login</a>
+            {% endif %}
             </li>
         </ul>
     </div>
