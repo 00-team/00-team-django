@@ -10,6 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.decorators.http import require_GET
 
+from django.core.exceptions import PermissionDenied
+
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
@@ -42,7 +44,7 @@ def authorize(request):
 @require_GET
 def google_callback(request):
     if request.GET.get("state") != request.session.get("google_state"):
-        return HttpResponse("Error 403, state not True")
+        raise PermissionDenied
     
     if "code" in request.GET:
         code = request.GET["code"]
@@ -51,7 +53,7 @@ def google_callback(request):
 
         response = requests.post(url)
         if response.status_code != 200:
-            return HttpResponse("Error get google token")
+            raise PermissionDenied
         
         response = response.json()
         access_token = response.get("access_token")
@@ -60,11 +62,11 @@ def google_callback(request):
 
         response = requests.get(url)
         if response.status_code != 200:
-            return HttpResponse("Error get user info")
+            raise PermissionDenied
         
         response = response.json()
         if not response.get("verified_email"):
-            return HttpResponse("Error 403 we need verified email google account for sing-up you")
+            raise PermissionDenied
 
         email = response.get("email")
         picture = response.get("picture")
@@ -99,7 +101,7 @@ def google_callback(request):
         return HttpResponseRedirect("/account/")
 
     else:
-        return HttpResponse("WTF: ")
+        raise PermissionDenied
 
 
 @require_GET
