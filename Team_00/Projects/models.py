@@ -1,11 +1,17 @@
-import datetime
+import datetime, string
+
 from django.db import models
+from django.db import IntegrityError
+
+from django.utils.crypto import get_random_string
+
 
 class Project(models.Model):
     name = models.CharField(max_length=30, default="No Name")
     description = models.TextField(default="No Description")
     video = models.FileField(upload_to="Projects/video/")
-    thumbnail = models.FileField(upload_to="Projects/thumbnail/")
+    thumbnail = models.ImageField(upload_to="Projects/thumbnail/")
+
     date_start = models.DateTimeField(default=datetime.datetime.now())
     stars = models.IntegerField(default=0)
     language = models.CharField(max_length=30, default="No Language")
@@ -15,7 +21,7 @@ class Project(models.Model):
         choices = [("PR", "Private"), ("PB", "Public")],
         default = "PB",
     )
-    slug = models.SlugField(max_length=30, unique=True)
+    slug = models.SlugField(null=True, blank=True, unique=True)
     git = models.URLField(default="https://github.com/00-team")
     shop = models.CharField(max_length=200, default="/shop/projects/")
 
@@ -24,6 +30,15 @@ class Project(models.Model):
         self.video.storage.delete(self.video.name)
         self.thumbnail.storage.delete(self.thumbnail.name)
         super().delete()
+    
+    def save(self, *args, **kwargs):
+        try:
+            print(self.video)
+            if not self.slug:
+                self.slug = get_random_string(15, string.ascii_letters + string.digits +"-")
+            super().save(*args, **kwargs)
+        except IntegrityError:
+            self.save(*args, **kwargs)
 
     def __str__(self):
         return self.name
