@@ -21,7 +21,7 @@ def projects(request):
                 "description": p.description,
                 "video": p.video.url,
                 "thumbnail": p.thumbnail.url,
-                "index": p.id
+                "index": str(p.slug)
             })
         
         c["projects"] = a
