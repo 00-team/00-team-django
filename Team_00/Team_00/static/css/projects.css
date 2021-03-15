@@ -7,111 +7,101 @@
     margin-left: 5vw;
 }
 
-.project h3 {
-    color: #FFF;
+.new-hr {
+    content: "";
+    width: 100%;
+    height: 2px;
+    background-color: #ffffff70;
+}
+
+.all-projecs .see-all {
     font-family: 'Graduate', sans-serif;
-    padding-top: 50px;
-    font-size: 30px;
-}
-.project .video {
-    width: 50%;
-    overflow: hidden;
-    border-radius: 10px;    
-    --plyr-color-main: #58a6ff;
-    margin: 30px auto;
-    border: 3px solid #58a6ff;
+    text-align: right;
+    display: block;
+    padding: 0 50px 10px;
+    text-transform: uppercase;
+    margin: 20px 0 0;
 }
 
-.project p {
-    color: #FFF;
-    padding: 20px;
-    max-width: 70%;
-    font-size: 18px;
-    margin: 0 auto 50px;
-    font-family: 'Roboto', sans-serif;
-}
-
-.btns {
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom: 300px;
-}
-
-.btns .btn {
-    position: relative;
-    float: left;
-    border-right-width: 0;
-    border-radius: 0;
-    border: 1px solid;
-    border-color: #30363d;
-    color: #58a6ff;
-
-    background-color: #21262d;
-    box-shadow: 0 0 transparent, 0 0 transparent;
-    transition: .2s cubic-bezier(.3,0,.5,1);
-    transition-property: color, background-color, border-color;
-
-    
-    padding: 5px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
-    white-space: nowrap;
-    vertical-align: middle;
-    cursor: pointer;
-    user-select: none;
-    
-    appearance: none;
+.all-projecs .see-all a {
     text-decoration: none;
-    text-align: center;
-    font-family: 'Roboto', sans-serif;
+    color: #0d419d;
+    transition: all 300ms;
 }
 
-
-.btns .btn:hover {
+.all-projecs .see-all a:hover {
     color: #58a6ff;
-    background-color: #30363d;
-    border-color: #58a6ff;
-    box-shadow: 0 1px 0 rgba(1,4,9,0.1), inset 0 1px 0 rgba(240,246,252,0.03);
 }
 
-.btns .btn:active {
-    color: #f0f6fc;
-    background-color: #0d419d;
-    border-color: rgb(240 246 252 / 10%);
-    box-shadow: 0 0 transparent;
-}
-
-.btns .btn:disabled,.btns .btn.disabled, .btns .btn[disabled] {
-    color: rgb(88 166 255 / 50%);
-    background-color: #0d1117;
-    border-color: #30363d;
-    box-shadow: none;
-    cursor: default;
-}
-
-.btns .btn.previous {
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
-}
-
-.btns .btn.next {
-    border-right-width: 1px;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-}
-
-.all-projecs .no-project {
-    padding: 20px;
-    font-size: 18px;
-    margin-left: 15vw;
-    text-align: left;
+.base-project {
+    margin: 0 0 20px;
+    height: 250px;
+    overflow: hidden;
     color: #FFF;
-    font-family: 'Roboto', sans-serif;
 }
 
-@media (max-width:900px) {
-    .project .video {
-        width: 95%;
-    }
+.base-project .project {
+    width: 300px;
+    height: 250px;
+    display: inline-block;
+    position: relative;
+}
+
+.base-project .project .video-thumbnail {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 300px;
+    height: 200px;
+}
+
+.base-project .project .name {
+    font-family: 'Graduate', sans-serif;
+    text-align: left;
+    font-size: 25px;
+    display: block;
+    text-transform: uppercase;
+    padding-left: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.base-project .project .lang {
+    font-family: 'Graduate', sans-serif;
+    overflow: hidden;
+    width: 148px;
+    position: absolute;
+    left: 5px;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.base-project .project .dt {
+    font-family: 'Graduate', sans-serif;
+    overflow: hidden;
+    width: 148px;
+    position: absolute;
+    right: 5px;
+    text-align: right;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+
+.base-project .project .stars {
+    font-family: 'Graduate', sans-serif;
+    overflow: hidden;
+    width: 148px;
+    position: absolute;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.base-project .project .stars svg {
+    margin-left: 10px;
 }
