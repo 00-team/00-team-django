@@ -11,8 +11,41 @@
 <div class="all-projecs">
     <h2>00 Team Projects</h2>
     
-    {% if projects %}
-    {% for p in projects %}
+    {% if time_projects %}
+    <div class="see-all">
+        <a href="?q=all_time">See All</a>
+    </div>
+    <div class="base-project">
+    {% for p in time_projects %}
+    <div class="project">
+        <div class="video-thumbnail" style="background-image: url({{ p.thumbnail }});"></div>
+        <span class="name">{{ p.name }}</span>
+        <span class="lang">{{ p.language }}</span>
+        <span class="dt">{{ p.date_start }}</span>
+    </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+    <div class="new-hr"></div>
+    {% if star_projects %}
+    <div class="see-all">
+        <a href="?q=all_stars">See All</a>
+    </div>
+    <div class="base-project">
+    {% for p in star_projects %}
+    <div class="project">
+        <div class="video-thumbnail" style="background-image: url({{ p.thumbnail }});"></div>
+        <span class="name">{{ p.name }}</span>
+        <span class="lang">{{ p.language }}</span>
+        <span class="stars">{{ p.stars }}
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" stroke="#FFD600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </span>
+    </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+
+    {% comment %} {% for p in time_projects %}
     <div class="slide project">
         <h3>{{ p.name }}</h3>
         <div class="video">
@@ -27,8 +60,10 @@
     <div class="btns">
         <a class="btn previous">Previous</a>
         <a class="btn next">Next</a>
-    </div>
-    {% else %}
+    </div> {% endcomment %}
+
+
+    {% if not star_projects or not time_projects %}
     <h3 class="no-project">Noting so far</h3>
     {% endif %}
 </div>
@@ -36,6 +71,6 @@
 {% endblock content %}
 
 {% block script_body_tags %}
-<script src="/static/js/projects.js"></script>
+<!-- <script src="/static/js/projects.js"></script> -->
 {% endblock script_body_tags %}
 
