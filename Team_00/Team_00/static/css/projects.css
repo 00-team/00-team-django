@@ -45,6 +45,7 @@
     height: 250px;
     display: inline-block;
     position: relative;
+    cursor: pointer;
 }
 
 .base-project .project .video-thumbnail {
