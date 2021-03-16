@@ -11,9 +11,10 @@
 <div class="all-projecs">
     <h2>00 Team Projects</h2>
     
-    {% if time_projects %}
+    {% if star_projects and time_projects %}
+
     <div class="see-all">
-        <a href="?q=all_time">See All</a>
+        <span>Last Projects</span>
     </div>
     <div class="base-project">
     {% for p in time_projects %}
@@ -25,11 +26,11 @@
     </div>
     {% endfor %}
     </div>
-    {% endif %}
+
     <div class="new-hr"></div>
-    {% if star_projects %}
+
     <div class="see-all">
-        <a href="?q=all_stars">See All</a>
+        <span>Most Stars</span>
     </div>
     <div class="base-project">
     {% for p in star_projects %}
@@ -43,9 +44,24 @@
     </div>
     {% endfor %}
     </div>
-    {% endif %}
 
-    {% if not star_projects or not time_projects %}
+    <div class="new-hr"></div>
+
+    <div class="see-all">
+        <span>All Projects</span>
+    </div>
+    <div class="base-all-projects">
+        {% for p in all_projects %}
+        <div class="project" slug-link="{{ p.slug }}">
+            <div class="video-thumbnail" style="background-image: url({{ p.thumbnail }});"></div>
+            <span class="name">{{ p.name }}</span>
+            <span class="lang">{{ p.language }}</span>
+            <span class="ws">{{ p.workspace }}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
     <h3 class="no-project">Noting so far</h3>
     {% endif %}
 </div>
@@ -54,6 +70,5 @@
 
 {% block script_body_tags %}
 <script src="{% static 'js/projects.js' %}"></script>
-
 {% endblock script_body_tags %}
 
