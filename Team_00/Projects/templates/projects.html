@@ -17,7 +17,7 @@
     </div>
     <div class="base-project">
     {% for p in time_projects %}
-    <div class="project">
+    <div class="project" slug-link="{{ p.slug }}">
         <div class="video-thumbnail" style="background-image: url({{ p.thumbnail }});"></div>
         <span class="name">{{ p.name }}</span>
         <span class="lang">{{ p.language }}</span>
@@ -33,7 +33,7 @@
     </div>
     <div class="base-project">
     {% for p in star_projects %}
-    <div class="project">
+    <div class="project" slug-link="{{ p.slug }}">
         <div class="video-thumbnail" style="background-image: url({{ p.thumbnail }});"></div>
         <span class="name">{{ p.name }}</span>
         <span class="lang">{{ p.language }}</span>
@@ -45,24 +45,6 @@
     </div>
     {% endif %}
 
-    {% comment %} {% for p in time_projects %}
-    <div class="slide project">
-        <h3>{{ p.name }}</h3>
-        <div class="video">
-            <video id="player-{{ p.index }}" controls data-poster="{{ p.thumbnail }}">
-                <source src="{{ p.video }}" type="video/mp4" />
-            </video>
-            <script>new Plyr('#player-{{ p.index }}');</script>
-        </div>
-        <p>{{ p.description }}</p>
-    </div>
-    {% endfor %}
-    <div class="btns">
-        <a class="btn previous">Previous</a>
-        <a class="btn next">Next</a>
-    </div> {% endcomment %}
-
-
     {% if not star_projects or not time_projects %}
     <h3 class="no-project">Noting so far</h3>
     {% endif %}
@@ -71,6 +53,7 @@
 {% endblock content %}
 
 {% block script_body_tags %}
-<!-- <script src="/static/js/projects.js"></script> -->
+<script src="{% static 'js/projects.js' %}"></script>
+
 {% endblock script_body_tags %}
 
