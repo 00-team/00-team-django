@@ -8,6 +8,7 @@ from Projects.models import Project
 
 from django.views.decorators.http import require_GET
 
+from Home.views import error_404
 
 @require_GET
 def projects(request):
@@ -22,7 +23,7 @@ def projects(request):
                 "description": p.description,
                 "video": p.video.url,
                 "thumbnail": p.thumbnail.url,
-                "index": p.slug,
+                "slug": p.slug,
                 "date_start": p.date_start.strftime("%Y-%m-%d"),
                 "stars": p.stars,
                 "language": p.language,
@@ -37,7 +38,7 @@ def projects(request):
                 "description": p.description,
                 "video": p.video.url,
                 "thumbnail": p.thumbnail.url,
-                "index": p.slug,
+                "slug": p.slug,
                 "date_start": p.date_start.strftime("%Y-%m-%d"),
                 "stars": p.stars,
                 "language": p.language,
@@ -49,3 +50,13 @@ def projects(request):
 
     template = loader.get_template("projects.html")
     return HttpResponse(template.render(c, request))
+
+
+@require_GET
+def project(request, slug):
+    if Project.objects.filter(slug=slug).exists():
+        p = Project.objects.get(slug=slug)
+    else:
+        return error_404(request, exception="X")
+
+    return HttpResponse(p)
