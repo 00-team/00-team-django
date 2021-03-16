@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ p.name }}{% endblock %}
+{% load static %}
+
+{% block style_tags %}
+  <link href="{% static 'css/project.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+
+
+{% endblock content %}
+
+{% block script_body_tags %}
+<script src="{% static 'js/projects.js' %}"></script>
+{% endblock script_body_tags %}
+
