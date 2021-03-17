@@ -5,6 +5,8 @@ from django.db import IntegrityError
 
 from django.utils.crypto import get_random_string
 
+from django.contrib.auth.models import User
+
 
 class Project(models.Model):
     name = models.CharField(max_length=30, default="No Name")
@@ -13,7 +15,6 @@ class Project(models.Model):
     thumbnail = models.ImageField(upload_to="Projects/thumbnail/")
 
     date_start = models.DateTimeField(default=datetime.datetime.now())
-    stars = models.IntegerField(default=0)
     language = models.CharField(max_length=30, default="No Language")
     workspace = models.CharField(max_length=40, default="No Work Space")
     private = models.CharField(
@@ -42,3 +43,11 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Star(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username + " - " + self.project.name
