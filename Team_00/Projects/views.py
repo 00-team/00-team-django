@@ -1,10 +1,13 @@
 from django.shortcuts import render
 
 from django.http import HttpResponse
+from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 
 from django.template import loader
 
 from Projects.models import Project, Star
+from Account.models import UserAccount, User
 
 from django.views.decorators.http import require_GET, require_POST
 
@@ -85,11 +88,29 @@ def projects(request):
 def project(request, slug):
     if not Project.objects.filter(slug=slug).exists():
         return error_404(request)
-        
+
+    user_token = None
+    user_stared = False
     p = Project.objects.get(slug=slug)
+
+    if request.user.is_authenticated:
+        if UserAccount.objects.filter(user=request.user).exists():
+            user_acc = UserAccount.objects.get(user=request.user)
+            if user_acc.token:
+                user_token = user_acc.token
+        
+        if not user_token:
+            return HttpResponseRedirect(f"/account/?next={request.path}")
+
+        if Star.objects.filter(user=request.user, project=p).exists():
+            user_stared = True
+                
+
     stars = len(Star.objects.filter(project=p))
+
     c = {
         "p": {
+            "id": p.id,
             "name": p.name,
             "description": p.description,
             "video": p.video.url,
@@ -98,8 +119,10 @@ def project(request, slug):
             "date_start": p.date_start.strftime("%Y-%m-%d"),
             "stars": stars,
             "language": p.language,
-            "workspace": p.workspace
-        }
+            "workspace": p.workspace,
+            "stared": user_stared
+        },
+        "useracc_token": user_token
     }
 
     if p.private == "PR":
@@ -111,3 +134,45 @@ def project(request, slug):
 
     template = loader.get_template("project.html")
     return HttpResponse(template.render(c, request))
+
+
+@require_POST
+def modify_star(request):
+    data = request.POST
+    if not data.get("token") or not data.get("pid"):
+        return JsonResponse({
+            "error":"data is not Valid"
+        })
+    
+    pid = data.get("pid")
+
+    if pid.isnumeric():
+        pid = int(pid)
+    
+    if not Project.objects.filter(id=pid).exists():
+        return JsonResponse({
+            "error":"Project Not Found"
+        })
+    
+    p = Project.objects.get(id=pid)
+
+    if not UserAccount.objects.filter(token=data.get("token")).exists():
+        return JsonResponse({
+            "error":"User Not Found"
+        })
+    
+    u = UserAccount.objects.get(token=data.get("token")).user
+
+    if Star.objects.filter(user=u, project=p).exists():
+        s = Star.objects.get(user=u,project=p)
+        s.delete()
+        return JsonResponse({
+            "success":"Your Star Removed"
+        })
+    
+    s = Star.objects.create(user=u,project=p)
+    s.save()
+
+    return JsonResponse({
+        "success":"Your Star added"
+    })
