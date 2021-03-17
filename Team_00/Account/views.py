@@ -27,8 +27,11 @@ from .models import UserAccount
 
 @require_GET
 def authorize(request):
+    if request.GET.get("next"):
+        request.session["next"] = request.GET.get("next")
+
     if request.user.is_authenticated:
-        return HttpResponseRedirect("/account/")
+        logout(request)
 
     google_auth = "https://accounts.google.com/o/oauth2/v2/auth"
     scope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
@@ -87,6 +90,7 @@ def google_callback(request):
             user_account.picture = picture
             user_account.name = name
             user_account.locale = locale
+            user_account.change_token()
             user_account.save()
         else:
             user_account = UserAccount.objects.create(
@@ -95,11 +99,16 @@ def google_callback(request):
                 name=name,
                 locale=locale)
             
+            user_account.change_token()
             user_account.save()
         
         login(request, user)
-        return HttpResponseRedirect("/account/")
+        url = "/account/"
 
+        if request.session.get("next"):
+            url = request.session["next"]
+
+        return HttpResponseRedirect(url)
     else:
         raise PermissionDenied
 
