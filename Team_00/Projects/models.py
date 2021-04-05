@@ -11,9 +11,6 @@ from django.contrib.auth.models import User
 class Project(models.Model):
     name = models.CharField(max_length=30, default="No Name")
     description = models.TextField(default="No Description")
-    video = models.FileField(upload_to="Projects/video/")
-    thumbnail = models.ImageField(upload_to="Projects/thumbnail/")
-
     date_start = models.DateTimeField(default=datetime.datetime.now())
     language = models.CharField(max_length=30, default="No Language")
     workspace = models.CharField(max_length=40, default="No Work Space")
@@ -25,18 +22,11 @@ class Project(models.Model):
     slug = models.SlugField(null=True, blank=True, unique=True)
     git = models.URLField(default="https://github.com/00-team")
     shop = models.CharField(max_length=200, default="/shop/projects/")
-
-
-    def delete(self, using=None, keep_parents=False):
-        self.video.storage.delete(self.video.name)
-        self.thumbnail.storage.delete(self.thumbnail.name)
-        super().delete()
     
     def save(self, *args, **kwargs):
         try:
-            print(self.video)
             if not self.slug:
-                self.slug = get_random_string(15, string.ascii_letters + string.digits +"-")
+                self.slug = get_random_string(15, string.ascii_letters + string.digits + "-")
             super().save(*args, **kwargs)
         except IntegrityError:
             self.save(*args, **kwargs)
@@ -51,3 +41,29 @@ class Star(models.Model):
 
     def __str__(self):
         return self.user.username + " - " + self.project.name
+
+
+class DocumentVideos(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    video = models.FileField(upload_to="Projects/DocumentVideos/video/")
+    thumbnail = models.ImageField(upload_to="Projects/DocumentVideos/thumbnail/")
+
+    def delete(self, using=None, keep_parents=False):
+        self.video.storage.delete(self.video.name)
+        self.thumbnail.storage.delete(self.thumbnail.name)
+        super().delete()
+
+    def __str__(self):
+        return self.project.name + " - Document Video"
+
+
+class DocumentImages(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="Projects/DocumentImages/")
+
+    def delete(self, using=None, keep_parents=False):
+        self.image.storage.delete(self.image.name)
+        super().delete()
+
+    def __str__(self):
+        return self.project.name + " - Document Image"

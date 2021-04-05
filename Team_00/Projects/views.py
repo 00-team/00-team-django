@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 
 from django.template import loader
 
-from Projects.models import Project, Star
+from .models import Project, Star, DocumentImages, DocumentVideos
 from Account.models import UserAccount, User
 
 from django.views.decorators.http import require_GET, require_POST
@@ -23,17 +23,18 @@ def most_stars(all_projects):
     s = []
     for pi, st in proj.items():
         p = Project.objects.get(id=int(pi))
-        s.append({
-            "name": p.name,
-            "description": p.description,
-            "video": p.video.url,
-            "thumbnail": p.thumbnail.url,
-            "slug": p.slug,
-            "date_start": p.date_start.strftime("%Y-%m-%d"),
-            "stars": st,
-            "language": p.language,
-            "workspace": p.workspace
-        })
+        d = DocumentVideos.objects.filter(project=p).last()
+        if d:
+            s.append({
+                "name": p.name,
+                "description": p.description,
+                "thumbnail": d.thumbnail.url,
+                "slug": p.slug,
+                "date_start": p.date_start.strftime("%Y-%m-%d"),
+                "stars": st,
+                "language": p.language,
+                "workspace": p.workspace
+            })
     
     return s
 
@@ -49,25 +50,29 @@ def projects(request):
     
     for p in time_projects:
         stars = len(Star.objects.filter(project=p))
-        t.append({
-            "name": p.name,
-            "description": p.description,
-            "video": p.video.url,
-            "thumbnail": p.thumbnail.url,
-            "slug": p.slug,
-            "date_start": p.date_start.strftime("%Y-%m-%d"),
-            "stars": stars,
-            "language": p.language,
-            "workspace": p.workspace
-        })
+        d = DocumentVideos.objects.filter(project=p).last()
+        if d:
+            t.append({
+                "name": p.name,
+                "description": p.description,
+                "thumbnail": d.thumbnail.url,
+                "slug": p.slug,
+                "date_start": p.date_start.strftime("%Y-%m-%d"),
+                "stars": stars,
+                "language": p.language,
+                "workspace": p.workspace
+            })
     
     for p in all_projects:
         stars = len(Star.objects.filter(project=p))
+        d = DocumentVideos.objects.filter(project=p).last()
+        if not d:
+            continue
+
         a.append({
             "name": p.name,
             "description": p.description,
-            "video": p.video.url,
-            "thumbnail": p.thumbnail.url,
+            "thumbnail": d.thumbnail.url,
             "slug": p.slug,
             "date_start": p.date_start.strftime("%Y-%m-%d"),
             "stars": stars,
@@ -113,8 +118,6 @@ def project(request, slug):
             "id": p.id,
             "name": p.name,
             "description": p.description,
-            "video": p.video.url,
-            "thumbnail": p.thumbnail.url,
             "slug": p.slug,
             "date_start": p.date_start.strftime("%Y-%m-%d"),
             "stars": stars,
@@ -124,6 +127,12 @@ def project(request, slug):
         },
         "useracc_token": user_token
     }
+
+    d = DocumentVideos.objects.filter(project=p).last()
+
+    if d:
+        c["p"]["video"] = d.video.url
+        c["p"]["thumbnail"] = d.thumbnail.url
 
     if p.private == "PR":
         c["p"]["link"] = p.shop
