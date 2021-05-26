@@ -1,0 +1,9 @@
+ls=dir /b
+clear=cls
+
+mk=python manage.py makemigrations
+m=python manage.py migrate
+c=python manage.py createsuperuser --username=$1 --email=$2
+run=python manage.py runserver --insecure
+
+;= doskey /macrofile=django.macro
