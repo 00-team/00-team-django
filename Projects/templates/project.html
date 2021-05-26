@@ -47,6 +47,6 @@
 {% endblock content %}
 
 {% block script_body_tags %}
-<script src="{% static 'js/project.js' %}" csrf_token={{ csrf_token }} user_token={{ useracc_token }} project_id={{ p.id }}></script>
+<script src="{% static 'js/project.js' %}" csrfToken={{ csrf_token }} userToken={{ useracc_token }} projectId={{ p.id }}></script>
 {% endblock script_body_tags %}
 

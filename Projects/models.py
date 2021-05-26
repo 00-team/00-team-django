@@ -14,14 +14,13 @@ class Project(models.Model):
     date_start = models.DateTimeField(default=datetime.datetime.now())
     language = models.CharField(max_length=30, default="No Language")
     workspace = models.CharField(max_length=40, default="No Work Space")
-    private = models.CharField(
+    status = models.CharField(
         max_length = 2,
         choices = [("PR", "Private"), ("PB", "Public")],
         default = "PB",
     )
     slug = models.SlugField(null=True, blank=True, unique=True)
-    git = models.URLField(default="https://github.com/00-team")
-    shop = models.CharField(max_length=200, default="/shop/projects/")
+    git = models.URLField(null=True, blank=True)
     
     def save(self, *args, **kwargs):
         try:
