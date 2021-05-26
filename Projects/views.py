@@ -14,6 +14,9 @@ from django.views.decorators.http import require_GET, require_POST
 from Home.views import error_404
 
 
+no_thumbnail = "data:image/png;base64,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"
+
+
 def most_stars(all_projects):
     proj = {}
     for p in all_projects:
@@ -23,24 +26,30 @@ def most_stars(all_projects):
     s = []
     for pi, st in proj.items():
         p = Project.objects.get(id=int(pi))
-        d = DocumentVideos.objects.filter(project=p).last()
-        if d:
-            s.append({
-                "name": p.name,
-                "description": p.description,
-                "thumbnail": d.thumbnail.url,
-                "slug": p.slug,
-                "date_start": p.date_start.strftime("%Y-%m-%d"),
-                "stars": st,
-                "language": p.language,
-                "workspace": p.workspace
-            })
+        dv = DocumentVideos.objects.filter(project=p)
+        di = DocumentImages.objects.filter(project=p)
+
+        thumbnail = no_thumbnail
+
+        if dv:
+            thumbnail = dv.last().thumbnail.url
+
+        s.append({
+            "name": p.name,
+            "description": p.description,
+            "thumbnail": thumbnail,
+            "slug": p.slug,
+            "date_start": p.date_start.strftime("%Y-%m-%d"),
+            "stars": st,
+            "language": p.language,
+            "workspace": p.workspace
+        })
     
     return s
 
 
 @require_GET
-def projects(request):
+def projects_view(request):
     all_projects = Project.objects.all()
     star_projects = most_stars(all_projects)
     time_projects = Project.objects.order_by("-date_start")[:6]
@@ -90,7 +99,7 @@ def projects(request):
 
 
 @require_GET
-def project(request, slug):
+def project_view(request, slug):
     if not Project.objects.filter(slug=slug).exists():
         return error_404(request)
 
@@ -134,54 +143,43 @@ def project(request, slug):
         c["p"]["video"] = d.video.url
         c["p"]["thumbnail"] = d.thumbnail.url
 
-    if p.private == "PR":
-        c["p"]["link"] = p.shop
-        c["p"]["link_name"] = "Shop"
-    else:
-        c["p"]["link"] = p.git
-        c["p"]["link_name"] = "Git"
+    
+    c["p"]["link"] = p.git
+    c["p"]["link_name"] = "Git"
 
     template = loader.get_template("project.html")
     return HttpResponse(template.render(c, request))
 
 
 @require_POST
-def modify_star(request):
-    data = request.POST
-    if not data.get("token") or not data.get("pid"):
-        return JsonResponse({
-            "error":"data is not Valid"
-        })
-    
-    pid = data.get("pid")
+def modify_star(r):
+    token = r.POST.get('token')
+    project_id = r.POST.get('project_id')
 
-    if pid.isnumeric():
-        pid = int(pid)
-    
-    if not Project.objects.filter(id=pid).exists():
-        return JsonResponse({
-            "error":"Project Not Found"
-        })
-    
-    p = Project.objects.get(id=pid)
 
-    if not UserAccount.objects.filter(token=data.get("token")).exists():
-        return JsonResponse({
-            "error":"User Not Found"
-        })
+    if UserAccount.objects.filter(token=token).exists():
+        u = UserAccount.objects.get(token=token).user
+    else:
+        return JsonResponse({'Error':f'User with token: {token} not found.'}, status=401)
     
-    u = UserAccount.objects.get(token=data.get("token")).user
 
-    if Star.objects.filter(user=u, project=p).exists():
-        s = Star.objects.get(user=u,project=p)
-        s.delete()
-        return JsonResponse({
-            "success":"Your Star Removed"
-        })
+    # project id
+    if type(project_id) == str:
+        if project_id.isnumeric():
+            project_id = int(project_id)
+
+
+    if Project.objects.filter(id=project_id).exists():
+        project = Project.objects.get(id=project_id)
+    else:
+        return JsonResponse({'Error':f'Project with project id: {project_id} was not found.'}, status=404)
     
-    s = Star.objects.create(user=u,project=p)
-    s.save()
+    
 
-    return JsonResponse({
-        "success":"Your Star added"
-    })
+    if Star.objects.filter(user=u, project=project).exists():
+        Star.objects.get(user=u, project=project).delete()
+        return JsonResponse({"success":"Your Star Removed"})
+    else:
+        Star.objects.create(user=u, project=project)
+        return JsonResponse({"success":"Your Star added"})
+
