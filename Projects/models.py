@@ -47,11 +47,6 @@ class DocumentVideos(models.Model):
     video = models.FileField(upload_to="Projects/DocumentVideos/video/")
     thumbnail = models.ImageField(upload_to="Projects/DocumentVideos/thumbnail/")
 
-    def delete(self, using=None, keep_parents=False):
-        self.video.storage.delete(self.video.name)
-        self.thumbnail.storage.delete(self.thumbnail.name)
-        super().delete()
-
     def __str__(self):
         return self.project.name + " - Document Video"
 
@@ -59,10 +54,6 @@ class DocumentVideos(models.Model):
 class DocumentImages(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="Projects/DocumentImages/")
-
-    def delete(self, using=None, keep_parents=False):
-        self.image.storage.delete(self.image.name)
-        super().delete()
 
     def __str__(self):
         return self.project.name + " - Document Image"
