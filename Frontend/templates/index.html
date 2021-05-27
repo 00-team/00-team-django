@@ -1,19 +1,43 @@
 {% load static %}<!DOCTYPE html>
 <html lang="en">
     <head>
+        <!-- meta tags -->
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="00 Team Page"/>
-        
-        <link rel="icon" href="{% static "favicon.ico" %}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+        <meta name="theme-color" content="#010101">
+        <meta name="og:locale" content="en_US">
+        <meta name="og:image:height" content="640">
+        <meta property="og:image:width" content="640">
+        <meta property="og:image" content="/static/images/logo.png">
+        <meta property="og:title" content="00 Team Page">
+        <meta property="og:site_name" content="00 Team">
+        <meta property="og:description" content="Noting ...">
+        <meta name="keywords" content="00 Team,github 00 Team,00 Team Page">
+        <meta property="og:url" content="https://00-team.github.io">
+        <meta property="og:type" content="website">
+        <meta name="copyright" content="00 Team">
 
-        <link rel="stylesheet" href="{% static "basic.css" %}">
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>00 Team</title>
+        
+        <!-- Local Styles -->
+        <link rel="stylesheet" href="{% static 'css/basic.css' %}">
+
+        <!-- Page icon -->
+        <link rel="icon" href="{% static 'img/favicon.ico' %}" />
+
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Graduate&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+        
     </head>
+
     <body>
         <div id="root"></div>
-        <script src="{% static "main.js" %}" csrfToken={{ csrf_token }} ></script>
+        <script src="{% static 'main.js' %}" csrfToken={{ csrf_token }} ></script>
     </body>
 </html>
