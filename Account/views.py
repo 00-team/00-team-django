@@ -1,9 +1,5 @@
 import requests
 
-from django.shortcuts import render
-
-from django.template import loader
-
 from django.utils.crypto import get_random_string
 
 from django.views.decorators.csrf import csrf_exempt
@@ -119,10 +115,21 @@ def logout_user(request):
     return HttpResponseRedirect("/")
 
 
+def login_user(r):
+    return JsonResponse({'1':1})
+
+
+def change_password(r):
+    return JsonResponse({'1c':1})
+
+
 @require_GET
-def account(request):
+def account_view(request):
     user = request.user
     c = {}
+
+    return JsonResponse({'test':1})
+    """
     if user.is_authenticated:
         if not UserAccount.objects.filter(user=user).exists():
             return HttpResponseRedirect("/account/login/google/")
@@ -138,5 +145,5 @@ def account(request):
         return HttpResponse(template.render(c, request))
     else:
         return HttpResponseRedirect("/account/login/google/")
-
     
+    """
