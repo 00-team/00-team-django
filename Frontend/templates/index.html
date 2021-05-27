@@ -1,0 +1,19 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="description" content="00 Team Page"/>
+        
+        <link rel="icon" href="{% static "favicon.ico" %}" />
+
+        <link rel="stylesheet" href="{% static "basic.css" %}">
+
+        <title>00 Team</title>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script src="{% static "main.js" %}" csrfToken={{ csrf_token }} ></script>
+    </body>
+</html>

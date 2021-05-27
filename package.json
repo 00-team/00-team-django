@@ -1,0 +1,35 @@
+{
+  "name": "00-team-django",
+  "version": "1.0.0",
+  "description": "The Django Site Project for 00 Team",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development --watch ./Frontend/src/index.js -o ./Frontend/static/",
+    "build": "webpack --mode production ./Frontend/src/index.js -o ./Frontend/static/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/00-team/00-team-django.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/00-team/00-team-django/issues"
+  },
+  "homepage": "https://github.com/00-team/00-team-django#readme",
+  "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-react": "^7.13.13",
+    "babel-loader": "^8.2.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.0"
+  },
+  "dependencies": {
+    "prop-types": "^15.7.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}
