@@ -4,8 +4,8 @@
   "description": "The Django Site Project for 00 Team",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode development --watch ./Frontend/src/index.js -o ./Frontend/static/",
-    "build": "webpack --mode production ./Frontend/src/index.js -o ./Frontend/static/"
+    "dev": "webpack --mode development --watch ./Frontend/src/App.js -o ./Frontend/static/",
+    "build": "webpack --mode production ./Frontend/src/App.js -o ./Frontend/static/"
   },
   "repository": {
     "type": "git",

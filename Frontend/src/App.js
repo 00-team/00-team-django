@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 function App() {
     return (
         <div>
-            <h1>apps</h1>
+            <h1>aps</h1>
         </div>
     )
 }
