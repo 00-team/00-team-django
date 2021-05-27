@@ -77,8 +77,7 @@ def google_callback(request):
         else:
             username = email.replace("@", "-")
             username = username.replace(".", "-")
-            user = User.objects.create_user(username, email, get_random_string(length=16))
-            user.save()
+            user = User.objects.create_user(username, email, get_random_string(length=20))
 
 
         if UserAccount.objects.filter(user=user).exists():
@@ -87,19 +86,17 @@ def google_callback(request):
             user_account.name = name
             user_account.locale = locale
             user_account.change_token()
-            user_account.save()
         else:
-            user_account = UserAccount.objects.create(
+            user_account = UserAccount(
                 user=user,
                 picture=picture,
                 name=name,
                 locale=locale)
             
             user_account.change_token()
-            user_account.save()
         
         login(request, user)
-        url = "/account/"
+        url = "/"
 
         if request.session.get("next"):
             url = request.session["next"]
@@ -126,24 +123,26 @@ def change_password(r):
 @require_GET
 def account_view(request):
     user = request.user
-    c = {}
+    user_data = None
 
-    return JsonResponse({'test':1})
-    """
     if user.is_authenticated:
-        if not UserAccount.objects.filter(user=user).exists():
-            return HttpResponseRedirect("/account/login/google/")
+        if UserAccount.objects.filter(user=user).exists():
+            ua = UserAccount.objects.get(user=user)
 
-        user_account = UserAccount.objects.get(user=user)
-        c["user_data"] = {
-            "email": user.email,
-            "username": user.username,
-            "name": user_account.name,
-            "picture": user_account.picture
-        }
-        template = loader.get_template("account.html")
-        return HttpResponse(template.render(c, request))
-    else:
-        return HttpResponseRedirect("/account/login/google/")
+            if not ua.token:
+                ua.change_token()
+
+            user_data = {
+                'username': user.username,
+                'name': ua.name,
+                'email': user.email,
+                'picture': ua.picture,
+                'token': ua.token
+            }
+
+        else:
+            return HttpResponseRedirect('/api/account/login/google/')
+
     
-    """
+    return JsonResponse({'user': user_data})
+    
