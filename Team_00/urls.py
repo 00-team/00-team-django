@@ -8,8 +8,9 @@ from django.views.generic import TemplateView
 
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='index.html')),
-    path('projects/', include('Projects.urls')),
-    path('account/', include('Account.urls')),
+    path('api/projects/', include('Projects.urls')),
+    path('api/account/', include('Account.urls')),
     path('admin/', admin.site.urls),
+    path('', TemplateView.as_view(template_name='index.html')),
+    path('<path:resource>', TemplateView.as_view(template_name='index.html')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
