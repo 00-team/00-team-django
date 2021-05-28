@@ -1,4 +1,4 @@
-import requests
+import requests, json
 
 from django.utils.crypto import get_random_string
 
@@ -19,6 +19,13 @@ from django.contrib.auth import login, logout
 
 from django.contrib.auth.models import User
 from .models import UserAccount
+
+
+def BodyLoader(data):
+    try:
+        return json.loads(data)
+    except Exception:
+        return None
 
 
 @require_GET
@@ -83,14 +90,14 @@ def google_callback(request):
         if UserAccount.objects.filter(user=user).exists():
             user_account = UserAccount.objects.get(user=user)
             user_account.picture = picture
-            user_account.name = name
+            user_account.nickname = name
             user_account.locale = locale
             user_account.change_token()
         else:
             user_account = UserAccount(
                 user=user,
                 picture=picture,
-                name=name,
+                nickname=name,
                 locale=locale)
             
             user_account.change_token()
@@ -106,10 +113,26 @@ def google_callback(request):
         raise PermissionDenied
 
 
-@require_GET
-def logout_user(request):
-    logout(request)
-    return HttpResponseRedirect("/")
+def logout_user(r):
+    if r.method == 'POST':
+        try:
+            logout(r)
+            return JsonResponse({'success': 'User successfully logouted'})
+        except Exception as e:
+            return JsonResponse({'Error': str(e)})
+    elif r.method == 'GET':
+        try:
+            logout(r)
+            if r.GET.get('next'):
+                return HttpResponseRedirect(r.GET.get('next'))
+            else:
+                return HttpResponseRedirect('/')
+
+        except Exception as e:
+            return HttpResponse(str(e))
+
+    else:
+        return HttpResponseRedirect("/")
 
 
 def login_user(r):
@@ -121,8 +144,8 @@ def change_password(r):
 
 
 @require_GET
-def account_view(request):
-    user = request.user
+def account(r):
+    user = r.user
     user_data = None
 
     if user.is_authenticated:
@@ -134,15 +157,26 @@ def account_view(request):
 
             user_data = {
                 'username': user.username,
-                'name': ua.name,
+                'nickname': ua.nickname,
                 'email': user.email,
                 'picture': ua.picture,
                 'token': ua.token
             }
 
         else:
-            return HttpResponseRedirect('/api/account/login/google/')
+            return HttpResponseRedirect('/api/account/login/google/?next=/account/')
 
     
     return JsonResponse({'user': user_data})
     
+
+
+@require_POST
+def change_info(r):
+    user = r.user
+    data = BodyLoader(r.body)
+    if not data:
+        return JsonResponse({'error': 'Body is empty'}, status=400)
+    
+    return JsonResponse({'username': user.username})
+
