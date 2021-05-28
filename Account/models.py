@@ -8,7 +8,7 @@ import string
 
 class UserAccount(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, default="No Name")
+    nickname = models.CharField(max_length=100, default="No Name")
     picture = models.URLField(null=True, blank=True)
     locale = models.CharField(max_length=10)
     token = models.CharField(max_length=50, null=True, blank=True, unique=True)
