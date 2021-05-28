@@ -1,5 +1,568 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+*:focus {
     outline: none;
+    border: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-transform: uppercase;
+}
+
+:root {
+    --button-color: #58a6ff;
+    --button-bg-color: #0d419d;
+}
+
+
+/* scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #111;
+    border-radius: 20px;
+}
+
+/* selection */
+::selection {
+    background: #FFF;
+    color: #000;
+}
+
+body {
+    width: 100%;
+    background-color: #000;
+    text-align: center;
+    overflow-x: hidden;
+}
+
+.content {
+    padding-top: 60px;
+    min-height: 100vh;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* main menu */
+.base-menu .menu-bar {
+    position: fixed;
+    width: 100%;
+    height: 60px;
+    color: #FFF;
+    border-bottom: #FFF 3px solid;
+    background-color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 76px 0 100px;
+    z-index: 2;
+    user-select: none;
+}
+
+.menu-bar .togo {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 40px;
+    font-family: 'Graduate', sans-serif;
+    color: #FFF;
+    text-transform: uppercase;
+}
+
+.menu-bar .tree-link {
+    display: flex;
+    justify-content: flex-end;
+    list-style: none;
+}
+
+.menu-bar .tree-link .link {
+    margin-right: 30px;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.menu-bar .tree-link .link a {
+    color: #FFFA;
+    text-decoration: none;
+    font-size: 22px;
+    font-family: 'Graduate', sans-serif;
+    transition: color 200ms ease-out 0s;
+}
+
+.menu-bar .tree-link .link a:hover {
+    color: #FFF;
+}
+
+.menu-bar .tree-link .spacel {
+    content: "";
+    width: 2px;
+    height: 35px;
+    background-color: #FFFC;
+    position: absolute;
+    transform: rotate(35deg);
+    right: -15px;
+    top: -4.5px;
+}
+
+.base-menu .btn-bar {
+    display: none;
+    position: fixed;
+    padding: 28px 20px;
+    cursor: pointer;
+    z-index: 3;
+}
+
+
+/* span */
+.base-menu .btn-bar span {
+    background-color: #FFF;
+    display: block;
+    height: 2px;
+    width: 18px;
+    position: relative;
+    z-index: 3;
+}
+
+.base-menu .btn-bar span:before, .base-menu .btn-bar span:after {
+    background-color: #FFF;
+    display: block;
+    content: "";
+    position: absolute;
+    transition: transform 0.2s ease-out 0s;
+    height: 2px;
+    width: 100%;
+}
+
+.base-menu .btn-bar span:before {top: 5px}
+.base-menu .btn-bar span:after {top: -5px}
+
+.base-menu.active .btn-bar span:after {
+    top: 0;
+    transform: rotate(45deg);
+}
+.base-menu.active .btn-bar span:before {
+    top: 0;
+    transform: rotate(-45deg);
+}
+
+
+.base-menu.active .menu-bar {
+    transform: translateX(0);
+}
+
+.base-menu.active span {
+    background-color: #000;
+}
+
+@media (max-width:1000px) {
+    .base-menu .menu-bar {
+        border-bottom: none;
+        border-right: 3px solid #FFF;
+        height: 100vh;
+        transform: translateX(-1000px);
+        transition: transform 500ms ease-out 0s;
+        width: 250px;
+        padding: 60px 0;
+        display: block;
+    }
+
+    .base-menu .menu-bar .togo {
+        display: block;
+        font-size: 35px;
+        margin-bottom: 50px;
+    }
+
+    .menu-bar .tree-link {
+        display: block;
+    }
+
+    .menu-bar .tree-link .link {
+        text-align: left;
+        margin: 25px 0 0 23px;
+    }
+
+    .menu-bar .tree-link .link .spacel {
+        display: none;
+    }
+
+    .base-menu .btn-bar {
+        display: block;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Home style */
+.header-home {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+.conects {
+    position: relative;
+    color: #FFF;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    min-height: 50vh;
+    margin-top: 100px;
+}
+
+.conects .about {
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin-bottom: 300px;
+}
+
+.conects .about h2 {
+    font-size: 40px;
+    margin-left: 10vw;
+    text-align: left;
+    font-family: 'Graduate', sans-serif;
+}
+
+
+.conects .about p {
+    text-align: left;
+    padding: 20px;
+    max-width: 70%;
+    font-size: 18px;
+    margin-left: 7vw;
+}
+
+.conects .projects {
+    margin-bottom: 200px;
+}
+
+.conects .projects h2 {
+    font-size: 40px;
+    margin-left: 10vw;
+    text-align: left;
+    font-family: 'Graduate', sans-serif;
+}
+
+.conects .projects .last-project h3 {
+    font-family: 'Graduate', sans-serif;
+    font-size: 25px;
+}
+.conects .projects .last-project .video {
+    width: 60%;
+    overflow: hidden;
+    border-radius: 10px;    
+    --plyr-color-main: #782FEF;
+    margin: 30px auto;
+}
+.conects .projects .last-project p {
+    padding: 20px;
+    max-width: 70%;
+    font-size: 18px;
+    margin: 0 auto 100px;
+}
+
+.conects .projects .last-project a {
+    color: #58a6ff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    text-decoration: none;
+    transition: all 500ms;
+}
+
+.conects .projects .last-project a:hover {
+    text-decoration: underline;
+}
+
+.conects .projects .no-project {
+    padding: 20px;
+    font-size: 18px;
+    margin-left: 15vw;
+    text-align: left;
+}
+
+@media (max-width:900px) {
+    .conects .projects .last-project .video {
+        width: 95%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Errors */
+.error-stuffs {
+    width: 100%;
+    height: 100%;
+    padding: 100px;
+    color: #FFF;
+    font-family: 'Graduate', sans-serif;
+}
+
+.error-stuffs .error-code {
+    font-size: 100px;
+}
+
+.error-stuffs .error-title {
+    font-size: 50px;
+}
+
+.error-stuffs .error-description {
+    margin-top: 30px;
+    font-size: 20px;
+}
+
+.error-stuffs .error-description .location-path {
+    color: #ff8c00;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* buttons */
+
+button.dark {
+    background-color: #000;
+    color: var(--button-color);
+    outline: none;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    transition: .2s cubic-bezier(.3,0,.5,1);
+    transition-property: color, border-color;
+    padding: 5px 16px;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    appearance: none;
+    text-decoration: none;
+    text-align: center;
+}
+
+button.dark:hover {
+    color: var(--button-color);
+    border-color: var(--button-color);
+    box-shadow: 0 1px 0 rgba(1,4,9,0.1), inset 0 1px 0 rgba(240,246,252,0.03);
+}
+
+
+button.dark:active {
+    color: #f0f6fc;
+    background-color: var(--button-bg-color);
+    border-color: rgb(240 246 252 / 10%);
+    box-shadow: 0 0 transparent;
+}
+
+
+
+/* Account */
+
+.account {
+    padding: 50px;
+}
+
+.account .profile {
+    width: 1000px;
+    height: 300px;
+    display: flex;
+}
+
+.account .profile .pp {
+    width: 300px;
+    padding: 10px;
+}
+
+.account .profile img {
+    width: 100%;
+    border-radius: 20px;
+}
+
+.account .profile .info {
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    padding: 10px;
+    position: relative;
+}
+
+.account .profile .info .actions {
+    position: absolute;
+    bottom: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.account .profile .info .actions button {
+    margin: 0 5px 0 0;
+}
+
+.account .profile span {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 16px;
+    color: #FFF;
+    font-family: 'Roboto', sans-serif;
+}
+
+.account .profile span svg {
+    margin-right: 5px;
+}
+
+
+.account .started-projects {
+    margin-top: 150px;
+    width: 100%;
+    padding: 20px;
+    position: relative;
+}
+
+.account .started-projects .title {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    color: #FFF;
+    font-size: 25px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.account .started-projects .project {
+    display: inline-block;
+    width: 400px;
+    height: 225px;
+    border: 1px solid yellow;
+    margin: 10px;
+    border-radius: 7px;
 }
