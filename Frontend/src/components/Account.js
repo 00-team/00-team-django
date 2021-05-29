@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from './layouts/Button'
 import { FiAtSign, FiUser, FiHexagon, FiStar } from 'react-icons/fi'
 
@@ -30,30 +30,42 @@ const logout = () => {
     )
 }
 
-const Account = ({ user }) => {
-    if (!user) {
-        go('/api/account/login/google/?next=/account')
+const Account = () => {
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        fetch('/api/account/')
+        .then(res => res.json())
+        .then(
+            (result) => {
+                setUser(result.user);
+            },
+            (error) => {
+                console.log(error);
+            }
+        )
+    }, [])
+
+    if (!user) return go('/api/account/login/google/?next=/account');
+
+    if (!user.username) return <div></div>;
+
+    if (user.picture) {
+        if (user.picture.slice(-5) === 's96-c') {
+            user.picture = user.picture.slice(0,-5) + 's500-c'
+        }
     }
 
-    let pic = user.picture
-
-    if (pic) {
-        pic = pic.slice(0,-5) + 's500-c'
-    }
-
-    if (user === true) return <></>
-
+    
     return (
         <div className='account'>
             <div className='profile'>
-                <div className='pp'>
-                    <img src={pic} alt='your profile picture' />
-                </div>
+                <div className='pp' style={user.picture ? { '--bg-img': 'url(' + user.picture + ')' } : {}} ></div>
                 <div className='info'>
                     <span> <FiHexagon /> {user.nickname} </span>
                     <span> <FiUser /> {user.username} </span>
                     <span> <FiAtSign /> {user.email} </span>
-                    <span> <FiStar /> 100 </span>
+                    <span> <FiStar /> {user.stared_projects.length} </span>
 
                     <div className='actions'>
                         <Button onClick={() => {}}>Edit</Button>
@@ -64,10 +76,9 @@ const Account = ({ user }) => {
             </div>
             <div className='started-projects'>
                 <span className='title'>Stared Projects</span>
-                <div className='project'></div>
-                <div className='project'></div>
-                <div className='project'></div>
-                <div className='project'></div>
+                {user.stared_projects.map((p, i) => {
+                    return <div key={i} className='project'></div>
+                })}
             </div>
         </div>
     )
