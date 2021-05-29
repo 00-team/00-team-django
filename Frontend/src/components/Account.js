@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Button from './Button'
+import Button from './layouts/Button'
 import { FiAtSign, FiUser, FiHexagon, FiStar } from 'react-icons/fi'
 
 
