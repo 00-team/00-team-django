@@ -53,10 +53,11 @@ const Login = () => {
         setPassword(null)
     }
 
-    let social = <>
+    let social = 
+    <div className='social'>
         <div className='hr2' style={{ '--w': '100%', '--bg': '#FFF', margin: '10px 0' }}>or</div>
-        <Button color='#FFF' bgColor='#FFF' className='google' onClick={() => {go('/api/account/login/google/?next=/account')}}> <FcGoogle /> </Button>
-    </>
+        <Button color='#FFF' bgColor='#FFF' onClick={() => {go('/api/account/login/google/?next=/account')}}> <FcGoogle /> </Button>
+    </div>
 
     let forgot = 
     <div className='form'>
