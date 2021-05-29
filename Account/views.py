@@ -15,10 +15,11 @@ from django.http import JsonResponse
 from django.conf import settings
 GOOGLE = settings.GOOGLE
 
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 
 from django.contrib.auth.models import User
 from .models import UserAccount
+from Projects.models import Star
 
 
 def BodyLoader(data):
@@ -135,8 +136,24 @@ def logout_user(r):
         return HttpResponseRedirect("/")
 
 
+@require_POST
 def login_user(r):
-    return JsonResponse({'1':1})
+    if r.user.is_authenticated:
+        logout(r)
+
+    data = BodyLoader(r.body)
+    
+    username = data.get('username')
+    password = data.get('password')
+
+    user = authenticate(username=username, password=password)
+
+    if user:
+        login(r, user)
+        return JsonResponse({'success': 'successfully logined'})
+    else:
+        return JsonResponse({'Error': 'Username and password not match'})
+    
 
 
 def change_password(r):
@@ -152,6 +169,16 @@ def account(r):
         if UserAccount.objects.filter(user=user).exists():
             ua = UserAccount.objects.get(user=user)
 
+            stared_projects = []
+
+            for s in Star.objects.filter(user=user):
+                p = s.project
+                stared_projects.append({
+                    'id': p.id,
+                    'name': p.name,
+                    'slug': p.slug,
+                })
+
             if not ua.token:
                 ua.change_token()
 
@@ -160,7 +187,8 @@ def account(r):
                 'nickname': ua.nickname,
                 'email': user.email,
                 'picture': ua.picture,
-                'token': ua.token
+                'token': ua.token,
+                'stared_projects': stared_projects,
             }
 
         else:
