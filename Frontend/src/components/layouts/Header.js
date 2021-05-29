@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom'
 
 const Header = ({ user }) => {
     let linkTag = null
-    if (user) {
-        linkTag = <Link  to='/account/'>Account</Link>
+    if (!user) {
+        linkTag = <Link to='/login'>Login</Link>
+    } else if (!user.username) {
+        linkTag = <Link to='/login'>Login</Link>
     } else {
-        linkTag = <a href="/api/account/login/google/?next=/account/">Login</a>
+        linkTag = <Link to='/account'>Account</Link>
     }
 
     return (
