@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    user-select: none;
 }
 
 *:focus {
@@ -20,6 +21,9 @@ h1, h2, h3, h4, h5, h6 {
 :root {
     --button-color: #58a6ff;
     --button-bg-color: #0d419d;
+    --bg-img: url('https://cdn.discordapp.com/attachments/731174051170746500/814603567704047646/00_logo_f27.png');
+    --input-color: #30363d;
+    --input-f-color: #0260E8;
 }
 
 
@@ -48,6 +52,7 @@ body {
     background-color: #000;
     text-align: center;
     overflow-x: hidden;
+    font-family: 'Roboto', sans-serif;
 }
 
 .content {
@@ -446,6 +451,25 @@ body {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* buttons */
 
 button.dark {
@@ -486,6 +510,43 @@ button.dark:active {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Account */
 
 .account {
@@ -501,11 +562,12 @@ button.dark:active {
 .account .profile .pp {
     width: 300px;
     padding: 10px;
-}
-
-.account .profile img {
-    width: 100%;
+    /* border: 1px solid #FFF; */
     border-radius: 20px;
+    background-image: var(--bg-img);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .account .profile .info {
@@ -565,4 +627,279 @@ button.dark:active {
     border: 1px solid yellow;
     margin: 10px;
     border-radius: 7px;
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Login Page */
+.login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 63px);
+
+}
+
+
+.login-page .login-form {
+    width: 1000px;
+    height: 600px;
+    border: 2px solid #FFF;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+}
+
+.login-page .login-form .cool-img {
+    width: 45%;
+    height: 100%;
+    background-image: url('/s/img/login-bg.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.login-page .login-form .form {
+    width: 55%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 30px 20px;
+}
+
+.login-page .login-form .form input {
+    width: 80%;
+    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+
+.login-page .login-form .form span {
+    color: #FFF;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+.login-page .login-form .form a {
+    color: #30363d;
+    font-size: 16px;
+    text-decoration: none;
+    transition: color 200ms ease-in-out;
+    cursor: pointer;
+    user-select: none;
+}
+
+.login-page .login-form .form a:hover {
+    color: #58a6ff;
+}
+
+.login-page .login-form .form a:active {
+    color: #0260E8;
+}
+
+.login-page .login-form .form .btn {
+    margin: 30px 0;
+}
+
+.login-page .login-form .form .btn button {
+    margin-right: 10px;
+}
+
+.login-page .login-form .form .social {
+    width: 100%;
+}
+
+.login-page .login-form .form .social button {
+    width: 100%;
+}
+
+
+@media (max-width: 1022px)  {
+    .login-page .login-form .cool-img {
+        display: none;
+    }
+
+    .login-page .login-form {
+        width: 500px;
+    }
+
+    .login-page .login-form .form {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 520px)  {
+    .login-page .login-form {
+        width: 90%;
+        height: 500px;
+    }
+
+    .login-page .login-form .form input {
+        font-size: 16px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* input style */
+input.dark {
+    outline: none;
+    padding: 4px 8px;
+    border: 2px solid var(--input-color);
+    border-radius: 5px;
+    font-size: 22px;
+    color: #FFF;
+    background-color: #000;
+    font-family: 'Roboto', sans-serif;
+    transition: border-color 400ms;
+}
+
+input.dark:focus {
+    border-color: var(--input-f-color);
+    box-shadow: 0 1px 0 rgba(1,4,9,0.1), inset 0 1px 0 rgba(240,246,252,0.03);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* hr */
+
+div.hr {
+    content: '';
+    width: var(--w);
+    background: var(--bg);
+    height: 2px;
+}
+
+
+div.hr2 {
+    width: var(--w);
+    display: flex;
+    align-items: center;
+    color: var(--bg);
+    text-transform: uppercase;
+}
+
+div.hr2::before {
+    content: '';
+    height: 2px;
+    width: var(--w);
+    background: var(--bg);
+    margin-right: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+div.hr2::after {
+    content: '';
+    height: 2px;
+    width: var(--w);
+    background: var(--bg);
+    margin-left: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
