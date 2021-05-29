@@ -1,39 +1,56 @@
-# 00-team-django
+# 00 Team Django Project
 
-The Django Site Project for 00 Team
+A small web project for 00 Team
 
-## how to run locally
+## How to run locally
 
-first clone the code with git
+### Requirements
+
+1. Python 3.9
+2. Django 3.2
+3. Nodejs
+
+### Install
 
 ```bash
 git clone https://github.com/00-team/00-team-django.git
+cd 00-team-django
+npm i
+pip install requests django Pillow
 ```
 
-second open `manage.py` in your text editor and edit **line 9** from this:
+### Edit
 
-```py
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Team_00.local_settings")
+edit `manage.py` :
+
+```diff
+- os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Team_00.local_settings')
++ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Team_00.settings')
 ```
 
-to this:
+edit `Team_00/settings.py` :
 
-```py
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Team_00.settings")
+```diff
+- SECRET_KEY = ''
++ SECRET_KEY = '13r+28!4ii8%n7#ofeeju3aj@zn_br*byimxfbt$e-u(3*#1#('
+
+
+GOOGLE = {
+-   "client_id": "",
++   "client_id": "<your google app client_id>",
+
+-   "client_secret": "",
++   "client_secret": "<your google app client_secret>",
+    "redirect_uri": "http://localhost:8000/account/login/google_callback/"
+}
 ```
 
-then open `settings.py` in your text editor and chnage **SECRET_KEY** to somting like this:
+### Run
 
-```py
-SECRET_KEY = "13r+28!4ii8%n7#ofeeju3aj@zn_br*byimxfbt$e-u(3*#1#("
-```
-
-and also set your google **client_id** and **client_secret**
-
-after changes you can run project like that:
-
-```cmd
+```bash
+npm run build
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
 python manage.py runserver --insecure
 ```
-
-I think it will run without any problems and you can go to [this link](http://127.0.0.1:8000/) after the site runs
