@@ -6,7 +6,7 @@ SECRET_KEY = ''
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost']
 
 GOOGLE = {
     'client_id': '',
