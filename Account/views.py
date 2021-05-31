@@ -19,12 +19,12 @@ from django.contrib.auth import login, logout, authenticate
 
 from django.contrib.auth.models import User
 from .models import UserAccount
-from Projects.models import Star
+from Projects.models import Project, Star, DocumentImages, DocumentVideos
 
 
-def BodyLoader(data):
+def BodyLoader(body):
     try:
-        return json.loads(data)
+        return json.loads(body)
     except Exception:
         return None
 
@@ -173,10 +173,24 @@ def account(r):
 
             for s in Star.objects.filter(user=user):
                 p = s.project
+                project_thumbnail = None
+
+                pdv = DocumentVideos.objects.filter(project=p).last()
+                pdi = DocumentImages.objects.filter(project=p).last()
+
+                if pdv:
+                    project_thumbnail = pdv.thumbnail.url
+                elif pdi:
+                    project_thumbnail = pdi.image.url
+                
+
                 stared_projects.append({
                     'id': p.id,
                     'name': p.name,
                     'slug': p.slug,
+                    'thumbnail': project_thumbnail,
+                    'lang': p.language,
+                    'wspace': p.workspace,
                 })
 
             if not ua.token:
