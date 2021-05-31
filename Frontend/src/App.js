@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, useLocation, Redirect, useParams } from 'react-router-dom';
+import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 
 // components
 import Header from './components/layouts/Header'
@@ -8,9 +9,14 @@ import Home from './components/Home'
 import Account from './components/Account'
 import Error from './components/Error'
 import Login from './components/layouts/Login'
+import Alert from './components/layouts/Alert'
 
-var csrfToken = document.currentScript.getAttribute('csrfToken');
 
+const alertOptions = {
+    position: positions.TOP_RIGHT,
+    timeout: 7000,
+    transition: transitions.FADE
+}
 
 const App = () => {
     const [user, setUser] = useState({});
@@ -64,8 +70,6 @@ const App = () => {
 export default App
 
 function Child() {
-    // We can use the `useParams` hook here to access
-    // the dynamic pieces of the URL.
     let { slug } = useParams();
   
     return (
@@ -78,8 +82,11 @@ function Child() {
   
 
 ReactDOM.render(
-    <Router>
-        <App />
-    </Router>,
+    <AlertProvider template={Alert} {...alertOptions} >
+        <Router>
+            <App />
+        </Router>
+    </AlertProvider>,
+
     document.getElementById('root')
 )
