@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route, useLocation, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, useLocation, Redirect, useParams } from 'react-router-dom';
 
 // components
 import Header from './components/layouts/Header'
@@ -45,7 +45,11 @@ const App = () => {
                     </Route>
 
                     <Route path="/login" >
-                        {user != true && user ? <Redirect to='/account' /> :<Login />}
+                        {user ? (user.username ? <Redirect to='/account' /> : <Login />) : <Login />}
+                    </Route>
+
+                    <Route path="/project/:slug" >
+                        <Child />
                     </Route>
                     
                     <Route path="*">
@@ -59,6 +63,19 @@ const App = () => {
 
 export default App
 
+function Child() {
+    // We can use the `useParams` hook here to access
+    // the dynamic pieces of the URL.
+    let { slug } = useParams();
+  
+    return (
+      <div>
+        <h3>ID: {slug}</h3>
+      </div>
+    );
+  }
+
+  
 
 ReactDOM.render(
     <Router>
