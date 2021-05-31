@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FiAtSign, FiUser, FiHexagon, FiStar } from 'react-icons/fi'
 import { useHistory } from 'react-router-dom'
+import { useAlert } from 'react-alert'
 
 import Button from './layouts/Button'
 
@@ -32,20 +33,18 @@ const Account = () => {
     const [user, setUser] = useState({});
     const [projects, setProjects] = useState([]);
     const history = useHistory();
+    const alert = useAlert()
 
     useEffect(() => {
         fetch('/api/account/')
         .then(res => res.json())
         .then(
             (r) => {
-                if (r.user) {
-                    setProjects(r.user.stared_projects)
-                }
-
+                if (r.user) setProjects(r.user.stared_projects);
                 setUser(r.user);
             },
             (error) => {
-                console.log(error);
+                alert.error(error)
             }
         );
     }, [])
@@ -64,10 +63,10 @@ const Account = () => {
         }).then(res => res.json())
         .then(
             (r) => {
-                console.log(r);
+                alert.success('Project Removed Successfully from Stard Projects')
             },
             (error) => {
-                console.log(error);
+                alert.error(error);
             }
         )
 
@@ -86,15 +85,11 @@ const Account = () => {
         .then(res => res.json())
         .then(
             (r) => {
-                if (r.success) {
-                    go('/')
-                    // history.push('/')
-                } else {
-                    console.log(r.Error);
-                }
+                if (r.success) go('/')
+                else alert.error(r.Error);
             },
             (error) => {
-                console.log(error);
+                alert.error(error);
             }
         )
     }

@@ -2,23 +2,24 @@ import React, { useEffect, useState } from 'react'
 import Input from './Input'
 import Button from './Button'
 import { FcGoogle } from 'react-icons/fc'
+import { useAlert } from 'react-alert'
 
 var csrfToken = document.currentScript.getAttribute('csrfToken');
 
 const go = (path) => window.location.replace(path);
 
 const Login = () => {
-    const [forgotForm, setForgotForm] = useState(false)
-    const [registerForm, setRegisterForm] = useState(false)
-    const [error, setError] = useState(null)
-    const [email, setEmail] = useState('')
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [forgotForm, setForgotForm] = useState(false);
+    const [registerForm, setRegisterForm] = useState(false);
+    const [error, setError] = useState(null);
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const alert = useAlert();
 
     useEffect(() => {
         if (localStorage.username) setUsername(localStorage.username)
         if (localStorage.password) setPassword(localStorage.password)
-
     }, [])
 
     const sendLogin = () => {
@@ -34,17 +35,17 @@ const Login = () => {
             })
         }).then(r => r.json()).then(
             (r) => {
-                console.log(r);
                 if (r.success) {
                     localStorage.username = username;
                     localStorage.password = password;
                     go('/account');
                 } else if (r.Error) {
                     setError({msg: r.Error})
+                    alert.error(r.Error)
                 }
             }, 
             (error) => {
-                console.log(error);
+                alert.error(error)
             }
         )
     
