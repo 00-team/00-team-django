@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Input from './Input'
 import Button from './Button'
-import Account from '../Account'
 import { FcGoogle } from 'react-icons/fc'
 
 var csrfToken = document.currentScript.getAttribute('csrfToken');
@@ -12,9 +11,15 @@ const Login = () => {
     const [forgotForm, setForgotForm] = useState(false)
     const [registerForm, setRegisterForm] = useState(false)
     const [error, setError] = useState(null)
-    const [email, setEmail] = useState(null)
-    const [username, setUsername] = useState(null)
-    const [password, setPassword] = useState(null)
+    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+
+    useEffect(() => {
+        if (localStorage.username) setUsername(localStorage.username)
+        if (localStorage.password) setPassword(localStorage.password)
+
+    }, [])
 
     const sendLogin = () => {
         fetch('/api/account/login/', {
@@ -31,7 +36,9 @@ const Login = () => {
             (r) => {
                 console.log(r);
                 if (r.success) {
-                    go('/account')
+                    localStorage.username = username;
+                    localStorage.password = password;
+                    go('/account');
                 } else if (r.Error) {
                     setError({msg: r.Error})
                 }
@@ -48,9 +55,9 @@ const Login = () => {
             i.value = '';
         })
 
-        setEmail(null)
-        setUsername(null)
-        setPassword(null)
+        setEmail('')
+        setUsername('')
+        setPassword('')
     }
 
     let social = 
@@ -73,9 +80,9 @@ const Login = () => {
     let login = 
     <div className='form'>
         <span>Username</span>
-        <Input onChange={(e) => setUsername(e.target.value)} placeholder='Username' badInput={error ? true : false} />
+        <Input onChange={(e) => setUsername(e.target.value)} placeholder='Username' badInput={error ? true : false} defaultVal={username} />
         <span>Password</span>
-        <Input onChange={(e) => setPassword(e.target.value)} placeholder='Password' badInput={error ? true : false} />
+        <Input onChange={(e) => setPassword(e.target.value)} placeholder='Password' badInput={error ? true : false} defaultVal={password} type='password' />
 
         <a onClick={() => {clean(); setForgotForm(true)}}>Forgot Password</a>
 
