@@ -73,28 +73,6 @@ const Account = () => {
         setProjects(projects.filter((p) => p.id !== projectId))
     }
 
-
-    const logout = () => {
-        fetch('/api/account/logout/', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-        })
-        .then(res => res.json())
-        .then(
-            (r) => {
-                if (r.success) go('/')
-                else alert.error(r.Error);
-            },
-            (error) => {
-                alert.error(error);
-            }
-        )
-    }
-
-
     if (!user) { go('/login');return <></>; } else if (!user.username) return <></>
 
 
@@ -117,7 +95,7 @@ const Account = () => {
                     <div className='actions'>
                         <Button onClick={() => {}}>Edit</Button>
                         <Button onClick={() => {}}>Change Password</Button>
-                        <Button color='#F00' bgColor='#E20338' onClick={() => logout()}>Logout</Button>
+                        <Button color='#F00' bgColor='#E20338' onClick={() => go('/api/account/logout/')}>Logout</Button>
                     </div>
                 </div>
             </div>
@@ -127,10 +105,6 @@ const Account = () => {
             </div>
         </div>
     )
-}
-
-Account.defaultProps = {
-    user: null,
 }
 
 export default Account
