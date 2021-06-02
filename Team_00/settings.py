@@ -6,12 +6,12 @@ SECRET_KEY = ''
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 GOOGLE = {
     'client_id': '',
     'client_secret': '',
-    'redirect_uri': 'http://localhost:8000/api/account/login/google_callback/'
+    'redirect_uri': '/api/account/login/google_callback/'
 }
 
 INSTALLED_APPS = [

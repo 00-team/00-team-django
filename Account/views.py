@@ -30,33 +30,35 @@ def BodyLoader(body):
 
 
 @require_GET
-def authorize(request):
-    if request.GET.get("next"):
-        request.session["next"] = request.GET.get("next")
+def authorize(r):
+    if r.GET.get("next"):
+        r.session["next"] = r.GET.get("next")
 
-    if request.user.is_authenticated:
-        logout(request)
+    if r.user.is_authenticated:
+        logout(r)
 
     google_auth = "https://accounts.google.com/o/oauth2/v2/auth"
     scope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
+    redirect_uri = f'{r.scheme}://{r.get_host()}' + GOOGLE['redirect_uri']
 
     state = get_random_string(length=20)
-    request.session["google_state"] = state
+    r.session["google_state"] = state
 
-    url = google_auth + f"?redirect_uri={GOOGLE['redirect_uri']}&response_type=code&scope={scope}&state={state}&client_id={GOOGLE['client_id']}"
+    url = google_auth + f"?redirect_uri={redirect_uri}&response_type=code&scope={scope}&state={state}&client_id={GOOGLE['client_id']}"
 
     return HttpResponseRedirect(url)
 
 
 @require_GET
-def google_callback(request):
-    if request.GET.get("state") != request.session.get("google_state"):
+def google_callback(r):
+    if r.GET.get("state") != r.session.get("google_state"):
         raise PermissionDenied
     
-    if "code" in request.GET:
-        code = request.GET["code"]
+    if "code" in r.GET:
+        code = r.GET["code"]
+        redirect_uri = f'{r.scheme}://{r.get_host()}' + GOOGLE['redirect_uri']
 
-        url = f"https://oauth2.googleapis.com/token?code={code}&client_id={GOOGLE['client_id']}&client_secret={GOOGLE['client_secret']}&redirect_uri={GOOGLE['redirect_uri']}&grant_type=authorization_code"
+        url = f"https://oauth2.googleapis.com/token?code={code}&client_id={GOOGLE['client_id']}&client_secret={GOOGLE['client_secret']}&redirect_uri={redirect_uri}&grant_type=authorization_code"
 
         response = requests.post(url)
         if response.status_code != 200:
@@ -103,11 +105,11 @@ def google_callback(request):
             
             user_account.change_token()
         
-        login(request, user)
+        login(r, user)
         url = "/"
 
-        if request.session.get("next"):
-            url = request.session["next"]
+        if r.session.get("next"):
+            url = r.session["next"]
 
         return HttpResponseRedirect(url)
     else:
@@ -154,11 +156,6 @@ def login_user(r):
     else:
         return JsonResponse({'Error': 'Username and password not match'})
     
-
-
-def change_password(r):
-    return JsonResponse({'1c':1})
-
 
 @require_GET
 def account(r):
@@ -222,3 +219,7 @@ def change_info(r):
     
     return JsonResponse({'username': user.username})
 
+
+
+def change_password(r):
+    return JsonResponse({'1c':1})
