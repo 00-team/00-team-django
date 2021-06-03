@@ -8,5 +8,5 @@ def login_required(view_func):
         if request.user.is_authenticated:
             return view_func(request, *args, **kwargs)
         else:
-            return JsonResponse({'Error': 'login required', 'Redirect':'/login'})
+            return JsonResponse({'user': 'anonymous'}, status=203)
     return wrap
