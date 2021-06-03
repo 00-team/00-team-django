@@ -28,6 +28,7 @@
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {
+    "@emotion/babel-plugin": "^11.3.0",
     "axios": "^0.21.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
@@ -37,6 +38,7 @@
     "react-redux": "^7.2.4",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-spinners": "^0.11.0",
     "react-transition-group": "^4.4.2",
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
