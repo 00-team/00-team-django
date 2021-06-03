@@ -3,7 +3,7 @@ import { FiAtSign, FiUser, FiHexagon, FiStar } from 'react-icons/fi'
 import { useHistory } from 'react-router-dom'
 import { useAlert } from 'react-alert'
 
-import Button from './layouts/Button'
+import Button from '../common/Button'
 
 var csrfToken = document.currentScript.getAttribute('csrfToken');
 

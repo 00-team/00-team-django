@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, useLocation, Redirect, useParams } from 'react-router-dom';
-import { transitions, positions, Provider as AlertProvider } from 'react-alert'
+import { transitions, Provider as AlertProvider } from 'react-alert'
 
 // components
 import Header from './components/layouts/Header'
 import Home from './components/Home'
-import Account from './components/Account'
-import Error from './components/Error'
-import Login from './components/layouts/Login'
+import Account from './components/accounts/Account'
+import Error from './components/common/Error'
+import Login from './components/accounts/Login'
 import Alert from './components/layouts/Alert'
 
 
 const alertOptions = {
-    position: positions.TOP_RIGHT,
+    position: 'top right',
     timeout: 7000,
     transition: transitions.FADE
 }
