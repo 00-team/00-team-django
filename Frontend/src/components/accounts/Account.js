@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { FiAtSign, FiUser, FiHexagon, FiStar } from 'react-icons/fi'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Redirect } from 'react-router-dom'
 import { useAlert } from 'react-alert'
+import { useSelector, useDispatch } from 'react-redux'
+import { getUser, loadSprojects } from '../../actions/auth'
 
-import Button from '../common/Button'
+import PacmanLoader from "react-spinners/PacmanLoader";
+import { css } from "@emotion/react";
+
+import { Button } from '../common/Elements'
 
 var csrfToken = document.currentScript.getAttribute('csrfToken');
 
@@ -30,24 +35,35 @@ const Projects = ({ projects, Rstar, history }) => {
 
 
 const Account = () => {
+    const dispatch = useDispatch();
+    const auth = useSelector((state) => state.auth);
     const [user, setUser] = useState({});
     const [projects, setProjects] = useState([]);
     const history = useHistory();
     const alert = useAlert()
 
+    const LoaderCss = css`
+        width: auto;
+        height: auto;
+    `;
+
     useEffect(() => {
-        fetch('/api/account/')
-        .then(res => res.json())
-        .then(
-            (r) => {
-                if (r.user) setProjects(r.user.stared_projects);
-                setUser(r.user);
-            },
-            (error) => {
-                alert.error(error)
-            }
-        );
-    }, [])
+        dispatch(getUser());
+        dispatch(loadSprojects());
+    }, [dispatch]);
+
+
+    useEffect(() => {
+        if (auth.user) {
+            setUser(auth.user);
+        }
+
+        if (auth.sprojects) {
+            setProjects(auth.sprojects);
+        }
+
+        if (auth.sprojectsError) alert.error(auth.sprojectsError)
+    }, [auth]);
 
 
     const removeStar = (projectId) => {
@@ -73,7 +89,17 @@ const Account = () => {
         setProjects(projects.filter((p) => p.id !== projectId))
     }
 
-    if (!user) { go('/login');return <></>; } else if (!user.username) return <></>
+    if (auth.anonymous) {
+        return <Redirect to='/login' />
+    } else if (auth.userLoading) { // loading
+        return (
+            <div className='loading-box'>
+                <PacmanLoader color='#FFF' loading={auth.userLoading} css={LoaderCss} />
+            </div>
+        )
+    } else if (!user) {
+        return <></>
+    }
 
 
     if (user.picture) {
@@ -81,7 +107,8 @@ const Account = () => {
             user.picture = user.picture.slice(0,-5) + 's500-c'
         }
     }
-    
+
+
     return (
         <div className='account'>
             <div className='profile'>
@@ -99,10 +126,15 @@ const Account = () => {
                     </div>
                 </div>
             </div>
+            {!auth.sprojectsError && 
             <div className='started-projects'>
                 <span className='title'>Stared Projects</span>
-                <Projects projects={projects} Rstar={removeStar} history={history} />
-            </div>
+                {auth.sprojectsLoading ? 
+                <div className='loading-box-sprojects'>
+                    <PacmanLoader color='#FFF' loading={auth.sprojectsLoading} css={LoaderCss} />
+                </div>:
+                <Projects projects={projects} Rstar={removeStar} history={history} />}
+            </div>}
         </div>
     )
 }

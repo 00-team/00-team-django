@@ -1,16 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useAlert } from 'react-alert'
+import { useSelector, useDispatch } from 'react-redux'
+import { getUser } from '../../actions/auth'
 
 
-const Header = ({ user }) => {
-    let linkTag = null
-    if (!user) {
-        linkTag = <Link to='/login'>Login</Link>
-    } else if (!user.username) {
-        linkTag = <Link to='/login'>Login</Link>
-    } else {
-        linkTag = <Link to='/account'>Account</Link>
-    }
+const Header = () => {
+    const alert = useAlert();
+    const dispatch = useDispatch();
+    const auth = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        dispatch(getUser());
+    }, [dispatch]);
+
+
+    let linkTag = <Link to='/login'>Login</Link>
+
+    if (auth.userLoading) linkTag = <Link to='#'>Loading</Link>
+    else if (auth.error) alert.error(auth.error)
+    else if (auth.user) linkTag = <Link to='/account'>Account</Link>
 
     return (
         <div className='base-menu'>
@@ -47,8 +56,4 @@ const Header = ({ user }) => {
 }
 
 
-Header.defaultProps = {
-    user: null
-}
-
-export default Header
+export default Header;

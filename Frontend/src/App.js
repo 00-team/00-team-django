@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, useLocation, Redirect, useParams } from 'react-router-dom';
 import { transitions, Provider as AlertProvider } from 'react-alert'
+import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux';
 
 // components
 import Header from './components/layouts/Header'
@@ -11,6 +12,10 @@ import Error from './components/common/Error'
 import Login from './components/accounts/Login'
 import Alert from './components/layouts/Alert'
 
+// redux stuffs
+import store from './store';
+import { getUser } from './actions/auth';
+
 
 const alertOptions = {
     position: 'top right',
@@ -19,26 +24,23 @@ const alertOptions = {
 }
 
 const App = () => {
+    const dispatch = useDispatch();
+    const auth = useSelector((state) => state.auth);
     const [user, setUser] = useState({});
     const location = useLocation();
 
     useEffect(() => {
-        fetch('/api/account/')
-        .then(res => res.json())
-        .then(
-            (result) => {
-                setUser(result.user);
-            },
-            (error) => {
-                console.log(error);
-            }
-        )
-    }, [])
+        dispatch(getUser());
+    }, [dispatch]);
+
+    useEffect(() => {
+        setUser(auth.user);
+    }, [auth]);
 
 
     return (
         <>
-            <Header user={user} />
+            <Header />
 
             <div className='content'>
                 <Switch>
@@ -73,20 +75,19 @@ function Child() {
     let { slug } = useParams();
   
     return (
-      <div>
-        <h3>ID: {slug}</h3>
-      </div>
+        <span style={{ color: '#FFF' }} >{slug}</span>
     );
-  }
+}
 
-  
 
 ReactDOM.render(
-    <AlertProvider template={Alert} {...alertOptions} >
-        <Router>
-            <App />
-        </Router>
-    </AlertProvider>,
+    <ReduxProvider store={store}>
+        <AlertProvider template={Alert} {...alertOptions} >
+            <Router>
+                <App />
+            </Router>
+        </AlertProvider>
+    </ReduxProvider>,
 
     document.getElementById('root')
 )

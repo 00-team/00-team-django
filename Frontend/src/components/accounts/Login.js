@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Input, Button } from '../common/Elements'
-// import Button from './Button'
 import { FcGoogle } from 'react-icons/fc'
 import { useAlert } from 'react-alert'
 
