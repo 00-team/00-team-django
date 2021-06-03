@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, time
 
 from django.contrib.auth import login as system_login, logout as system_logout, authenticate
 from django.contrib.auth.models import User
@@ -176,7 +176,23 @@ def account(r):
         ua = UserAccount(user=user)
         ua.save()
 
-    stared_projects = []
+
+    user_data = {
+        'username': user.username,
+        'nickname': ua.nickname or 'No Name',
+        'email': user.email,
+        'picture': ua.picture,
+        'token': ua.token,
+        'stared_projects': [],
+    }
+    
+    return JsonResponse({'user': user_data})
+
+
+@login_required
+def stared_projects(r):
+    user = r.user
+    sp = []
 
     for s in Star.objects.filter(user=user):
         p = {
@@ -188,27 +204,18 @@ def account(r):
             'wspace': s.project.workspace,
         }
 
-        pdv = DocumentVideos.objects.filter(project=p).last()
-        pdi = DocumentImages.objects.filter(project=p).last()
+        pdv = DocumentVideos.objects.filter(project=s.project).last()
+        pdi = DocumentImages.objects.filter(project=s.project).last()
 
         if pdv:
             p['thumbnail'] = pdv.thumbnail.url
         elif pdi:
             p['thumbnail'] = pdi.image.url
 
-        stared_projects.append(p)
+        sp.append(p)
 
-    user_data = {
-        'username': user.username,
-        'nickname': ua.nickname or 'No Name',
-        'email': user.email,
-        'picture': ua.picture,
-        'token': ua.token,
-        'stared_projects': stared_projects,
-    }
-    
-    return JsonResponse({'user': user_data})
-    
+    return JsonResponse({'stared_projects': sp})
+
 
 @require_POST
 def change_info(r):
