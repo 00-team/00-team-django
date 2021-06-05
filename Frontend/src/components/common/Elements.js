@@ -25,19 +25,20 @@ Button.defaultProps = {
 
 
 
-export const Input = ({ type, onChange, placeholder, badInput, defaultVal }) => {
+export const Input = ({ type, onChange, placeholder, badInput, defaultVal, maxLength }) => {
     return (
-        <input type={type} className='dark' onChange={onChange} placeholder={placeholder} style={badInput ? { '--input-color': '#A00', '--input-f-color': '#F00' } : {}} defaultValue={defaultVal} />
+        <input type={type} className='dark' onChange={onChange} placeholder={placeholder} style={badInput ? { '--input-color': '#A00', '--input-f-color': '#F00' } : {}} defaultValue={defaultVal} maxLength={maxLength} />
     )
 }
 
 
 Input.defaultProps = {
-    id: '',
     type: 'text',
     onChange: () => {},
     placeholder: '',
     badInput: false,
+    defaultVal: '',
+    maxLength: null,
 }
 
 
