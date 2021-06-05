@@ -14,7 +14,7 @@ import Alert from './components/layouts/Alert'
 
 // redux stuffs
 import store from './store';
-import { getUser } from './actions/auth';
+import { getUser } from './actions/account';
 
 
 const alertOptions = {
@@ -25,7 +25,7 @@ const alertOptions = {
 
 const App = () => {
     const dispatch = useDispatch();
-    const auth = useSelector((state) => state.auth);
+    const account = useSelector((state) => state.account);
     const [user, setUser] = useState({});
     const location = useLocation();
 
@@ -34,8 +34,8 @@ const App = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        setUser(auth.user);
-    }, [auth]);
+        setUser(account.user);
+    }, [account]);
 
 
     return (
