@@ -606,6 +606,20 @@ button.dark:active {
     margin-right: 5px;
 }
 
+.account .profile .edit-input {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 16px;
+    color: #FFF;
+    font-family: 'Roboto', sans-serif;
+}
+
+.account .profile .edit-input svg {
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+}
 
 .account .started-projects {
     margin-top: 150px;
@@ -622,6 +636,15 @@ button.dark:active {
     color: #FFF;
     font-size: 25px;
     font-family: 'Roboto', sans-serif;
+}
+
+.account .started-projects .reason {
+    color: #FFF;
+    font-size: 20px;
+    text-align: left;
+    display: block;
+    margin-left: 50px;
+    margin-top: 20px;
 }
 
 .account .started-projects .project {
