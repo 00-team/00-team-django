@@ -1,28 +1,16 @@
 import {
-    // user auth
     ANONYMOUS_USER,
     AUTH_ERROR,
     USER_LOADED,
     USER_LOADING,
-
-    // stared projects
-    SPROJECTS_LOADED,
-    SPROJECTS_ERROR,
-    SPROJECTS_LOADING
 } from '../actions/types';
 
 
 const initialState = {
-    // user
     anonymous: false,
     userLoading: false,
     user: null,
     error: null,
-
-    // stared project
-    sprojects: [],
-    sprojectsError: null,
-    sprojectsLoading: false,
 };
 
 
@@ -56,28 +44,6 @@ export default function (state = initialState, action) {
                 user: null,
                 userLoading: false,
                 error: null,
-            }
-        
-        case SPROJECTS_LOADING:
-            return {
-                ...state,
-                sprojects: [],
-                sprojectsError: null,
-                sprojectsLoading: true,
-            }
-        case SPROJECTS_LOADED:
-                return {
-                    ...state,
-                    sprojects: action.payload,
-                    sprojectsError: null,
-                    sprojectsLoading: false,
-                }
-        case SPROJECTS_ERROR:
-            return {
-                ...state,
-                sprojects: [],
-                sprojectsError: action.payload,
-                sprojectsLoading: false,
             }
         default:
             return state;
