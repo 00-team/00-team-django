@@ -1,51 +1,44 @@
+// react stuffs
 import React, { useEffect, useState } from 'react'
-import { FiAtSign, FiUser, FiHexagon, FiStar } from 'react-icons/fi'
-import { useHistory, Redirect } from 'react-router-dom'
-import { useAlert } from 'react-alert'
-import { useSelector, useDispatch } from 'react-redux'
-import { getUser, loadSprojects } from '../../actions/auth'
 
+// icons
+import { FiAtSign, FiUser, FiHexagon, FiStar, FiLock, FiUnlock } from 'react-icons/fi'
+
+// router
+import { Redirect } from 'react-router-dom'
+
+// alerts
+import { useAlert } from 'react-alert'
+
+// redux
+import { useSelector, useDispatch } from 'react-redux'
+
+// actions
+import { getUser } from '../../actions/account'
+import { loadSprojects } from '../../actions/sprojects'
+
+// loading
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { css } from "@emotion/react";
 
-import { Button } from '../common/Elements'
-
-var csrfToken = document.currentScript.getAttribute('csrfToken');
+// components
+import { Button, Input } from '../common/Elements'
+import Sprojects from './Sprojects'
 
 
 const go = (path) => window.location.replace(path);
 
-const Projects = ({ projects, Rstar, history }) => {
-    if (projects.length == 0) return <></>
-
-    return (
-        projects.map((p, i) =>
-            <div key={i} className='project'>
-                <div className='thumbnail' style={p.thumbnail ? { '--ps-bg-img':'url(' + p.thumbnail + ')' } : {}} onDoubleClick={() => {Rstar(p.id)}} >
-                    <span onClick={() => history.push('/project/' + p.slug)} >{p.name}</span>
-                </div>
-                <div className='lw'>
-                    <span className='lang'>{p.lang}</span>
-                    <span className='wspace'>{p.wspace}</span>
-                </div>
-            </div>
-        )
-    )
-}
-
-
 const Account = () => {
     const dispatch = useDispatch();
-    const auth = useSelector((state) => state.auth);
-    const [user, setUser] = useState({});
-    const [projects, setProjects] = useState([]);
-    const history = useHistory();
-    const alert = useAlert()
+    const alert = useAlert();
 
-    const LoaderCss = css`
-        width: auto;
-        height: auto;
-    `;
+    const acc = useSelector((state) => state.account);
+    const sprojects = useSelector((state) => state.sprojects);
+
+    const [user, setUser] = useState({});
+    const [info, setInfo] = useState('info');
+
+    const LoaderCss = css`width:auto;height:auto;`;
 
     useEffect(() => {
         dispatch(getUser());
@@ -54,53 +47,20 @@ const Account = () => {
 
 
     useEffect(() => {
-        if (auth.user) {
-            setUser(auth.user);
-        }
+        if (acc.user) setUser(acc.user);
+        if (sprojects.error) alert.error(sprojects.error);
+    }, [acc]);
 
-        if (auth.sprojects) {
-            setProjects(auth.sprojects);
-        }
-
-        if (auth.sprojectsError) alert.error(auth.sprojectsError)
-    }, [auth]);
-
-
-    const removeStar = (projectId) => {
-        fetch('/api/projects/modify_star/', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify({
-                project_id: projectId
-            }),
-        }).then(res => res.json())
-        .then(
-            (r) => {
-                alert.success('Project Removed Successfully from Stard Projects')
-            },
-            (error) => {
-                alert.error(error);
-            }
-        )
-
-        setProjects(projects.filter((p) => p.id !== projectId))
-    }
-
-    if (auth.anonymous) {
-        return <Redirect to='/login' />
-    } else if (auth.userLoading) { // loading
+    if (acc.anonymous) return <Redirect to='/login' />
+    else if (acc.userLoading) { // loading
         return (
             <div className='loading-box'>
-                <PacmanLoader color='#FFF' loading={auth.userLoading} css={LoaderCss} />
+                <PacmanLoader color='#FFF' loading={acc.userLoading} css={LoaderCss} />
             </div>
         )
-    } else if (!user) {
-        return <></>
-    }
-
+    } 
+    
+    if (!user) return <></>
 
     if (user.picture) {
         if (user.picture.slice(-5) === 's96-c') {
@@ -108,33 +68,52 @@ const Account = () => {
         }
     }
 
+    let infoFrag = <>
+        <span> <FiHexagon /> {user.nickname || 'No Name'} </span>
+        <span> <FiUser /> {user.username || 'No Username'} </span>
+        <span> <FiAtSign /> {user.email || 'No Email'} </span>
+        <span> <FiStar /> {sprojects.sprojects.length || '0'} </span>
+
+        <div className='actions'>
+            <Button onClick={() => {setInfo('edit')}}>Edit</Button>
+            <Button onClick={() => {setInfo('changepass')}}>Change Password</Button>
+            <Button color='#F00' bgColor='#E20338' onClick={() => go('/api/account/logout/')}>Logout</Button>
+        </div>
+    </>
+
+    let editFrag = <>
+        <div className='edit-input' ><FiHexagon /> <Input placeholder='Name' defaultVal={user.nickname || 'No Name'} maxLength={50} /></div>
+        <div className='edit-input' ><FiUser /> <Input placeholder='Username' defaultVal={user.username || 'No Username'} maxLength={140} /></div>
+
+        <div className='actions'>
+            <Button onClick={() => {setInfo('info')}}>Back</Button>
+            <Button onClick={() => {}}>Save</Button>
+        </div>
+    </>
+
+    let changePassFrag = <>
+        <div className='edit-input' ><FiUnlock /> <Input placeholder='Old Password' defaultVal='' maxLength={4096} /></div>
+        <span>Enter New Password</span>
+        <div className='edit-input' ><FiLock /> <Input placeholder='Password' defaultVal='' maxLength={4096} /></div>
+        <div className='edit-input' ><FiLock /> <Input placeholder='Confirm Password' defaultVal='' maxLength={4096} /></div>
+
+        <div className='actions'>
+            <Button onClick={() => {setInfo('info')}}>Back</Button>
+            <Button onClick={() => {}}>Save</Button>
+        </div>
+    </>
 
     return (
         <div className='account'>
             <div className='profile'>
                 <div className='pp' style={user.picture ? { '--bg-img': 'url(' + user.picture + ')' } : {}} ></div>
                 <div className='info'>
-                    <span> <FiHexagon /> {user.nickname} </span>
-                    <span> <FiUser /> {user.username} </span>
-                    <span> <FiAtSign /> {user.email} </span>
-                    <span> <FiStar /> {projects.length} </span>
-
-                    <div className='actions'>
-                        <Button onClick={() => {}}>Edit</Button>
-                        <Button onClick={() => {}}>Change Password</Button>
-                        <Button color='#F00' bgColor='#E20338' onClick={() => go('/api/account/logout/')}>Logout</Button>
-                    </div>
+                {info === 'info' && infoFrag}
+                {info === 'edit' && editFrag}
+                {info === 'changepass' && changePassFrag}
                 </div>
             </div>
-            {!auth.sprojectsError && 
-            <div className='started-projects'>
-                <span className='title'>Stared Projects</span>
-                {auth.sprojectsLoading ? 
-                <div className='loading-box-sprojects'>
-                    <PacmanLoader color='#FFF' loading={auth.sprojectsLoading} css={LoaderCss} />
-                </div>:
-                <Projects projects={projects} Rstar={removeStar} history={history} />}
-            </div>}
+            <Sprojects />
         </div>
     )
 }
