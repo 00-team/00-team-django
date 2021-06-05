@@ -105,7 +105,7 @@ def google_callback(r):
     except User.DoesNotExist:
         while True:
             try:
-                user = User.objects.create_user(username=get_random_string(length=40), email=email)
+                user = User.objects.create_user(username=get_random_string(length=20), email=email)
                 break
             except IntegrityError:
                 continue                
