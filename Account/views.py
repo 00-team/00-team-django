@@ -191,28 +191,29 @@ def account(r):
 
 @login_required
 def stared_projects(r):
-    user = r.user
-    sp = []
+    def gt(p):
+        pdv = DocumentVideos.objects.filter(project=p).last()
+        pdi = DocumentImages.objects.filter(project=p).last()
 
-    for s in Star.objects.filter(user=user):
-        p = {
+        if pdv:
+            return pdv.thumbnail.url
+        elif pdi:
+            return pdi.image.url
+        
+        return None
+
+
+    sp = list(map(
+        lambda s : {
             'id': s.project.id,
             'name': s.project.name,
             'slug': s.project.slug,
-            'thumbnail': None,
+            'thumbnail': gt(s.project),
             'lang': s.project.language,
             'wspace': s.project.workspace,
-        }
-
-        pdv = DocumentVideos.objects.filter(project=s.project).last()
-        pdi = DocumentImages.objects.filter(project=s.project).last()
-
-        if pdv:
-            p['thumbnail'] = pdv.thumbnail.url
-        elif pdi:
-            p['thumbnail'] = pdi.image.url
-
-        sp.append(p)
+        },
+        Star.objects.filter(user=r.user)
+    ))
 
     return JsonResponse({'stared_projects': sp})
 
