@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAlert } from 'react-alert'
 import { useSelector, useDispatch } from 'react-redux'
@@ -9,17 +9,19 @@ const Header = () => {
     const alert = useAlert();
     const dispatch = useDispatch();
     const account = useSelector((state) => state.account);
+    const [accountLink, setLink] = useState(null);
 
     useEffect(() => {
         dispatch(getUser());
     }, [dispatch]);
 
+    useEffect(() => {
+        if (account.anonymous) setLink(<Link to='/login'>Login</Link>);
+        else if (account.user) setLink(<Link to='/account'>Account</Link>);
+        else if (account.loading) setLink(<Link to='#'>Loading</Link>);
+        else if (account.error) alert.error(account.error);
+    }, [account]);
 
-    let linkTag = <Link to='/login'>Login</Link>
-
-    if (account.userLoading) linkTag = <Link to='#'>Loading</Link>
-    else if (account.error) alert.error(account.error)
-    else if (account.user) linkTag = <Link to='/account'>Account</Link>
 
     return (
         <div className='base-menu'>
@@ -47,7 +49,7 @@ const Header = () => {
                     </li>
 
                     <li className="link">
-                        {linkTag}
+                        {accountLink}
                     </li>
                 </ul>
             </div>
