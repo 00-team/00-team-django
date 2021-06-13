@@ -161,9 +161,9 @@ def login(r):
         GetOrMakeUA(user)
         system_login(r, user)
             
-        return JsonResponse({'success': 'successfully logined'})
+        return JsonResponse({'status': 'success'})
     else:
-        return JsonResponse({'error': 'Username and password not match'})
+        return JsonResponse({'error': 'Username and password not match', 'status':'error'}, status=405)
     
 
 @login_required

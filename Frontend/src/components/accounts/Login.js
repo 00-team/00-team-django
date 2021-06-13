@@ -1,56 +1,54 @@
 import React, { useEffect, useState } from 'react'
+
+// components
 import { Input, Button } from '../common/Elements'
+
+// icons
 import { FcGoogle } from 'react-icons/fc'
+
+// alerts
 import { useAlert } from 'react-alert'
 
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import { login as loginRequest } from '../../actions/login';
+
+import PacmanLoader from "react-spinners/PacmanLoader";
+import { css } from "@emotion/react";
+
+// style (sass)
 import './sass/login.scss'
 
-var csrfToken = document.currentScript.getAttribute('csrfToken');
+// var csrfToken = document.currentScript.getAttribute('csrfToken');
 
 const go = (path) => window.location.replace(path);
 
 const Login = () => {
+    const dispatch = useDispatch();
+    const alert = useAlert();
+
+    const logingState = useSelector((state) => state.login);
+    const alerts = useSelector((state) => state.alerts);
+
     const [forgotForm, setForgotForm] = useState(false);
     const [registerForm, setRegisterForm] = useState(false);
     const [error, setError] = useState(null);
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const alert = useAlert();
+
+    useEffect(() => {
+        if (alerts.info) {alert.info(alerts.info); dispatch({ type: 'INFO_ALERT', payload: null });}
+        if (alerts.error) {alert.error(alerts.error); setError(true); dispatch({ type: 'ERROR_ALERT', payload: null });}
+        if (alerts.success) {alert.success(alerts.success); dispatch({ type: 'SUCCESS_ALERT', payload: null });}
+    }, [alerts])
+
 
     useEffect(() => {
         if (localStorage.username) setUsername(localStorage.username)
         if (localStorage.password) setPassword(localStorage.password)
     }, [])
 
-    const sendLogin = () => {
-        fetch('/api/account/login/', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify({
-                'username': username,
-                'password': password
-            })
-        }).then(r => r.json()).then(
-            (r) => {
-                if (r.success) {
-                    localStorage.username = username;
-                    localStorage.password = password;
-                    go('/account');
-                } else if (r.error) {
-                    setError({msg: r.error})
-                    alert.error(r.error)
-                }
-            }, 
-            (error) => {
-                alert.error(error)
-            }
-        )
-    
-    }
 
     const clean = () => {
         document.querySelectorAll("input").forEach(i => {
@@ -90,7 +88,7 @@ const Login = () => {
 
         <div className='btn'>
             <Button onClick={() => {clean(); setRegisterForm(true)}}>Register</Button>
-            <Button onClick={() => {sendLogin()}}>Login</Button>
+            <Button onClick={() => {dispatch(loginRequest(username, password))}}>Login</Button>
         </div>
 
         {social}
@@ -116,12 +114,26 @@ const Login = () => {
         {social}
     </div>
 
+    let loadingFrag = <div className="form">
+        <div className="loading-box">
+            <PacmanLoader color='#FFF' loading={logingState.loading} css={css`width:auto;height:auto;margin-left: -90px;`} />
+        </div>
+    </div>
+
 
     return (
         <div className='login-page'>
             <div className='login-form'>
                 <div className='cool-img'></div>
-                {forgotForm ? forgot : (registerForm ? register : login)}
+                {logingState.loading ? 
+                    loadingFrag : (
+                        forgotForm ? 
+                            forgot : (
+                                registerForm ? 
+                                    register : login
+                            )
+                    )
+                }
             </div>
         </div>
     )
