@@ -1,0 +1,77 @@
+@import '../../sass/variables.sass';
+
+.account .started-projects {
+    margin-top: 150px;
+    width: 100%;
+    padding: 20px;
+    position: relative;
+    user-select: none;
+
+    .title {
+        position: absolute;
+        top: -20px;
+        left: 0;
+        color: #FFF;
+        font-size: 25px;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .reason {
+        color: #FFF;
+        font-size: 20px;
+        text-align: left;
+        display: block;
+        margin-left: 50px;
+        margin-top: 20px;
+    }
+
+    .project {
+        display: inline-block;
+        width: 400px;
+        margin: 10px;
+
+        .thumbnail {
+            width: 400px;
+            height: 225px;
+            border: 1px solid yellow;
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+            cursor: url($BASE-URL + '/s/img/trash.svg'), auto;
+            background-image: var(--ps-bg-img);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex;
+            overflow: hidden;
+
+            span {
+                color: #FFF;
+                background-color: #000C;
+                border-bottom-right-radius: 7px;
+                padding: 10px;
+                text-transform: capitalize;
+                font-size: 18px;
+                overflow: hidden;
+                height: 42px;
+                transition: color 200ms ease-in;
+                cursor: pointer;
+                font-family: 'Roboto', sans-serif;
+
+                &:hover {
+                    color: #58a6ff;
+                }
+            }
+        }
+
+        .lw {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+
+            span {
+                color: #FFF;
+                font-size: 16px;
+            }
+        }
+    }
+}

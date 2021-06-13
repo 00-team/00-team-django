@@ -25,6 +25,11 @@ import { css } from "@emotion/react";
 import { Button, Input } from '../common/Elements'
 import Sprojects from './Sprojects'
 
+
+// sass
+import './sass/account.scss'
+
+
 const go = path => window.location.replace(path);
 
 const Account = () => {
@@ -73,7 +78,7 @@ const Account = () => {
         <div className='actions'>
             <Button onClick={() => {setInfo('edit')}}>Edit</Button>
             <Button onClick={() => {setInfo('changepass')}}>Change Password</Button>
-            <Button color='#F00' bgColor='#E20338' onClick={() => go('/api/account/logout/')}>Logout</Button>
+            <Button className='danger' onClick={() => go('/api/account/logout/')}>Logout</Button>
         </div>
     </>
 

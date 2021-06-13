@@ -1,0 +1,99 @@
+.header-home {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.conects {
+    position: relative;
+    color: #FFF;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    min-height: 50vh;
+    margin-top: 100px;
+
+    .about {
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin-bottom: 300px;
+
+        h2 {
+            font-size: 40px;
+            margin-left: 10vw;
+            text-align: left;
+            font-family: 'Graduate', sans-serif;
+        }
+
+        p {
+            text-align: left;
+            padding: 20px;
+            max-width: 70%;
+            font-size: 18px;
+            margin-left: 7vw;
+        }
+    }
+
+    .projects {
+        margin-bottom: 200px;
+
+        h2 {
+            font-size: 40px;
+            margin-left: 10vw;
+            text-align: left;
+            font-family: 'Graduate', sans-serif;
+        }
+
+        .last-project {
+            h3 {
+                font-family: 'Graduate', sans-serif;
+                font-size: 25px;
+            }
+
+            .video {
+                width: 60%;
+                overflow: hidden;
+                border-radius: 10px;    
+                --plyr-color-main: #782FEF;
+                margin: 30px auto;
+
+                @media (max-width:900px) {
+                    width: 95%;
+                }
+            }
+
+            p {
+                padding: 20px;
+                max-width: 70%;
+                font-size: 18px;
+                margin: 0 auto 100px;
+            }
+
+            a {
+                color: #58a6ff;
+                font-family: 'Roboto', sans-serif;
+                font-size: 20px;
+                text-decoration: none;
+                transition: all 500ms;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        .no-project {
+            padding: 20px;
+            font-size: 18px;
+            margin-left: 15vw;
+            text-align: left;
+        }
+    }
+}

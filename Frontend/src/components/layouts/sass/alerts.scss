@@ -1,0 +1,44 @@
+.custom-alert-box {
+    --alert-color: #FFF;
+
+    pointer-events: all;
+    cursor: pointer;
+    width: 300px;
+    background-color: #050505;
+    border-left: 2px solid;
+    border-right: 2px solid;
+    border-color: var(--alert-color);
+    border-radius: 5px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    padding: 5px 5px 10px 5px;
+
+    .title {
+        display: flex;
+        align-items: center;
+        position: relative;
+        justify-content: space-between;
+        padding: 2px;
+
+        svg {
+            width: 25px;
+            height: 25px;
+        }
+
+        span {
+            font-size: 22px;
+            text-transform: capitalize;
+            color: #FFF;
+            font-family: monospace;
+        }
+    }
+
+    .des span {
+        color: #FFF;
+        font-size: 18px;
+        font-family: 'Roboto', sans-serif;
+        word-wrap: break-word;
+    }
+}

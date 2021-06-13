@@ -8,7 +8,7 @@ import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux
 import Header from './components/layouts/Header'
 import Home from './components/Home'
 import Account from './components/accounts/Account'
-import Error from './components/common/Error'
+import Error from './components/layouts/Error'
 import Login from './components/accounts/Login'
 import Alert from './components/layouts/Alert'
 
@@ -16,6 +16,7 @@ import Alert from './components/layouts/Alert'
 import store from './store';
 import { getUser } from './actions/account';
 
+import './components/sass/base.scss';
 
 const alertOptions = {
     position: 'top right',

@@ -14,6 +14,8 @@ import { css } from "@emotion/react";
 // router
 import { useHistory } from 'react-router-dom'
 
+import './sass/stared-projects.scss';
+
 const Sprojects = () => {
     const dispatch = useDispatch();
     const sprojects = useSelector((state) => state.sprojects);

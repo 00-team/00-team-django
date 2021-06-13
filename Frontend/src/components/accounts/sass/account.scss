@@ -1,0 +1,70 @@
+.account {
+    --bg-img: url('https://cdn.discordapp.com/attachments/731174051170746500/836494236941680650/cock.png');
+    padding: 50px;
+
+    .profile {
+        width: 1000px;
+        height: 300px;
+        display: flex;
+
+        .pp {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #FFF;
+            border-radius: 20px;
+            background-image: var(--bg-img);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .info {
+            width: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: baseline;
+            padding: 10px;
+            position: relative;
+
+
+            .actions {
+                position: absolute;
+                bottom: 10px;
+                display: flex;
+                justify-content: space-around;
+
+                button {
+                    margin: 0 5px 0 0;
+                }
+            }
+        }
+
+        span {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #FFF;
+            font-family: 'Roboto', sans-serif;
+
+            svg {
+                margin-right: 5px;
+            }
+        }
+
+        .edit-input {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #FFF;
+            font-family: 'Roboto', sans-serif;
+
+            svg {
+                margin-right: 10px;
+                width: 25px;
+                height: 25px;
+            }
+        }
+    }
+}

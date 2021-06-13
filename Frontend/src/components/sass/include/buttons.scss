@@ -1,0 +1,91 @@
+$dark-color: #58a6ff;
+$dark-bg: #0d419d;
+
+$light-color: #000;
+$light-bg: #FFF;
+
+$danger-color: #F00;
+$danger-bg: #E20338;
+
+button {
+    cursor: pointer;
+    outline: none;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    transition: .2s cubic-bezier(.3,0,.5,1);
+    transition-property: color, border-color;
+    padding: 5px 16px;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    appearance: none;
+    text-decoration: none;
+    text-align: center;
+
+    &:hover {
+        box-shadow: 0 1px 0 rgba(1,4,9,0.1), inset 0 1px 0 rgba(240,246,252,0.03);
+    }
+
+    &:active {
+        border-color: rgb(240 246 252 / 10%);
+        box-shadow: 0 0 transparent;
+    }
+}
+
+button.light {
+    background-color: $light-bg;
+    color: $light-color;
+
+    &:hover {
+        border-color: $light-color;    
+    }
+
+    &:active {
+        color: $light-bg;
+        background-color: $light-color;
+    }
+}
+
+button.dark {
+    background-color: transparent;
+    color: $dark-color;
+
+    &:hover {
+        border-color: $dark-color;    
+    }
+
+    &:active {
+        color: #f0f6fc;
+        background-color: $dark-bg;
+    }
+}
+
+button.danger {
+    color: $danger-color;
+
+    &:hover {
+        border-color: $danger-color;
+    }
+
+    &:active {
+        color: #f0f6fc;
+        background-color: $danger-bg;
+    }
+}
+
+
+button.google {
+    color: #FFF;
+
+    &:hover {
+        border-color: #FFF;
+    }
+
+    &:active {
+        background-color: #FFF;
+    }
+}

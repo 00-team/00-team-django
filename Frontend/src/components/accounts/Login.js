@@ -3,6 +3,8 @@ import { Input, Button } from '../common/Elements'
 import { FcGoogle } from 'react-icons/fc'
 import { useAlert } from 'react-alert'
 
+import './sass/login.scss'
+
 var csrfToken = document.currentScript.getAttribute('csrfToken');
 
 const go = (path) => window.location.replace(path);
@@ -38,9 +40,9 @@ const Login = () => {
                     localStorage.username = username;
                     localStorage.password = password;
                     go('/account');
-                } else if (r.Error) {
-                    setError({msg: r.Error})
-                    alert.error(r.Error)
+                } else if (r.error) {
+                    setError({msg: r.error})
+                    alert.error(r.error)
                 }
             }, 
             (error) => {
@@ -62,8 +64,8 @@ const Login = () => {
 
     let social = 
     <div className='social'>
-        <div className='hr2' style={{ '--w': '100%', '--bg': '#FFF', margin: '10px 0' }}>or</div>
-        <Button color='#FFF' bgColor='#FFF' onClick={() => {go('/api/account/login/google/?next=/account')}}> <FcGoogle /> </Button>
+        <div className='custom-hr'>or</div>
+        <Button className='google' onClick={() => {go('/api/account/login/google/?next=/account')}}> <FcGoogle /> </Button>
     </div>
 
     let forgot = 

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import './sass/errors.scss'
+
 const Error = ({ code, title, description }) => {
     return (
         <div className="error-stuffs">

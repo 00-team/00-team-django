@@ -4,12 +4,14 @@ import { useAlert } from 'react-alert'
 import { useSelector, useDispatch } from 'react-redux'
 import { getUser } from '../../actions/account'
 
+import './sass/header.scss'
 
 const Header = () => {
     const alert = useAlert();
     const dispatch = useDispatch();
     const account = useSelector((state) => state.account);
     const [accountLink, setLink] = useState(null);
+    const [active, setActive] = useState(false);
 
     useEffect(() => {
         dispatch(getUser());
@@ -24,8 +26,8 @@ const Header = () => {
 
 
     return (
-        <div className='base-menu'>
-            <div className="btn-bar">
+        <div className={active ? 'active header' : 'header'}>
+            <div className="btn-bar" onClick={() => setActive(!active)}>
                 <span></span>
             </div>
             <div className="menu-bar">
