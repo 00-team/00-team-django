@@ -16,11 +16,11 @@ Button.defaultProps = {
 
 
 
-export const Input = ({ type, onChange, placeholder, badInput, defaultVal, maxLength }) => {
+export const Input = ({ type, onChange, placeholder, error, autoComp, maxLength }) => {
     return (
-        <input type={type} className={badInput ? 'error dark' : 'dark'} onChange={onChange} 
-               placeholder={placeholder} defaultValue={defaultVal} 
-               maxLength={maxLength} autoComplete={defaultVal} />
+        <input type={type} className={error ? 'error dark' : 'dark'} onChange={onChange} 
+               placeholder={placeholder}  
+               maxLength={maxLength} autoComplete={autoComp} />
     )
 }
 
