@@ -25,8 +25,7 @@ import { css } from "@emotion/react";
 import { Button, Input } from '../common/Elements'
 import Sprojects from './Sprojects'
 
-
-const go = (path) => window.location.replace(path);
+const go = path => window.location.replace(path);
 
 const Account = () => {
     const dispatch = useDispatch();
@@ -64,12 +63,6 @@ const Account = () => {
     }, [acc]);
 
     if (acc.anonymous) return <Redirect to='/login' />
-
-    if (user.picture) {
-        if (user.picture.slice(-5) === 's96-c') {
-            user.picture = user.picture.slice(0,-5) + 's500-c'
-        }
-    }
 
     let infoFrag = <>
         <span> <FiHexagon /> {user.nickname || 'No Name'} </span>
@@ -143,9 +136,9 @@ const Account = () => {
             <div className='profile'>
                 <div className='pp' style={user.picture ? { '--bg-img': 'url(' + user.picture + ')' } : {}} ></div>
                 <div className='info'>
-                {info === 'info' && infoFrag}
-                {info === 'edit' && editFrag}
-                {info === 'changepass' && changePassFrag}
+                    {info === 'info' && infoFrag}
+                    {info === 'edit' && editFrag}
+                    {info === 'changepass' && changePassFrag}
                 </div>
             </div>}
             <Sprojects />

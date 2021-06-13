@@ -196,12 +196,10 @@ def modify_star(r):
 
 @receiver(pre_delete, sender=DocumentImages)
 def delete_images(sender, instance, **kwargs):
-    print(instance.id)
     instance.image.storage.delete(instance.image.name)
 
 
 @receiver(pre_delete, sender=DocumentVideos)
 def delete_videos(sender, instance, **kwargs):
-    print(instance.id)
     instance.video.storage.delete(instance.video.name)
     instance.thumbnail.storage.delete(instance.thumbnail.name)
