@@ -3,7 +3,9 @@ import requests, json, string
 from django.contrib.auth import login as system_login, logout as system_logout, authenticate
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.db.models.signals import pre_delete
 from django.db import IntegrityError
+from django.dispatch import receiver
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_exempt
@@ -20,7 +22,9 @@ def GetOrMakeUA(user: User) -> UserAccount:
     try:
         return UserAccount.objects.get(user=user)
     except UserAccount.DoesNotExist:
-        return UserAccount(user=user).save()
+        ua = UserAccount(user=user)
+        ua.save()
+        return ua
 
 
 def BodyLoader(body):
@@ -114,19 +118,12 @@ def google_callback(r):
                 user = User.objects.create_user(username=get_random_string(length=20), email=email)
                 break
             except IntegrityError:
-                continue                
-        
-    try:
-        ua = UserAccount.objects.get(user=user)
-        if not ua.picture:
-            ua.picture = picture
-        if not ua.nickname:
-            ua.nickname = name
-
-        ua.save()
-    except UserAccount.DoesNotExist:
-        ua = UserAccount(user=user, picture=picture, nickname=name)
-        ua.save()
+                continue
+    
+    ua = GetOrMakeUA(user)
+    ua.nickname = name
+    ua.get_picture(picture)
+    ua.save()
     
     system_login(r, user)
 
@@ -178,7 +175,7 @@ def account(r):
         'username': user.username,
         'nickname': ua.nickname or 'No Name',
         'email': user.email,
-        'picture': ua.picture,
+        'picture': ua.picture.url if ua.picture else None, # js: ua.picture ? ua.picture.url : null
         'token': ua.token,
     }
     
@@ -250,3 +247,8 @@ def change_info(r):
 
 def change_password(r):
     return JsonResponse({'1c':1})
+
+
+@receiver(pre_delete, sender=UserAccount)
+def delete_images(sender, instance, **kwargs):
+    instance.picture.storage.delete(instance.picture.name)
