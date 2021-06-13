@@ -1,6 +1,5 @@
 import {
     SPROJECTS_LOADED,
-    SPROJECTS_ERROR,
     SPROJECTS_LOADING,
 
     ADD_SPROJECTS,
@@ -10,7 +9,6 @@ import {
 
 const initialState = {
     sprojects: [],
-    error: null,
     loading: false,
 };
 
@@ -19,32 +17,25 @@ export default (state = initialState, action) => {
         case SPROJECTS_LOADING:
             return {
                 ...state,
-                loading: action.payload,
+                loading: true,
             }
         case SPROJECTS_LOADED:
             return {
                 ...state,
                 sprojects: action.payload,
-                error: null
-            }
-        case SPROJECTS_ERROR:
-            return {
-                ...state,
-                error: action.payload
+                loading: false,
             }
         case ADD_SPROJECTS:
-            if (action.payload) {
-                return {
-                    ...state,
-                    sprojects: [...state.sprojects, action.payload],
-                    error: null,
-                }
+            return {
+                ...state,
+                sprojects: [...state.sprojects, action.payload],
+                loading: false,
             }
         case REMOVE_SPROJECTS:
             return {
                 ...state,
                 sprojects: state.sprojects.filter((p) => p.id !== action.payload),
-                error: null,
+                loading: false,
             }
         default:
             return state
