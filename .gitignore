@@ -159,7 +159,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-main.js
-main.js.map
-
 package-lock.json
