@@ -1,38 +1,70 @@
 import axios from 'axios';
 import {
     ANONYMOUS_USER,
-    AUTH_ERROR,
     USER_LOADED,
     USER_LOADING,
+
+    SUCCESS_ALERT,
+    ERROR_ALERT,
 } from './types';
 
+// var csrfToken = document.currentScript.getAttribute('csrfToken');
+
+const config = {
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.currentScript.getAttribute('csrfToken') || ''
+    },
+};
 
 export const getUser = () => (dispatch) => {
     dispatch({ type: USER_LOADING });
 
     axios.get('/api/account/')
-    .then(
-        (res) => {
-            if (res.status === 203) {
-                dispatch({ type: ANONYMOUS_USER });
-            } else if (res.status === 200 && res.data.user) {
-                dispatch({
-                    type: USER_LOADED,
-                    payload: res.data.user,
-                });
-            } else {
-                dispatch({
-                    type: AUTH_ERROR,
-                    payload: res.data.error || 'Error get user informations'
-                });
-            }
-        }
-    ).catch(
-        (error) => {
-            dispatch({
-                type: AUTH_ERROR,
-                payload: error || 'Error get user informations'
-            });
-        }
-    )
+    .then(res => {
+        if (res.status === 203) dispatch({ type: ANONYMOUS_USER });
+        if (res.status === 200 && res.data.user) dispatch({ 
+            type: USER_LOADED,
+            payload: res.data.user,
+        });
+    })
+    .catch(error => {
+        let msg = 'Error get user informations'
+
+        if (error.response) msg = error.response.data.error;
+        else if (error.message) msg = error.message;
+
+        dispatch({
+            type: ERROR_ALERT,
+            payload: msg
+        })
+    })
+}
+
+
+export const changeInfo = (username, nickname) => (dispatch) => {
+    dispatch({ type: USER_LOADING });
+
+    axios.post('/api/account/change_info/', {
+        username: username,
+        nickname: nickname,
+    }, config)
+    .then(res => {
+        dispatch({
+            type: SUCCESS_ALERT,
+            payload: res.data.success
+        })
+        dispatch(getUser());
+    })
+    .catch(error => {
+        let msg = 'Error to change your info'
+
+        if (error.response) msg = error.response.data.error;
+        else if (error.message) msg = error.message;
+
+        dispatch({
+            type: ERROR_ALERT,
+            payload: msg
+        })
+    })
 }

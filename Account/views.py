@@ -1,4 +1,4 @@
-import requests, json, time
+import requests, json, string
 
 from django.contrib.auth import login as system_login, logout as system_logout, authenticate
 from django.contrib.auth.models import User
@@ -15,6 +15,12 @@ from Projects.models import Project, Star, DocumentImages, DocumentVideos
 from .decorators import login_required
 
 GOOGLE = settings.GOOGLE
+
+def GetOrMakeUA(user: User) -> UserAccount:
+    try:
+        return UserAccount.objects.get(user=user)
+    except UserAccount.DoesNotExist:
+        return UserAccount(user=user).save()
 
 
 def BodyLoader(body):
@@ -155,10 +161,7 @@ def login(r):
     user = authenticate(username=username, password=password)
 
     if user:
-        if not UserAccount.objects.filter(user=user).exists():
-            ua = UserAccount(user=user)
-            ua.save()
-        
+        GetOrMakeUA(user)
         system_login(r, user)
             
         return JsonResponse({'success': 'successfully logined'})
@@ -169,13 +172,7 @@ def login(r):
 @login_required
 def account(r):
     user = r.user
-
-    try:
-        ua = UserAccount.objects.get(user=user)
-    except UserAccount.DoesNotExist:
-        ua = UserAccount(user=user)
-        ua.save()
-
+    ua = GetOrMakeUA(user)
 
     user_data = {
         'username': user.username,
@@ -183,7 +180,6 @@ def account(r):
         'email': user.email,
         'picture': ua.picture,
         'token': ua.token,
-        'stared_projects': [],
     }
     
     return JsonResponse({'user': user_data})
@@ -219,13 +215,37 @@ def stared_projects(r):
 
 
 @require_POST
+@login_required
 def change_info(r):
     user = r.user
-    data = BodyLoader(r.body)
-    if not data:
-        return JsonResponse({'error': 'Body is empty'}, status=400)
+    data = {}
+
+    if r.POST:
+        data = r.POST
+    elif r.body:
+        data = BodyLoader(r.body)
+
+    username = str(data.get('username'))[:100]
+    nickname = str(data.get('nickname'))[:50]
     
-    return JsonResponse({'username': user.username})
+    ua = GetOrMakeUA(user)
+
+    if nickname:
+        ua.nickname = nickname
+        ua.save()
+
+    if len(username) > 4:
+        for x in username:
+            if x not in (string.ascii_letters + string.digits + '_'):
+                return JsonResponse({'error': 'username is not valid'}, status=400)
+        
+        try:
+            user.username = username
+            user.save()
+        except IntegrityError:
+            return JsonResponse({'error': 'this username is exists'}, status=400)
+
+    return JsonResponse({'success': 'Your Info Changed Successfully', 'username': user.username, 'nickname': ua.nickname})
 
 
 def change_password(r):
