@@ -18,3 +18,5 @@ export const SUCCESS_ALERT = 'SUCCESS_ALERT';
 
 // login
 export const LOGIN_LOADING = 'LOGIN_LOADING';
+export const NEED_CODE = 'NEED_CODE';
+export const SUCCESS_VERIFY = 'SUCCESS_VERIFY';

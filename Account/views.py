@@ -3,6 +3,9 @@ import requests, json, string
 from django.contrib.auth import login as system_login, logout as system_logout, authenticate
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.core.validators import EmailValidator
 from django.db.models.signals import pre_delete
 from django.db import IntegrityError
 from django.dispatch import receiver
@@ -11,12 +14,35 @@ from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
-from Account.models import UserAccount
+
+from Account.models import UserAccount, UserTemp
 from Projects.models import Project, Star, DocumentImages, DocumentVideos
 
 from .decorators import login_required
 
 GOOGLE = settings.GOOGLE
+
+CheckTmeps = lambda: map(lambda ut: ut.check_time(), UserTemp.objects.all())
+
+def ValidPassword(password) -> str:
+    if password:
+        if type(password) == str:
+            if len(password) > 7:
+                if len(password) < 4096:
+                    return password
+    
+    return None
+
+def ValidUsername(username) -> str:
+    if username:
+        if type(username) == str:
+            if len(username) > 4:
+                if len(username) < 150:
+                    for c in username:
+                        if c not in (string.ascii_letters + string.digits + '_'):
+                            return None
+                    return username
+    return None
 
 def GetOrMakeUA(user: User) -> UserAccount:
     try:
@@ -166,6 +192,99 @@ def login(r):
         return JsonResponse({'error': 'Username and password not match', 'status':'error'}, status=405)
     
 
+@require_POST
+def register(r):
+    CheckTmeps()
+
+    if r.user.is_authenticated:
+        system_logout(r)
+    
+    data = {}
+    
+    if r.POST:
+        data = r.POST
+    elif r.body:
+        data = BodyLoader(r.body)
+    
+
+    email = data.get('email')
+    username = ValidUsername(data.get('username'))
+    password = ValidPassword(data.get('password'))
+
+    if not password:
+        return JsonResponse({'error': 'your password is not valid'}, status=403)
+    
+    if not username:
+        return JsonResponse({'error': 'your username is not valid'}, status=403)
+
+
+    try:
+        validator = EmailValidator(allowlist=['gmail'])
+        validator(email)
+    except ValidationError:
+        return JsonResponse({'error':'your emal addr is not valid'}, status=403)
+    
+
+    
+    if User.objects.filter(username=username).exists():
+        return JsonResponse({'error': 'this username is exists'}, status=403)
+    
+
+    ut = UserTemp(
+        username=username,
+        password=password,
+        email=email
+    )
+
+    ut.save()
+
+    send_mail(
+        subject='sub',
+        message=f'msg code: {ut.code}',
+        html_message=f'msg <p>{ut.code}</p>',
+        from_email=None,
+        recipient_list=[email],
+        fail_silently=True,
+    )
+
+    return JsonResponse({'success': 'we sand a email for you. pls read and verify your account'})
+
+
+
+@require_POST
+def verify_code(r):
+    CheckTmeps()
+
+    if r.user.is_authenticated:
+        system_logout(r)
+    
+    data = {}
+    
+    if r.POST:
+        data = r.POST
+    elif r.body:
+        data = BodyLoader(r.body)
+    
+
+    email = data.get('email')
+    code = data.get('code')
+
+    try:
+        ut = UserTemp.objects.get(email=email, code=code)
+    except UserTemp.DoesNotExist:
+        return JsonResponse({'error':'your data is not valid'}, status=403)
+    
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        user = User.objects.create_user(ut.username, ut.email, ut.password)
+    
+    system_login(r, user)
+    ut.delete()
+
+    return JsonResponse({'success':'Successfully logined'})
+
+
 @login_required
 def account(r):
     user = r.user
@@ -245,10 +364,38 @@ def change_info(r):
     return JsonResponse({'success': 'Your Info Changed Successfully', 'username': user.username, 'nickname': ua.nickname})
 
 
+@require_POST
+@login_required
 def change_password(r):
-    return JsonResponse({'1c':1})
+    user = r.user
+    data = {}
+
+    if r.POST:
+        data = r.POST
+    elif r.body:
+        data = BodyLoader(r.body)
+    
+    password = data.get('password')
+
+    if type(password) != str:
+        return JsonResponse({'error':'Send a valid password'}, status=406)
+    
+    if len(password) > 4096:
+        return JsonResponse({'error':'your password is too long'}, status=406)
+    
+    if len(password) < 8:
+        return JsonResponse({'error':'your password is too short'}, status=406)
+    
+    try:
+        user.set_password(password)
+        user.save()
+    except Exception:
+        return JsonResponse({'error':'we cant save this password for you'}, status=400)
+
+    return JsonResponse({'success': 'your password successfully changed'})
 
 
 @receiver(pre_delete, sender=UserAccount)
 def delete_images(sender, instance, **kwargs):
-    instance.picture.storage.delete(instance.picture.name)
+    if instance.picture:
+        instance.picture.storage.delete(instance.picture.name)

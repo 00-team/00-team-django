@@ -1,4 +1,4 @@
-import string, requests
+import string, requests, time
 
 from django.db import models
 from django.db import IntegrityError
@@ -47,3 +47,36 @@ class UserAccount(models.Model):
 
     def __str__(self):
         return self.nickname or str(self.user)
+
+
+class UserTemp(models.Model):
+    username = models.CharField(max_length=150)
+    password = models.TextField(max_length=4096, null=True, blank=True,)
+    email = models.EmailField()
+    code = models.CharField(max_length=10, null=True, blank=True, unique=True)
+    delete_time = models.BigIntegerField(null=True, blank=True)
+
+    def gen_code(self):
+        try:
+            self.code = get_random_string(10, string.ascii_letters + string.digits)
+            self.save()
+        except IntegrityError:
+            self.gen_code()
+
+    def check_time(self):
+        if self.delete_time:
+            if self.delete_time < int(time.time()):
+                self.delete()
+
+    def save(self, *args, **kwargs):
+        if not self.delete_time:
+            self.delete_time = int(time.time()) + (3 * 60) # 3 min
+        
+        if not self.code:
+            self.gen_code()
+
+        super(UserTemp, self).save(*args, **kwargs) # Call the real save() method
+
+    def __str__(self):
+        return self.username or str(self.id)
+    
