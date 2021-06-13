@@ -568,7 +568,7 @@ button.dark:active {
     /* border: 1px solid #FFF; */
     border-radius: 20px;
     background-image: var(--bg-img);
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
 }
