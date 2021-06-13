@@ -1,14 +1,10 @@
 // react stuffs
-import React, { useEffect, useState } from 'react'
-
-// alerts
-import { useAlert } from 'react-alert'
+import React, { useEffect } from 'react'
 
 // redux
 import { useSelector, useDispatch } from 'react-redux'
 
 // actions
-// import { removeSproject, loadSprojects } from '../../actions/account'
 import { loadSprojects, toggleSproject } from '../../actions/sprojects'
 
 // loading
@@ -21,31 +17,22 @@ import { useHistory } from 'react-router-dom'
 const Sprojects = () => {
     const dispatch = useDispatch();
     const sprojects = useSelector((state) => state.sprojects);
-    const [projects, setProjects] = useState([]);
     const history = useHistory();
-    const alert = useAlert();
-
-    const LoaderCss = css`width:auto;height:auto;`;
 
     useEffect(() => {
         dispatch(loadSprojects());
     }, [dispatch]);
 
-    useEffect(() => {
-        if (typeof sprojects.sprojects === 'object') setProjects(sprojects.sprojects);
-        if (sprojects.error) alert.error(sprojects.error);
-    }, [sprojects]);
-
 
     if (sprojects.loading) {
         return (
             <div className='loading-box-sprojects'>
-                <PacmanLoader color='#FFF' loading={sprojects.loading} css={LoaderCss} />
+                <PacmanLoader color='#FFF' loading={sprojects.loading} css={css`width:auto;height:auto;`} />
             </div>
         )
     }
 
-    let element = projects.map((p, i) =>
+    const projectFrag = sprojects.sprojects.map((p, i) =>
     <div key={i} className='project'>
         <div className='thumbnail' 
              style={p.thumbnail ? { '--ps-bg-img':'url(' + p.thumbnail + ')' } : {}} 
@@ -59,19 +46,13 @@ const Sprojects = () => {
         </div>
     </div>)
 
-    if (sprojects.error) {
-        element = <span className='reason'>We have some error, reload or report</span>
-    }
-
-    if (projects.length === 0) {
-        element = <span className='reason'>Nothing so far</span>
-    }
+    const nothingSP = <span className='reason'>Nothing so far</span>
 
 
     return (
         <div className='started-projects'>
             <span className='title'>Stared Projects</span>
-            {element}
+            {sprojects.sprojects.length === 0 ? nothingSP : projectFrag}
         </div>
     )
 }
