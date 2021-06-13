@@ -1079,7 +1079,7 @@ div.hr2::after {
 /* loading */
 .content .loading-box {
     width: 100%;
-    height: calc(100vh - 63px);
+    height: 300px;
     display: flex;
     justify-content: center;
     align-items: center;
