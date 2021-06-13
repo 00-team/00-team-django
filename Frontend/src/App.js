@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, useLocation, Redirect, useParams } from 'react-router-dom';
-import { transitions, Provider as AlertProvider } from 'react-alert'
+import { Provider as AlertProvider } from 'react-alert'
 import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux';
 
 // components
@@ -21,7 +21,11 @@ import './components/sass/base.scss';
 const alertOptions = {
     position: 'top right',
     timeout: 7000,
-    transition: transitions.FADE
+    transition: 'fade',
+    containerStyle: {
+        top: window.innerWidth < 1000 ? '10px' : '70px',
+        zIndex: '100',
+    }
 }
 
 const App = () => {
