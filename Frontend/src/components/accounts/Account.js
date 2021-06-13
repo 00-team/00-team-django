@@ -14,7 +14,7 @@ import { useAlert } from 'react-alert'
 import { useSelector, useDispatch } from 'react-redux'
 
 // actions
-import { getUser, changeInfo } from '../../actions/account'
+import { getUser, changeInfo, changePassword } from '../../actions/account'
 import { loadSprojects } from '../../actions/sprojects'
 
 // loading
@@ -44,7 +44,7 @@ const Account = () => {
     const [info, setInfo] = useState('loading');
     
     const [userInfo, setUserInfo] = useState({username: '', nickname: ''});
-    const [userPassword, setUserPassword] = useState({oldPass: '', newPass: '', confNewPass: ''});
+    const [userPassword, setUserPassword] = useState({newPass: '', confNewPass: ''});
 
     const LoaderCss = css`width:auto;height:auto;`;
 
@@ -104,12 +104,6 @@ const Account = () => {
     </>
 
     let changePassFrag = <>
-        <div className='edit-input' >
-            <FiUnlock />
-            <Input placeholder='Old Password' defaultVal={userPassword.oldPass} maxLength={4096} 
-                   onChange={e => setUserPassword({...userPassword, oldPass: e.target.value})} />
-        </div>
-
         <span>Enter New Password</span>
 
         <div className='edit-input' >
@@ -126,7 +120,17 @@ const Account = () => {
 
         <div className='actions'>
             <Button onClick={() => {setInfo('info')}}>Back</Button>
-            <Button onClick={() => {console.log(userPassword)}}>Save</Button>
+            <Button onClick={() => {
+                if (userPassword.newPass.length > 7) {
+                    if (userPassword.newPass === userPassword.confNewPass) {
+                        dispatch(changePassword(userPassword.newPass));
+                    } else {
+                        alert.error('Password and Confirm Password is not match');
+                    }
+                } else {
+                    alert.error('Your Password is too Short');
+                }
+            }}>Save</Button>
         </div>
     </>
 

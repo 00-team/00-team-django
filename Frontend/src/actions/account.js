@@ -8,8 +8,6 @@ import {
     ERROR_ALERT,
 } from './types';
 
-// var csrfToken = document.currentScript.getAttribute('csrfToken');
-
 const config = {
     headers: {
         'Content-Type': 'application/json',
@@ -58,6 +56,32 @@ export const changeInfo = (username, nickname) => (dispatch) => {
     })
     .catch(error => {
         let msg = 'Error to change your info'
+
+        if (error.response) msg = error.response.data.error;
+        else if (error.message) msg = error.message;
+
+        dispatch({
+            type: ERROR_ALERT,
+            payload: msg
+        })
+    })
+}
+
+
+export const changePassword = (password) => (dispatch) => {
+    dispatch({ type: USER_LOADING });
+
+    axios.post('/api/account/change_password/', {
+        password: password,
+    }, config)
+    .then(res => {
+        dispatch({
+            type: SUCCESS_ALERT,
+            payload: res.data.success
+        })
+    })
+    .catch(error => {
+        let msg = 'Error to change password'
 
         if (error.response) msg = error.response.data.error;
         else if (error.message) msg = error.message;
