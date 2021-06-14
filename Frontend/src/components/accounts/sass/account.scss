@@ -37,13 +37,19 @@
                     margin: 0 5px 0 0;
                 }
             }
+
+            .icon {
+                margin-right: 10px;
+                width: 25px;
+                height: 25px;
+            }
         }
 
         span {
             display: flex;
             align-items: center;
             margin-top: 20px;
-            font-size: 16px;
+            font-size: 20px;
             color: #FFF;
             font-family: 'Roboto', sans-serif;
 
@@ -59,12 +65,6 @@
             font-size: 16px;
             color: #FFF;
             font-family: 'Roboto', sans-serif;
-
-            svg {
-                margin-right: 10px;
-                width: 25px;
-                height: 25px;
-            }
         }
     }
 }

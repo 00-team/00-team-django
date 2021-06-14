@@ -29,6 +29,23 @@
 
         form {
             width: 55%;
+            position: relative;
+            overflow: hidden;
+
+            .back-icon {
+                color: #FFF;
+                position: absolute;
+                width: 40px;
+                height: 40px;
+                top: 5px;
+                right: -50px;
+                transition: right 500ms;
+                cursor: pointer;
+            }
+
+            .back-icon.show {
+                right: 5px;
+            }
         }
 
         @media (max-width: 1022px) {
@@ -59,12 +76,25 @@
                 }
             }
 
+            .password-input {
+                width: 100%;
+                color: #FFF;
+                margin-top: 10px;
+
+                input {
+                    width: calc(80% - 41px);
+                    margin-bottom: 0;
+                    margin-top: 0;
+                }
+            }
+
             span {
                 color: #FFF;
                 font-family: 'Roboto', sans-serif;
             }
 
             a {
+                margin-top: 20px;
                 color: #30363d;
                 font-size: 16px;
                 text-decoration: none;
