@@ -2,16 +2,21 @@ import axios from 'axios';
 import {
     ANONYMOUS_USER,
     USER_LOADED,
-    USER_LOADING,
+    USER_LOADING,    
+} from './types';
 
+import {
     SUCCESS_ALERT,
     ERROR_ALERT,
-} from './types';
+    INFO_ALERT,
+} from '../base/types'
+
+import Cookies from 'js-cookie';
 
 const config = {
     headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': document.currentScript.getAttribute('csrfToken') || ''
+        'X-CSRFToken': document.currentScript.getAttribute('csrfToken') || Cookies.get('csrftoken')
     },
 };
 
@@ -79,11 +84,12 @@ export const changePassword = (password) => (dispatch) => {
             type: SUCCESS_ALERT,
             payload: res.data.success
         })
+        dispatch(getUser());
     })
     .catch(error => {
         let msg = 'Error to change password'
 
-        if (error.response) msg = error.response.data.error;
+        if (error.response) msg = error.response.data.error || 'Error';
         else if (error.message) msg = error.message;
 
         dispatch({

@@ -11,12 +11,12 @@ export const SPROJECTS_LOADED = 'SPROJECTS_LOADED';
 export const ADD_SPROJECTS = 'ADD_SPROJECTS';
 export const REMOVE_SPROJECTS = 'REMOVE_SPROJECTS';
 
-// alerts
-export const INFO_ALERT = 'INFO_ALERT';
-export const ERROR_ALERT = 'ERROR_ALERT';
-export const SUCCESS_ALERT = 'SUCCESS_ALERT';
-
 // login
 export const LOGIN_LOADING = 'LOGIN_LOADING';
-export const NEED_CODE = 'NEED_CODE';
-export const SUCCESS_VERIFY = 'SUCCESS_VERIFY';
+
+// register
+export const REGISTER_LOADING = 'REGISTER_LOADING';
+export const REGISTER_NEED_CODE = 'REGISTER_NEED_CODE';
+export const REGISTER_ERROR = 'REGISTER_ERROR';
+export const VERIFY_CODE_ERROR = 'VERIFY_CODE_ERROR';
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';

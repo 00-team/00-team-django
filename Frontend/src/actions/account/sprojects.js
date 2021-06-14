@@ -5,15 +5,19 @@ import {
 
     ADD_SPROJECTS,
     REMOVE_SPROJECTS,
-
-    ERROR_ALERT,
-    SUCCESS_ALERT,
 } from './types';
 
+import {
+    SUCCESS_ALERT,
+    ERROR_ALERT,
+    INFO_ALERT,
+} from '../base/types'
+
+import Cookies from 'js-cookie';
 const config = {
     headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': document.currentScript.getAttribute('csrfToken'),
+        'X-CSRFToken': document.currentScript.getAttribute('csrfToken') || Cookies.get('csrftoken')
     },
 };
 

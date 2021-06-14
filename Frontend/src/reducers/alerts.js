@@ -2,7 +2,7 @@ import {
     INFO_ALERT,
     ERROR_ALERT,
     SUCCESS_ALERT,
-} from '../actions/types';
+} from '../actions/base/types';
 
 const initialState = {
     info: null,
