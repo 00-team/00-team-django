@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAlert } from 'react-alert'
 import { useSelector, useDispatch } from 'react-redux'
-import { getUser } from '../../actions/account'
+import { getUser } from '../../actions/account/account'
 
 import './sass/header.scss'
 

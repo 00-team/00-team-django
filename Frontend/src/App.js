@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route, useLocation, Redirect, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, useLocation, useParams } from 'react-router-dom';
 import { Provider as AlertProvider } from 'react-alert'
-import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux';
+import { Provider as ReduxProvider, useDispatch } from 'react-redux';
 
 // components
 import Header from './components/layouts/Header'
@@ -14,7 +14,7 @@ import Alert from './components/layouts/Alert'
 
 // redux stuffs
 import store from './store';
-import { getUser } from './actions/account';
+import { getUser } from './actions/account/account';
 
 import './components/sass/base.scss';
 
@@ -30,17 +30,11 @@ const alertOptions = {
 
 const App = () => {
     const dispatch = useDispatch();
-    const account = useSelector((state) => state.account);
-    const [user, setUser] = useState({});
     const location = useLocation();
 
     useEffect(() => {
         dispatch(getUser());
     }, [dispatch]);
-
-    useEffect(() => {
-        setUser(account.user);
-    }, [account]);
 
 
     return (
@@ -58,7 +52,7 @@ const App = () => {
                     </Route>
 
                     <Route path="/login" >
-                        {user ? (user.username ? <Redirect to='/account' /> : <Login />) : <Login />}
+                        <Login />
                     </Route>
 
                     <Route path="/project/:slug" >

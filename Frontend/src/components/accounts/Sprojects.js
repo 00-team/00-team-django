@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 // actions
-import { loadSprojects, toggleSproject } from '../../actions/sprojects'
+import { loadSprojects, toggleSproject } from '../../actions/account/sprojects'
 
 // loading
 import PacmanLoader from "react-spinners/PacmanLoader";

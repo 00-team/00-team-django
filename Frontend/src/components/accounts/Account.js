@@ -14,15 +14,15 @@ import { useAlert } from 'react-alert'
 import { useSelector, useDispatch } from 'react-redux'
 
 // actions
-import { getUser, changeInfo, changePassword } from '../../actions/account'
-import { loadSprojects } from '../../actions/sprojects'
+import { getUser, changeInfo, changePassword } from '../../actions/account/account'
+import { loadSprojects } from '../../actions/account/sprojects'
 
 // loading
 import PacmanLoader from "react-spinners/PacmanLoader";
 import { css } from "@emotion/react";
 
 // components
-import { Button, Input } from '../common/Elements'
+import { Button, Input, PasswordInput } from '../common/Elements'
 import Sprojects from './Sprojects'
 
 
@@ -44,7 +44,7 @@ const Account = () => {
     const [info, setInfo] = useState('loading');
     
     const [userInfo, setUserInfo] = useState({username: '', nickname: ''});
-    const [userPassword, setUserPassword] = useState({newPass: '', confNewPass: ''});
+    const [userPassword, setUserPassword] = useState('');
 
     const LoaderCss = css`width:auto;height:auto;`;
 
@@ -70,27 +70,27 @@ const Account = () => {
     if (acc.anonymous) return <Redirect to='/login' />
 
     let infoFrag = <>
-        <span> <FiHexagon /> {user.nickname || 'No Name'} </span>
-        <span> <FiUser /> {user.username || 'No Username'} </span>
-        <span> <FiAtSign /> {user.email || 'No Email'} </span>
-        <span> <FiStar /> {sprojects.sprojects.length || '0'} </span>
+        <span> <FiHexagon className='icon' /> {user.nickname || 'No Name'} </span>
+        <span> <FiUser className='icon' /> {user.username || 'No Username'} </span>
+        <span> <FiAtSign className='icon' /> {user.email || 'No Email'} </span>
+        <span> <FiStar className='icon' /> {sprojects.sprojects.length || '0'} </span>
 
         <div className='actions'>
-            <Button onClick={() => {setInfo('edit')}}>Edit</Button>
-            <Button onClick={() => {setInfo('changepass')}}>Change Password</Button>
+            <Button onClick={() => {setUserInfo({username: '', nickname: ''});setInfo('edit')}}>Edit</Button>
+            <Button onClick={() => {setUserPassword({newPass: '', confNewPass: ''});setInfo('changepass')}}>Change Password</Button>
             <Button className='danger' onClick={() => go('/api/account/logout/')}>Logout</Button>
         </div>
     </>
 
     let editFrag = <>
         <div className='edit-input' >
-            <FiHexagon />
+            <FiHexagon className='icon' />
             <Input placeholder='Name' defaultVal={user.nickname || 'No Name'} maxLength={50} 
                    onChange={e => setUserInfo({...userInfo, nickname: e.target.value})} />
         </div>
 
         <div className='edit-input' >
-            <FiUser />
+            <FiUser className='icon' />
             <Input placeholder='Username' defaultVal={user.username || 'No Username'} maxLength={140} 
                    onChange={e => setUserInfo({...userInfo, username: e.target.value})} />
         </div>
@@ -107,29 +107,18 @@ const Account = () => {
         <span>Enter New Password</span>
 
         <div className='edit-input' >
-            <FiLock />
-            <Input placeholder='Password' defaultVal={userPassword.newPass} maxLength={4096} 
-                   onChange={e => setUserPassword({...userPassword, newPass: e.target.value})} />
-        </div>
+            <FiLock className='icon' />
 
-        <div className='edit-input' >
-            <FiLock />
-            <Input placeholder='Confirm Password' defaultVal={userPassword.confNewPass} maxLength={4096} 
-                onChange={e => setUserPassword({...userPassword, confNewPass: e.target.value})} />
+            <form>
+                <PasswordInput maxLength={4096} onChange={e => setUserPassword(e.target.value)} />
+            </form>
         </div>
 
         <div className='actions'>
             <Button onClick={() => {setInfo('info')}}>Back</Button>
             <Button onClick={() => {
-                if (userPassword.newPass.length > 7) {
-                    if (userPassword.newPass === userPassword.confNewPass) {
-                        dispatch(changePassword(userPassword.newPass));
-                    } else {
-                        alert.error('Password and Confirm Password is not match');
-                    }
-                } else {
-                    alert.error('Your Password is too Short');
-                }
+                if (userPassword.length > 7) dispatch(changePassword(userPassword));
+                else alert.error('Your Password is too Short');
             }}>Save</Button>
         </div>
     </>
