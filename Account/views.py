@@ -14,6 +14,8 @@ from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
+from django.middleware.csrf import get_token
+
 
 from Account.models import UserAccount, UserTemp
 from Projects.models import Project, Star, DocumentImages, DocumentVideos
@@ -22,7 +24,9 @@ from .decorators import login_required
 
 GOOGLE = settings.GOOGLE
 
-CheckTmeps = lambda: map(lambda ut: ut.check_time(), UserTemp.objects.all())
+def CheckTmeps():
+    for ut in UserTemp.objects.all():
+        ut.check_time
 
 def ValidPassword(password) -> str:
     if password:
@@ -52,13 +56,11 @@ def GetOrMakeUA(user: User) -> UserAccount:
         ua.save()
         return ua
 
-
 def BodyLoader(body):
     try:
         return json.loads(body)
     except Exception:
         return {}
-
 
 def NextPath(r):
     data = {}
@@ -77,7 +79,6 @@ def NextPath(r):
     
     return '/'
 
-
 def RequestData(response):
     try:
         return response.json()
@@ -86,10 +87,8 @@ def RequestData(response):
             'error': 'can`t get data'
         }
 
-
 def googleRedirect(r):
     return f'{r.scheme}://{r.get_host()}' + GOOGLE['redirect_uri']
-
 
 
 @require_GET
@@ -223,7 +222,14 @@ def register(r):
         validator(email)
     except ValidationError:
         return JsonResponse({'error':'your emal addr is not valid'}, status=403)
+
     
+    if User.objects.filter(email=email).exists():
+        return JsonResponse({'error':'you have account with this email'}, status=403)
+    
+
+    if UserTemp.objects.filter(email=email).exists():
+        return JsonResponse({'error':'we send a code for your email pls verify your code'}, status=406)
 
     
     if User.objects.filter(username=username).exists():
@@ -239,9 +245,9 @@ def register(r):
     ut.save()
 
     send_mail(
-        subject='sub',
+        subject='00 Team Verify Code',
         message=f'msg code: {ut.code}',
-        html_message=f'msg <p>{ut.code}</p>',
+        html_message=f'msg <p style="color:red;">{ut.code}</p>',
         from_email=None,
         recipient_list=[email],
         fail_silently=True,

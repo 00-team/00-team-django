@@ -52,7 +52,7 @@ class UserAccount(models.Model):
 class UserTemp(models.Model):
     username = models.CharField(max_length=150)
     password = models.TextField(max_length=4096, null=True, blank=True,)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     code = models.CharField(max_length=10, null=True, blank=True, unique=True)
     delete_time = models.BigIntegerField(null=True, blank=True)
 
@@ -62,11 +62,17 @@ class UserTemp(models.Model):
             self.save()
         except IntegrityError:
             self.gen_code()
-
+    
+    @property
     def check_time(self):
         if self.delete_time:
             if self.delete_time < int(time.time()):
                 self.delete()
+                return 'no Time'
+            else:
+                return str(self.delete_time - int(time.time()))
+        
+        return 'None'
 
     def save(self, *args, **kwargs):
         if not self.delete_time:
@@ -78,5 +84,5 @@ class UserTemp(models.Model):
         super(UserTemp, self).save(*args, **kwargs) # Call the real save() method
 
     def __str__(self):
-        return self.username or str(self.id)
+        return (self.username  or str(self.id)) + ' - ' + self.check_time
     
