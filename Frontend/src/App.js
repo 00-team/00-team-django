@@ -1,16 +1,22 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route, useLocation, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
 import { Provider as AlertProvider } from 'react-alert'
 import { Provider as ReduxProvider, useDispatch } from 'react-redux';
 
-// components
+// base
 import Header from './components/layouts/Header'
 import Home from './components/Home'
-import Account from './components/accounts/Account'
 import Error from './components/layouts/Error'
-import Login from './components/accounts/Login'
 import Alert from './components/layouts/Alert'
+
+// account
+import Account from './components/accounts/Account'
+import Login from './components/accounts/Login'
+
+// projects
+import Projects from './components/projects/Projects';
+import Project from './components/projects/Project';
 
 // redux stuffs
 import store from './store';
@@ -55,8 +61,12 @@ const App = () => {
                         <Login />
                     </Route>
 
+                    <Route path="/projects" >
+                        <Projects />
+                    </Route>
+
                     <Route path="/project/:slug" >
-                        <Child />
+                        <Project />
                     </Route>
                     
                     <Route path="*">
@@ -69,14 +79,6 @@ const App = () => {
 }
 
 export default App
-
-function Child() {
-    let { slug } = useParams();
-  
-    return (
-        <span style={{ color: '#FFF' }} >{slug}</span>
-    );
-}
 
 
 ReactDOM.render(
