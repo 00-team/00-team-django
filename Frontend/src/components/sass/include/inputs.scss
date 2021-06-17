@@ -50,17 +50,17 @@ div.password-input {
         }
     }
 
+    input.error + .toggle-show {
+        border-color: #A00;
+    }
+
     .toggle-show {
         transition: border-color 400ms;
         display: inline-flex;
-        // position: absolute;
-        // top: 3px;
-        // right: 3px;
         border-radius: 5px;
         cursor: pointer;
         height: 38.5px;
         width: 39px;
-        // display: flex;
         justify-content: center;
         align-items: center;
         background-color: #000;
