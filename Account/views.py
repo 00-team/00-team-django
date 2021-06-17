@@ -18,7 +18,8 @@ from django.middleware.csrf import get_token
 
 
 from Account.models import UserAccount, UserTemp
-from Projects.models import Project, Star, DocumentImages, DocumentVideos
+from Projects.models import Project, Star
+from Projects.views import GetThumbnail
 
 from .decorators import login_required
 
@@ -307,24 +308,12 @@ def account(r):
 
 @login_required
 def stared_projects(r):
-    def gt(p):
-        pdv = DocumentVideos.objects.filter(project=p).last()
-        pdi = DocumentImages.objects.filter(project=p).last()
-
-        if pdv:
-            return pdv.thumbnail.url
-        elif pdi:
-            return pdi.image.url
-        
-        return None
-
-
     sp = list(map(
         lambda s : {
             'id': s.project.id,
             'name': s.project.name,
             'slug': s.project.slug,
-            'thumbnail': gt(s.project),
+            'thumbnail': GetThumbnail(s.project),
             'lang': s.project.language,
             'wspace': s.project.workspace,
         },
