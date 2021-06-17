@@ -26,14 +26,9 @@ const Register = () => {
     }, [localStorage])
 
     useEffect(() => {
-        console.log(registerState);
-        if (registerState.needCode) {
-            setStatus('verify')
-        } else if (registerState.loading) {
-            setStatus('loading')
-        } else {
-            setStatus('register')
-        }
+        if (registerState.needCode) setStatus('verify');
+        else if (registerState.loading) setStatus('loading');
+        else setStatus('register');
 
         if (registerState.error) {
             let efield = registerState.error.field;
@@ -51,7 +46,7 @@ const Register = () => {
 
     const RegisterForm = <>
         <span>Email address</span>
-        <Input onChange={(e) => setData({...data, email: e.target.value})} error={error.email} placeholder='Email address' autoComp={data.email} />
+        <Input onChange={(e) => setData({...data, email: e.target.value})} error={error.email} placeholder='Email address' autoComp={data.email} type='email' defaultVal={data.email} />
 
         <span>Username</span>
         <Input onChange={(e) => setData({...data, username: e.target.value})} error={error.username} placeholder='Username' autoComp={data.username} />
