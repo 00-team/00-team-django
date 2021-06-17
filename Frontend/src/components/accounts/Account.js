@@ -18,8 +18,8 @@ import { getUser, changeInfo, changePassword } from '../../actions/account/accou
 import { loadSprojects } from '../../actions/account/sprojects'
 
 // loading
-import PacmanLoader from "react-spinners/PacmanLoader";
-import { css } from "@emotion/react";
+import PacmanLoader from 'react-spinners/PacmanLoader';
+import { css } from '@emotion/react';
 
 // components
 import { Button, Input, PasswordInput } from '../common/Elements'
