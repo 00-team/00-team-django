@@ -211,21 +211,20 @@ def register(r):
     password = ValidPassword(data.get('password'))
 
     if not password:
-        return JsonResponse({'error': 'your password is not valid'}, status=403)
+        return JsonResponse({'error': 'your password is not valid', 'field': 'password'}, status=403)
     
     if not username:
-        return JsonResponse({'error': 'your username is not valid'}, status=403)
-
+        return JsonResponse({'error': 'your username is not valid', 'field': 'username'}, status=403)
 
     try:
         validator = EmailValidator(allowlist=['gmail'])
         validator(email)
     except ValidationError:
-        return JsonResponse({'error':'your emal addr is not valid'}, status=403)
+        return JsonResponse({'error':'your emal addr is not valid', 'field': 'email'}, status=403)
 
     
     if User.objects.filter(email=email).exists():
-        return JsonResponse({'error':'you have account with this email'}, status=403)
+        return JsonResponse({'error':'you have account with this email', 'field': 'email'}, status=403)
     
 
     if UserTemp.objects.filter(email=email).exists():
@@ -233,7 +232,7 @@ def register(r):
 
     
     if User.objects.filter(username=username).exists():
-        return JsonResponse({'error': 'this username is exists'}, status=403)
+        return JsonResponse({'error': 'this username is exists', 'field': 'username'}, status=403)
     
 
     ut = UserTemp(
@@ -254,7 +253,6 @@ def register(r):
     )
 
     return JsonResponse({'success': 'we sand a email for you. pls read and verify your account'})
-
 
 
 @require_POST
