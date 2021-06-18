@@ -1,0 +1,148 @@
+// @import '../../sass/variables.sass';
+
+.projects {
+    padding: 10px;
+    color: #FFF;
+
+    .header-projects {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+            font-family: 'Graduate', 'Roboto', sans-serif;
+            font-weight: normal ;
+        }
+
+        .dp {
+            width: 200px;
+
+            .dpp__control {
+                background-color: transparent;
+                border-color: #FFF;
+                box-shadow: none;
+                cursor: pointer;
+
+                .dpp__single-value {
+                    color: #FFF;
+                }
+            }
+
+            .dpp__menu {
+                background-color: #000;
+                border: 2px solid #580BE4;
+                .dpp__option {
+                    cursor: pointer;
+                }
+
+                .dpp__option--is-selected {
+                    background-color: transparent;
+                }
+
+                .dpp__option--is-focused {
+                    background-color: #580BE4;
+                }
+            }
+        }
+    }
+
+    .aps {
+        $border-color: #FD0079;
+        .project {
+            display: inline-block;
+            width: 400px;
+            margin: 10px;
+            position: relative;
+            height: calc(225px + 84px + 4px);
+
+            &:hover .info {
+                bottom: 0;
+            }
+            
+            .thumbnail {
+                width: 400px;
+                height: 225px;
+                border: 2px solid $border-color;
+                border-top-left-radius: 7px;
+                border-top-right-radius: 7px;
+                // background-image: url('https://cdn.discordapp.com/attachments/731174051170746500/840946150852001792/zz.png');
+                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=');
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+                display: flex;
+                overflow: hidden;
+                position: absolute;
+                top: 0;
+                z-index: 10;
+            }
+
+            .info {
+                position: absolute;
+                bottom: 55px;
+                width: 400px;
+                transition: bottom 500ms;
+
+                .name {
+                    color: #FFF;
+                    text-transform: capitalize;
+                    font-size: 18px;
+                    overflow: hidden;
+                    font-family: 'Roboto', sans-serif;
+                    display: block;
+                    text-align: left;
+                    padding: 2px;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .lw {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 2px;
+
+                    span {
+                        color: #FFF;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        display: block;
+                        max-width: 50%;
+                        overflow: hidden;
+                    }
+                }
+
+                .sd {
+                    display: flex;
+                    justify-content: space-between;
+                    border: 2px solid $border-color;
+                    border-bottom-left-radius: 7px;
+                    border-bottom-right-radius: 7px;
+                    padding: 2px 6px;
+                    margin-top: 5px;
+
+                    span {
+                        color: #FFF;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        display: block;
+                        max-width: 50%;
+                        overflow: hidden;
+                    }
+
+                    .stars {
+                        display: flex;
+                        align-items: center;
+                        max-width: 50%;
+
+                        svg {
+                            margin-right: 5px;
+                            width: 22px;
+                            height: 22px;
+                            color: #FFD600;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
