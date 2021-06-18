@@ -71,6 +71,7 @@ def get_projects(r):
         'thumbnail': GetThumbnail(p),
         'slug': p.slug,
         'date_start': p.date_start.strftime('%Y-%m-%d'),
+        'rawtime': int(p.date_start.timestamp()),
         'stars': TS(p),
         'language': p.language,
         'workspace': p.workspace,
