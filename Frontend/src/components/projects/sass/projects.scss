@@ -31,6 +31,8 @@
             .dpp__menu {
                 background-color: #000;
                 border: 2px solid #580BE4;
+                z-index: 20;
+
                 .dpp__option {
                     cursor: pointer;
                 }
@@ -142,6 +144,12 @@
                         }
                     }
                 }
+            }
+        }
+
+        .project.mobile {
+            .info {
+                bottom: 0;
             }
         }
     }

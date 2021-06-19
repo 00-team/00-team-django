@@ -19,6 +19,7 @@ const Projects = () => {
     const [status, setStatus] = useState('loading')
     const [order, setOrder] = useState('time')
     const [projects, setProjects] = useState([])
+    const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
         dispatch(LoadProjects());
@@ -32,6 +33,16 @@ const Projects = () => {
             setStatus('projects');
         }
     }, [projectsState])
+
+    useEffect(() => {
+        const WinSizeHandle = () => {
+            if (window.innerWidth < 1000) setIsMobile(true);
+            else setIsMobile(false);
+        }
+        window.onresize = WinSizeHandle;
+        WinSizeHandle();
+        return () => window.onresize = null;
+      }, []);
 
     const orderByStar = (a, b) => {
         if (a.stars > b.stars) return -1;
@@ -61,13 +72,13 @@ const Projects = () => {
         { value: 'name', label: 'Name' },
     ]
 
-    let ProjectsFlag = <div className='projects'>
+    const ProjectsFlag = <div className='projects'>
         <div className='header-projects'>
             <h2>00 Team Projects</h2> 
             <Select className='dp' classNamePrefix='dpp' options={opt} 
                     onChange={v => setOrder(v.value)} defaultValue={opt[0]} 
                     isSearchable={false} autoFocus={false} openMenuOnFocus={false} 
-                    closeMenuOnSelect={true} closeMenuOnScroll={true} hideSelectedOptions={true} 
+                    closeMenuOnSelect={true} closeMenuOnScroll={true} hideSelectedOptions={true}
             />
         </div>
 
@@ -78,7 +89,7 @@ const Projects = () => {
                 (order === 'name' && projects.sort(orderByName)) ||
                 []
             ).map((p, idx) => <Link key={idx} to={`/project/${p.slug}`}>
-                <div className='project'>
+                <div className={'project' + (isMobile ? ' mobile' : '')}>
                     <div className='thumbnail' style={p.thumbnail ? { backgroundImage: `url(${p.thumbnail})` } : {}}></div>
                     <div className='info'>
                         <div className='hover-anim'>
