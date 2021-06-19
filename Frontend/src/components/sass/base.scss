@@ -50,8 +50,8 @@ body {
 }
 
 .content {
-    padding-top: 60px;
-    min-height: 100vh;
+    overflow-y: scroll;
+    height: calc(100vh - 60px);
 
     .loading-box {
         width: 100%;
