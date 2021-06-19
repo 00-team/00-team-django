@@ -16,10 +16,11 @@ import './sass/projects.scss';
 const Projects = () => {
     const dispatch = useDispatch();
     const projectsState = useSelector(s => s.projects)
+    const isMobile = useSelector(s => s.base.isMobile);
     const [status, setStatus] = useState('loading')
     const [order, setOrder] = useState('time')
     const [projects, setProjects] = useState([])
-    const [isMobile, setIsMobile] = useState(false)
+    // const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
         dispatch(LoadProjects());
@@ -34,15 +35,6 @@ const Projects = () => {
         }
     }, [projectsState])
 
-    useEffect(() => {
-        const WinSizeHandle = () => {
-            if (window.innerWidth < 1000) setIsMobile(true);
-            else setIsMobile(false);
-        }
-        window.onresize = WinSizeHandle;
-        WinSizeHandle();
-        return () => window.onresize = null;
-      }, []);
 
     const orderByStar = (a, b) => {
         if (a.stars > b.stars) return -1;

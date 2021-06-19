@@ -7,7 +7,8 @@ import register from './account/register'
 
 import projects from './projects/projects'
 
-import alerts from './alerts'
+import alerts from './base/alerts'
+import base from './base/base'
 
 
 export default combineReducers({
@@ -17,6 +18,7 @@ export default combineReducers({
     register,
 
     alerts,
+    base,
 
     projects,
 });

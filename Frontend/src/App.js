@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
 import { Provider as AlertProvider } from 'react-alert'
-import { Provider as ReduxProvider, useDispatch } from 'react-redux';
+import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 
 // base
 import Header from './components/layouts/Header'
@@ -37,11 +37,24 @@ const alertOptions = {
 const App = () => {
     const dispatch = useDispatch();
     const location = useLocation();
+    // const isMobile = useSelector(s => s.base.isMobile);
+    // const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         dispatch(getUser());
     }, [dispatch]);
 
+    useEffect(() => {
+        const WinSizeHandle = () => {
+            if (window.innerWidth < 1000) dispatch({ type: 'IS_MOBILE', payload: true });
+            else dispatch({ type: 'IS_MOBILE', payload: false });
+        }
+        window.onresize = WinSizeHandle;
+        WinSizeHandle();
+        return () => window.onresize = null;
+    }, []);
+
+    // console.log(isMobile);
 
     return (
         <>
