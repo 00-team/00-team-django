@@ -10,6 +10,7 @@ const Header = () => {
     const alert = useAlert();
     const dispatch = useDispatch();
     const account = useSelector((state) => state.account);
+    const isMobile = useSelector(s => s.base.isMobile);
     const [accountLink, setLink] = useState(null);
     const [active, setActive] = useState(false);
 
@@ -25,36 +26,70 @@ const Header = () => {
     }, [account]);
 
 
-    return (
-        <div className={active ? 'active header' : 'header'}>
-            <div className="btn-bar" onClick={() => setActive(!active)}>
+    const MobileNavFlag = <div className='mobile-nav'>
+        <div className='top-bar'>
+            <div className={"btn-bar" + (active ? ' active' : '')} onClick={() => setActive(!active)}>
                 <span></span>
             </div>
-            <div className="menu-bar">
-                <div className="togo">
-                    <span>00 Team</span>
-                </div>
-                <ul className="tree-link">
-                    <li className="link">
-                        <Link to="/">Home</Link>
-                        <div className="spacel"></div>
-                    </li>
-                    
-                    <li className="link">
-                        <Link to="/projects">Projects</Link>
-                        <div className="spacel"></div>
-                    </li>
 
-                    <li className="link">
-                        <Link to="/join">Join Team</Link>
-                        <div className="spacel"></div>
-                    </li>
+            <h1>00 Team</h1>
+        </div>
+        
 
-                    <li className="link">
-                        {accountLink}
-                    </li>
-                </ul>
-            </div>
+        <div className={"side-bar" + (active ? ' active' : '')}>
+            <ul className="tree-link">
+                <li className="link">
+                    <Link to="/">Home</Link>
+                    <div className="spacel"></div>
+                </li>
+                
+                <li className="link">
+                    <Link to="/projects">Projects</Link>
+                    <div className="spacel"></div>
+                </li>
+
+                <li className="link">
+                    <Link to="/join">Join Team</Link>
+                    <div className="spacel"></div>
+                </li>
+
+                <li className="link">
+                    {accountLink}
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    const DesktopNavFlag = <div className='desktop-nav'>
+        <div className="togo">
+            <span>00 Team</span>
+        </div>
+        <ul className="tree-link">
+            <li className="link">
+                <Link to="/">Home</Link>
+                <div className="spacel"></div>
+            </li>
+            
+            <li className="link">
+                <Link to="/projects">Projects</Link>
+                <div className="spacel"></div>
+            </li>
+
+            <li className="link">
+                <Link to="/join">Join Team</Link>
+                <div className="spacel"></div>
+            </li>
+
+            <li className="link">
+                {accountLink}
+            </li>
+        </ul>
+    </div>
+
+    return (
+        <div className='header'>
+            {isMobile ? MobileNavFlag : DesktopNavFlag}
         </div>
     )
 }
