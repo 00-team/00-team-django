@@ -76,6 +76,7 @@ const Account = () => {
         <span> <FiStar className='icon' /> {sprojects.sprojects.length || '0'} </span>
 
         <div className='actions'>
+            {user.admin && <Button onClick={() => window.open(user.admin)}>Admin</Button>}
             <Button onClick={() => {setUserInfo({username: '', nickname: ''});setInfo('edit')}}>Edit</Button>
             <Button onClick={() => {setUserPassword({newPass: '', confNewPass: ''});setInfo('changepass')}}>Change Password</Button>
             <Button className='danger' onClick={() => go('/api/account/logout/')}>Logout</Button>

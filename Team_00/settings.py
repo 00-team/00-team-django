@@ -8,6 +8,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+ADMIN_URL_PATH = 'admin/'
+
 GOOGLE = {
     'client_id': '',
     'client_secret': '',

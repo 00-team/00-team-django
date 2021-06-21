@@ -301,8 +301,9 @@ def account(r):
         'email': user.email,
         'picture': ua.picture.url if ua.picture else None, # js: ua.picture ? ua.picture.url : null
         'token': ua.token,
+        'admin': f'/{settings.ADMIN_URL_PATH}' if user.is_staff else None,
     }
-    
+
     return JsonResponse({'user': user_data})
 
 
