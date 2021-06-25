@@ -29,6 +29,7 @@ class DocumentAdmin(admin.ModelAdmin):
         s = o.project.status or 'No Status'
         return ('Public' if o.project.status == 'PB' else 'Private')
 
+
 @admin.register(Star)
 class StarAdmin(admin.ModelAdmin):
     list_per_page = 15
