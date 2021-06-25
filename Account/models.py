@@ -38,8 +38,7 @@ class UserAccount(models.Model):
         
         self.picture.save(f'pp-{self.user.username}-{self.id}-{self.nickname}.png', File(tf))
         self.save()
-        
-    
+
     def save(self, *args, **kwargs):
         if not self.token:
             self.change_token()
@@ -53,8 +52,8 @@ class UserTemp(models.Model):
     username = models.CharField(max_length=150)
     password = models.TextField(max_length=4096, null=True, blank=True,)
     email = models.EmailField(unique=True)
-    code = models.CharField(max_length=10, null=True, blank=True, unique=True)
-    delete_time = models.BigIntegerField(null=True, blank=True)
+    code = models.CharField(max_length=10, null=True, blank=True, unique=True, editable=False)
+    delete_time = models.BigIntegerField(null=True, blank=True, editable=False)
 
     def gen_code(self):
         try:
