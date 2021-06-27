@@ -5,6 +5,7 @@ import {
 
     ADD_SPROJECTS,
     REMOVE_SPROJECTS,
+    GET_PROJECT_STARS,
 } from './types';
 
 import {
@@ -43,7 +44,7 @@ export const loadSprojects = () => (dispatch) => {
 }
 
 
-export const toggleSproject = (projectId) => (dispatch) => {
+export const toggleSproject = (projectId, callback) => (dispatch) => {
     dispatch({ type: SPROJECTS_LOADING });
 
     axios.post('/api/projects/modify_star/', {
@@ -70,6 +71,10 @@ export const toggleSproject = (projectId) => (dispatch) => {
                     payload: 'Successfully remove a Stared Project',
                 });
             }
+
+            if (typeof callback === 'function') {
+                callback()
+            }
         }
 
     })
@@ -77,6 +82,29 @@ export const toggleSproject = (projectId) => (dispatch) => {
         dispatch({
             type: ERROR_ALERT,
             payload: error.response ? (error.response.data.error) || 'Cant add/remove star project' : error.message,
+        });
+    })
+}
+
+
+
+export const getProjectStars = (projectId) => (dispatch) => {
+    axios.post('/api/projects/stars/', {
+        project_id: projectId
+    }, config)
+    .then((res) => {
+        if (res.status === 200) {
+            dispatch({ 
+                type: GET_PROJECT_STARS,
+                payload: res.data.data,
+            });
+        }
+
+    })
+    .catch(error => {
+        dispatch({
+            type: ERROR_ALERT,
+            payload: error.response ? (error.response.data.error) || 'Cant project stars' : error.message,
         });
     })
 }

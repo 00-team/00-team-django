@@ -6,6 +6,7 @@ export const ANONYMOUS_USER = 'ANONYMOUS_USER';
 // stared projects
 export const SPROJECTS_LOADING = 'SPROJECTS_LOADING';
 export const SPROJECTS_LOADED = 'SPROJECTS_LOADED';
+export const GET_PROJECT_STARS = 'GET_PROJECT_STARS';
 
 // toggle stared projects
 export const ADD_SPROJECTS = 'ADD_SPROJECTS';
