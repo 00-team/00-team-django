@@ -16,11 +16,15 @@ class Project(models.Model):
     workspace = models.CharField(max_length=40, default='No Work Space')
     status = models.CharField(
         max_length = 2,
-        choices = (('PR', 'Private'), ('PB', 'Public')),
+        choices = (('PR', 'Private'), ('PB', 'Public')), 
         default = 'PB',
     )
     slug = models.SlugField(null=True, blank=True, unique=True)
     git = models.URLField(null=True, blank=True)
+    
+    @property
+    def status_lable(self):
+        return 'Private' if self.status == 'PR' else 'Public'
     
     def save(self, *args, **kwargs):
         try:
