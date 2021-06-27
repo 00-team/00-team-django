@@ -6,6 +6,7 @@ import login from './account/login'
 import register from './account/register'
 
 import projects from './projects/projects'
+import project from './projects/project'
 
 import alerts from './base/alerts'
 import base from './base/base'
@@ -21,4 +22,5 @@ export default combineReducers({
     base,
 
     projects,
+    project,
 });
