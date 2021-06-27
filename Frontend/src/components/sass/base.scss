@@ -11,6 +11,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    // user-select: none;
+    
     &:focus {
         outline: none;
     }
@@ -50,7 +52,8 @@ body {
 }
 
 .content {
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
     height: calc(100vh - 60px);
 
     .loading-box {
