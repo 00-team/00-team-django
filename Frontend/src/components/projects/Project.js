@@ -86,14 +86,21 @@ const Project = () => {
             <span className='name'>{p.name}</span>
             <StarLord pid={p.id} />
             <div className="hred"></div>
-            <span className='data'>{p.date_start}</span>
             <div className='langspace'>
                 <span className='language'>{p.language}</span>
                 <span className='workspace'>{p.workspace}</span>
             </div>
-            <span className='status'>{p.status}</span>
-            {/* <span>{p.git}</span> */}
-            {/* <span>{p.self_star}</span> */}
+            <div className="hred"></div>
+            <div className='langspace'>
+                <span className='status'>{p.status}</span>
+                <span className='data'>{p.date_start}</span>
+            </div>
+            <div className="hred"></div>
+            {p.git && <>
+                <a href={p.git}>Github</a> 
+                <div className="hred"></div>
+            </>}
+            
             <p>{p.description}</p>
         </div>
     </>

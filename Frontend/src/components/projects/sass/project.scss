@@ -121,4 +121,37 @@
             color: #FFD600;
         }
     }
+
+    .langspace {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        span {
+            display: inline-block;
+            max-width: 45%;
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+        }
+    }
+
+    p {
+        word-break: break-all;
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    a {
+        color: #FFF;
+        font-size: 18px;
+        font-family: 'Graduate', 'Roboto', sans-serif;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 400ms ease;
+
+        &:hover {
+            color: #F00;
+        }
+    }
 }
