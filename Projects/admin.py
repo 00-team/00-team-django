@@ -23,6 +23,7 @@ class ProjectAdmin(admin.ModelAdmin):
 class DocumentAdmin(admin.ModelAdmin):
     list_per_page = 15
     list_display = ('__str__', 'status')
+    list_filter = ('project',)
 
     @admin.display
     def status(self, o):
