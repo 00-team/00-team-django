@@ -79,58 +79,39 @@ def get_projects(r):
 
     return JsonResponse({'projects': ps})
 
-
 @require_GET
-def project_view(request, slug):
-    if not Project.objects.filter(slug=slug).exists():
-        return JsonResponse({'error':'project not found'})
-
-    user_token = None
-    user_stared = False
-    p = Project.objects.get(slug=slug)
-
-    if request.user.is_authenticated:
-        if UserAccount.objects.filter(user=request.user).exists():
-            user_acc = UserAccount.objects.get(user=request.user)
-            if user_acc.token:
-                user_token = user_acc.token
-        
-        if not user_token:
-            return HttpResponseRedirect(f'/account/?next={request.path}')
-
-        if Star.objects.filter(user=request.user, project=p).exists():
-            user_stared = True
-                
-
-    stars = len(Star.objects.filter(project=p))
-
-    c = {
-        'p': {
-            'id': p.id,
-            'name': p.name,
-            'description': p.description,
-            'slug': p.slug,
-            'date_start': p.date_start.strftime('%Y-%m-%d'),
-            'stars': stars,
-            'language': p.language,
-            'workspace': p.workspace,
-            'stared': user_stared
-        },
-        'useracc_token': user_token
+def get_project(r, slug):
+    try:
+        project = Project.objects.get(slug=slug)
+    except Project.DoesNotExist:
+        return JsonResponse({'error':'project not found'}, status=404)
+    
+    p = {
+        'name': project.name,
+        'description': project.description,
+        'date_start': project.date_start.strftime('%Y-%m-%d'),
+        'stars': TS(project),
+        'language': project.language,
+        'workspace': project.workspace,
+        'status': project.status_lable,
+        'git': project.git,
+        'self_star': Star.objects.filter(user=r.user, project=project).exists(),
+        'docs': list(
+            map(lambda dv: {
+                'type': 'video',
+                'video': dv.video.url,
+                'thumbnail': dv.thumbnail.url
+            }, DocumentVideos.objects.filter(project=project))
+        ) + list(
+            map(lambda di: {
+                'type':'image',
+                'image': di.image.url
+            }, DocumentImages.objects.filter(project=project))
+        )
     }
 
-    d = DocumentVideos.objects.filter(project=p).last()
 
-    if d:
-        c['p']['video'] = d.video.url
-        c['p']['thumbnail'] = d.thumbnail.url
-
-    
-    c['p']['link'] = p.git
-    c['p']['link_name'] = 'Git'
-
-    template = loader.get_template('project.html')
-    return HttpResponse(template.render(c, request))
+    return JsonResponse({'project': p})
 
 
 @require_POST
