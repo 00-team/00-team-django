@@ -37,8 +37,6 @@ const alertOptions = {
 const App = () => {
     const dispatch = useDispatch();
     const location = useLocation();
-    // const isMobile = useSelector(s => s.base.isMobile);
-    // const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         dispatch(getUser());
@@ -53,8 +51,6 @@ const App = () => {
         WinSizeHandle();
         return () => window.onresize = null;
     }, []);
-
-    // console.log(isMobile);
 
     return (
         <>

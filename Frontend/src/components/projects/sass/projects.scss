@@ -87,6 +87,10 @@
                 width: 400px;
                 transition: bottom 500ms;
 
+                @media (max-width: 1000px) {
+                    bottom: 0;
+                }
+
                 .name {
                     color: #FFF;
                     text-transform: capitalize;
@@ -146,12 +150,6 @@
                         }
                     }
                 }
-            }
-        }
-
-        .project.mobile {
-            .info {
-                bottom: 0;
             }
         }
     }

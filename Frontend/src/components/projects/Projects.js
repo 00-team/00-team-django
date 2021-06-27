@@ -9,18 +9,17 @@ import { css } from '@emotion/react';
 
 import Select from 'react-select'
 import { Link } from 'react-router-dom'
-import { AiFillStar } from 'react-icons/ai'
+import { BsStar, BsStarFill } from 'react-icons/bs'
+
 
 import './sass/projects.scss';
 
 const Projects = () => {
     const dispatch = useDispatch();
     const projectsState = useSelector(s => s.projects)
-    const isMobile = useSelector(s => s.base.isMobile);
     const [status, setStatus] = useState('loading')
     const [order, setOrder] = useState('time')
     const [projects, setProjects] = useState([])
-    // const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
         dispatch(LoadProjects());
@@ -81,7 +80,7 @@ const Projects = () => {
                 (order === 'name' && projects.sort(orderByName)) ||
                 []
             ).map((p, idx) => <Link key={idx} to={`/project/${p.slug}`}>
-                <div className={'project' + (isMobile ? ' mobile' : '')}>
+                <div className='project'>
                     <div className='thumbnail' style={p.thumbnail ? { backgroundImage: `url(${p.thumbnail})` } : {}}></div>
                     <div className='info'>
                         <div className='hover-anim'>
@@ -93,7 +92,7 @@ const Projects = () => {
                         </div>
                         <div className="sd">
                             <div className="stars">
-                                <AiFillStar />
+                                {p.self_star ? <BsStarFill /> : <BsStar />}
                                 <span title={p.stars}>{p.stars}</span>
                             </div>
                             <span className="date" title={p.date_start}>{p.date_start}</span>
