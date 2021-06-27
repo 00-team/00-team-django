@@ -1,27 +1,53 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { LoadProject } from '../../actions/projects/project'
+import { toggleSproject, getProjectStars } from '../../actions/account/sprojects'
 import { useDispatch, useSelector } from 'react-redux';
 
 import PacmanLoader from 'react-spinners/PacmanLoader';
 import { css } from '@emotion/react';
 
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { BsStar, BsStarFill } from 'react-icons/bs'
+
+import { useAlert } from 'react-alert'
 
 import './sass/project.scss';
 
+const StarLord = ({ pid }) => {
+    const dispatch = useDispatch();
+    const sp = useSelector(s => s.project.projectStars)
+
+    useEffect(() => {
+        dispatch(getProjectStars(pid));
+    }, [pid])
+
+    return (<div className='stars' title={sp.count} onClick={() => {
+        dispatch(toggleSproject(pid, () => {
+            dispatch(getProjectStars(pid));
+        }));
+    }}>{sp.selfStar ? <BsStarFill /> : <BsStar />} <span>{sp.count}</span></div>)
+}
 
 const Project = () => {
     const { slug } = useParams();
     const dispatch = useDispatch();
+    const alert = useAlert();
     const project = useSelector(s => s.project)
+    const alerts = useSelector((state) => state.alerts);
     const [p, setProject] = useState(null)
     const [cDocIndex, setCDocIndex] = useState(0)
     const [cDoc, setCDoc] = useState({})
 
     useEffect(() => {
         dispatch(LoadProject(slug));
-    }, [dispatch])
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (alerts.info) {alert.info(alerts.info); dispatch({ type: 'INFO_ALERT', payload: null });}
+        if (alerts.error) {alert.error(alerts.error); dispatch({ type: 'ERROR_ALERT', payload: null });}
+        if (alerts.success) {alert.success(alerts.success); dispatch({ type: 'SUCCESS_ALERT', payload: null });}
+    }, [alerts])
 
     useEffect(() => {
         if (!project.loading && project.project) {
@@ -57,12 +83,15 @@ const Project = () => {
         </div>
 
         <div className='info'>
-            <span className='name'>Name: {p.name}</span>
-            <span>Start: {p.date_start}</span>
-            <span>Stars: {p.stars}</span>
-            <span>Language: {p.language}</span>
-            <span>Workspace: {p.workspace}</span>
-            <span>Status: {p.status}</span>
+            <span className='name'>{p.name}</span>
+            <StarLord pid={p.id} />
+            <div className="hred"></div>
+            <span className='data'>{p.date_start}</span>
+            <div className='langspace'>
+                <span className='language'>{p.language}</span>
+                <span className='workspace'>{p.workspace}</span>
+            </div>
+            <span className='status'>{p.status}</span>
             {/* <span>{p.git}</span> */}
             {/* <span>{p.self_star}</span> */}
             <p>{p.description}</p>
@@ -70,10 +99,10 @@ const Project = () => {
     </>
 
   
-    return (<>
+    return (<div className='project-page'>
         {project.loading && LoadingFlag}
         {p && ProjectFlag}
-    </>)
+    </div>)
 }
 
 export default Project
