@@ -11,12 +11,15 @@ import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { BsStar, BsStarFill } from 'react-icons/bs'
 
 import { useAlert } from 'react-alert'
+import VideoPlayer from '../common/VideoPlayer';
 
+
+// style
 import './sass/project.scss';
 
 const StarLord = ({ pid }) => {
     const dispatch = useDispatch();
-    const sp = useSelector(s => s.project.projectStars)
+    const sp = useSelector(s => s.sprojects.projectStars)
 
     useEffect(() => {
         dispatch(getProjectStars(pid));
@@ -78,7 +81,7 @@ const Project = () => {
 
             {cDoc.type === 'image' && <div className='image-doc' style={{ backgroundImage: `url(${cDoc.image})` }}></div>}
             {cDoc.type === 'video' && <div className='video-doc'>
-                <video controls poster={cDoc.thumbnail} src={cDoc.video}></video>
+                <VideoPlayer source={cDoc.video} poster={cDoc.thumbnail} />
             </div>}
         </div>
 
