@@ -11,6 +11,7 @@ import Select from 'react-select'
 import { Link } from 'react-router-dom'
 import { BsStar, BsStarFill } from 'react-icons/bs'
 
+import HoverPlayer from '../common/HoverPlayer';
 
 import './sass/projects.scss';
 
@@ -81,7 +82,9 @@ const Projects = () => {
                 []
             ).map((p, idx) => <Link key={idx} to={`/project/${p.slug}`}>
                 <div className='project'>
-                    <div className='thumbnail' style={p.thumbnail ? { backgroundImage: `url(${p.thumbnail})` } : {}}></div>
+                    <div className='thumbnail' style={!p.video && p.thumbnail ? { backgroundImage: `url(${p.thumbnail})` } : {}}>
+                        {p.video && <HoverPlayer source={p.video} overlay={p.thumbnail} />}
+                    </div>
                     <div className='info'>
                         <div className='hover-anim'>
                             <span className="name" title={p.name}>{p.name}</span>
