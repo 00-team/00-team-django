@@ -32,12 +32,9 @@ def BodyLoader(body):
 
 TS = lambda p: len(Star.objects.filter(project=p))
 SS = lambda u, p: Star.objects.filter(user=u, project=p).exists()
-# LV = lambda p: print(.last())
-# LV = lambda p: DocumentVideos.objects.filter(project=p).last().video if DocumentVideos.objects.filter(project=p).last() else None
 def LV(p):
     dv = DocumentVideos.objects.filter(project=p).last()
     if dv:
-        print(dv.video.url)
         return dv.video.url
     
     return None

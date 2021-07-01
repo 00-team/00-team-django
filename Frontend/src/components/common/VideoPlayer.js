@@ -6,7 +6,7 @@ import {
 
 } from 'react-icons/fa'
 
-import { IoMdSettings } from 'react-icons/io';
+import { FiSettings } from 'react-icons/fi';
 
 import { BsFullscreen, BsFullscreenExit } from 'react-icons/bs';
 
@@ -22,6 +22,7 @@ const VideoPlayer = ({ source, poster }) => {
     const [volume, setVolume] = useState(1);
     const [muted, setMuted] = useState(false);
     const [fs, setFS] = useState(false);
+    const [settingsIsOpen, setSettingsIsOpen] = useState(false)
 
     useEffect(() => {
         if (vide.current) setPaused(vide.current.paused);
@@ -57,6 +58,14 @@ const VideoPlayer = ({ source, poster }) => {
         }
     }
 
+    const changeVolume = (v) => {
+        if (v > 1) return;
+        if (v < 0) return;
+
+        setVolume(v);
+        vide.current.volume = v;
+    }
+
     return (
         <div className='video-player' ref={baseVide} 
              onMouseEnter={() => setShowControls(true)} 
@@ -66,23 +75,39 @@ const VideoPlayer = ({ source, poster }) => {
                  style={{ backgroundImage: `url(${poster})`, display: (paused ? '' : 'none') }} 
                  onClick={() => togglePlay()}
             ></div>
-            
+
             <video src={source} ref={vide} 
                    onClick={() => togglePlay()} 
                    onEnded={e => {e.target.currentTime = 0;setPaused(e.target.paused);}}
             ></video>
 
-            <div className={'controls' + (showControls ? ' show' : '')}>
+            <div className={'controls show' + (showControls ? ' show' : '')}>
                 <div className="part play-volume">
+
                     <div className="cts play" onClick={() => togglePlay()} > 
                         {paused ? <FaPlay /> : <FaPause />}
                     </div>
+
                     <div className="cts volume" onClick={() => toggleMute()} >
-                        {muted ? <FaVolumeMute /> : <FaVolumeUp /> }
+                        {muted ? <FaVolumeMute /> : 
+                        (volume < 0.05 ? <FaVolumeOff /> : 
+                        (volume > 0.5 ? <FaVolumeUp /> : <FaVolumeDown />))}
                     </div>
+
+                    <input type="range" min='0' max='1' step='0.01' className='volctrl' 
+                           defaultValue={volume} 
+                           onChange={e => {changeVolume(e.target.value)}}
+                    />
+
                 </div>
                 <div className="part settings-fullscreen">
-                    <div className="cts settings"> <IoMdSettings /> </div>
+                    <div className="cts settings" 
+                         style={settingsIsOpen ? { transform: 'rotate(69deg)' } : {}} 
+                         onClick={() => setSettingsIsOpen(!settingsIsOpen)} 
+                    >
+                        <FiSettings />
+                    </div>
+                    
                     <div className="cts fs" onClick={() => {toggleFullScreen()}} >
                         {fs ? <BsFullscreenExit /> : <BsFullscreen />}
                     </div>
