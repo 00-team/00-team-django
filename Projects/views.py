@@ -32,7 +32,15 @@ def BodyLoader(body):
 
 TS = lambda p: len(Star.objects.filter(project=p))
 SS = lambda u, p: Star.objects.filter(user=u, project=p).exists()
-
+# LV = lambda p: print(.last())
+# LV = lambda p: DocumentVideos.objects.filter(project=p).last().video if DocumentVideos.objects.filter(project=p).last() else None
+def LV(p):
+    dv = DocumentVideos.objects.filter(project=p).last()
+    if dv:
+        print(dv.video.url)
+        return dv.video.url
+    
+    return None
 
 @require_GET
 def get_projects(r):
@@ -40,6 +48,7 @@ def get_projects(r):
         'name': p.name,
         'description': p.description,
         'thumbnail': GetThumbnail(p),
+        'video': LV(p),
         'slug': p.slug,
         'date_start': p.date_start.strftime('%Y-%m-%d'),
         'rawtime': int(p.date_start.timestamp()),
