@@ -17,7 +17,7 @@ const VideoPlayer = ({ source, poster }) => {
     const vide = useRef(null);
     const baseVide = useRef(null);
 
-    const [showControls, setShowControls] = useState(false);
+    const [showControls, setShowControls] = useState(true);
     const [paused, setPaused] = useState(false);
     const [volume, setVolume] = useState(1);
     const [muted, setMuted] = useState(false);
@@ -25,29 +25,15 @@ const VideoPlayer = ({ source, poster }) => {
 
     useEffect(() => {
         if (vide.current) setPaused(vide.current.paused);
+        setShowControls(true);
     }, [source])
 
     useEffect(() => {
-        baseVide.current.onmouseenter = () => setShowControls(true);
-        baseVide.current.onmouseleave = () => setShowControls(false);
-        baseVide.current.onfullscreenchange = () => {
-            if (document.fullscreenElement === baseVide.current && document.fullscreenElement) {
-                setFS(true)
-            } else {
-                setFS(false)
-            }
+        document.onfullscreenchange = () => {
+            if (document.fullscreenElement === baseVide.current && document.fullscreenElement) setFS(true);
+            else setFS(false);
         }
     }, [baseVide])
-
-    useEffect(() => {
-        vide.current.onended = () => {
-            vide.current.currentTime = 0;
-            setPaused(vide.current.paused);
-        }
-
-        // requestFullscreen
-
-    }, [vide])
 
 
     const togglePlay = () => {
@@ -72,12 +58,20 @@ const VideoPlayer = ({ source, poster }) => {
     }
 
     return (
-        <div className='video-player' ref={baseVide}>
+        <div className='video-player' ref={baseVide} 
+             onMouseEnter={() => setShowControls(true)} 
+             onMouseLeave={() => setShowControls(false)}
+        >
             <div className="poster" 
                  style={{ backgroundImage: `url(${poster})`, display: (paused ? '' : 'none') }} 
                  onClick={() => togglePlay()}
             ></div>
-            <video src={source} ref={vide} onClick={() => togglePlay()} ></video>
+            
+            <video src={source} ref={vide} 
+                   onClick={() => togglePlay()} 
+                   onEnded={e => {e.target.currentTime = 0;setPaused(e.target.paused);}}
+            ></video>
+
             <div className={'controls' + (showControls ? ' show' : '')}>
                 <div className="part play-volume">
                     <div className="cts play" onClick={() => togglePlay()} > 
