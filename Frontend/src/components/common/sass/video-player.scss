@@ -48,9 +48,9 @@
                 transition: transform 1s;
             }
 
-            .volctrl {
+            .input-range {
                 -webkit-appearance: none;
-                width: 100px;
+                // width: 100px;
                 height: 100%;
                 background: transparent;
             
@@ -96,6 +96,10 @@
                     background: #FFF;
                     cursor: pointer;
                 }
+            }
+
+            &.timeline {
+                width: 100%;
             }
         }
     }

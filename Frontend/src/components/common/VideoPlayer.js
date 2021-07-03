@@ -16,6 +16,7 @@ import './sass/video-player.scss'
 const VideoPlayer = ({ source, poster }) => {
     const vide = useRef(null);
     const baseVide = useRef(null);
+    const timeline = useRef(null)
 
     const [showControls, setShowControls] = useState(true);
     const [paused, setPaused] = useState(false);
@@ -25,7 +26,7 @@ const VideoPlayer = ({ source, poster }) => {
     const [settingsIsOpen, setSettingsIsOpen] = useState(false)
 
     useEffect(() => {
-        if (vide.current) setPaused(vide.current.paused);
+        if (vide.current) {setPaused(vide.current.paused);UpdateTimeLine(0);}
         setShowControls(true);
     }, [source])
 
@@ -36,6 +37,10 @@ const VideoPlayer = ({ source, poster }) => {
         }
     }, [baseVide])
 
+
+    const LoadTimeLine = (d) => {
+        if (timeline) if (timeline.current) timeline.current.max = d;
+    }
 
     const togglePlay = () => {
         vide.current.paused ? vide.current.play() : vide.current.pause();
@@ -66,6 +71,15 @@ const VideoPlayer = ({ source, poster }) => {
         vide.current.volume = v;
     }
 
+    const UpdateTimeLine = (t) => {
+        if (timeline) if (timeline.current) timeline.current.value = t;
+    }
+
+    const UpdateVideoTimeLine = (t) => {
+        if (vide) if (vide.current) vide.current.currentTime = t;
+    }
+
+
     return (
         <div className='video-player' ref={baseVide} 
              onMouseEnter={() => setShowControls(true)} 
@@ -79,6 +93,8 @@ const VideoPlayer = ({ source, poster }) => {
             <video src={source} ref={vide} 
                    onClick={() => togglePlay()} 
                    onEnded={e => {e.target.currentTime = 0;setPaused(e.target.paused);}}
+                   onLoadedData={e => {LoadTimeLine(e.target.duration)}}
+                   onTimeUpdate={e => {UpdateTimeLine(e.target.currentTime);}}
             ></video>
 
             <div className={'controls show' + (showControls ? ' show' : '')}>
@@ -94,12 +110,22 @@ const VideoPlayer = ({ source, poster }) => {
                         (volume > 0.5 ? <FaVolumeUp /> : <FaVolumeDown />))}
                     </div>
 
-                    <input type="range" min='0' max='1' step='0.01' className='volctrl' 
+                    <input type="range" min='0' max='1' step='0.01' className='input-range' 
+                           style={{ width: '100px' }}
                            defaultValue={volume} 
                            onChange={e => {changeVolume(e.target.value)}}
                     />
 
                 </div>
+
+                <div className="part timeline">
+                    <input ref={timeline} type="range" min='0' max='1' step='0.01' className='input-range' 
+                           style={{ width: '100%' }}
+                           onChange={e => {UpdateVideoTimeLine(e.target.value)}}
+                           defaultValue={0}
+                    />
+                </div>
+                    
                 <div className="part settings-fullscreen">
                     <div className="cts settings" 
                          style={settingsIsOpen ? { transform: 'rotate(69deg)' } : {}} 
