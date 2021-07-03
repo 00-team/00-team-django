@@ -2,7 +2,8 @@ import axios from 'axios';
 import {
     ANONYMOUS_USER,
     USER_LOADED,
-    USER_LOADING,    
+    USER_LOADING,
+    PROFILE_PIC_LOADING,
 } from './types';
 
 import {
@@ -13,10 +14,12 @@ import {
 
 import Cookies from 'js-cookie';
 
+const csrfToken = document.currentScript.getAttribute('csrfToken') || Cookies.get('csrftoken')
+
 const config = {
     headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': document.currentScript.getAttribute('csrfToken') || Cookies.get('csrftoken')
+        'X-CSRFToken': csrfToken
     },
 };
 
@@ -45,8 +48,8 @@ export const getUser = () => (dispatch) => {
 }
 
 
-export const changeInfo = (username, nickname) => (dispatch) => {
-    dispatch({ type: USER_LOADING });
+export const changeInfo = (username, nickname, pic) => (dispatch) => {
+    dispatch({ type: USER_LOADING, payload: true });
 
     axios.post('/api/account/change_info/', {
         username: username,
@@ -69,7 +72,38 @@ export const changeInfo = (username, nickname) => (dispatch) => {
             type: ERROR_ALERT,
             payload: msg
         })
-    })
+    }).then(() => dispatch({ type: USER_LOADING, payload: false }))
+
+    let fd = new FormData()
+    fd.append('file', pic)
+
+    if (pic) {
+        dispatch({ type: PROFILE_PIC_LOADING, payload: true })
+        axios.post('/api/account/change_picture/', fd, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(res => {
+            dispatch({
+                type: SUCCESS_ALERT,
+                payload: res.data.success
+            })
+            dispatch(getUser());
+        })
+        .catch(error => {
+            let msg = 'Error to change your info'
+
+            if (error.response) msg = error.response.data.error;
+            else if (error.message) msg = error.message;
+
+            dispatch({
+                type: ERROR_ALERT,
+                payload: msg
+            })
+        }).then(() => dispatch({ type: PROFILE_PIC_LOADING, payload: false }))
+    }
 }
 
 

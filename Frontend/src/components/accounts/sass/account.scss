@@ -1,5 +1,4 @@
 .account {
-    --bg-img: url('https://cdn.discordapp.com/attachments/731174051170746500/851794441593552926/1622826298059_copy.png');
     padding: 50px;
 
     .profile {
@@ -12,10 +11,12 @@
             padding: 10px;
             border: 1px solid #FFF;
             border-radius: 20px;
-            background-image: var(--bg-img);
-            background-size: contain;
-            background-position: center;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=');
+            background-color: #000;
+            background-size: cover;
+            background-position: center top;
             background-repeat: no-repeat;
+            overflow: hidden;
         }
 
         .info {
@@ -26,6 +27,18 @@
             padding: 10px;
             position: relative;
 
+            span {
+                display: flex;
+                align-items: center;
+                margin-top: 20px;
+                font-size: 20px;
+                color: #FFF;
+                font-family: 'Roboto', sans-serif;
+    
+                svg {
+                    margin-right: 5px;
+                }
+            }
 
             .actions {
                 position: absolute;
@@ -45,19 +58,6 @@
             }
         }
 
-        span {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-            font-size: 20px;
-            color: #FFF;
-            font-family: 'Roboto', sans-serif;
-
-            svg {
-                margin-right: 5px;
-            }
-        }
-
         .edit-input {
             display: flex;
             align-items: center;
@@ -65,6 +65,21 @@
             font-size: 16px;
             color: #FFF;
             font-family: 'Roboto', sans-serif;
+
+
+            .file-input {
+                font-size: 22px;
+                cursor: pointer;
+                background-color: transparent;
+                border: 2px solid #30363d;
+                color: #FFF;
+                padding: 4px 8px;
+                border-radius: 5px;
+                width: 270px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 export const USER_LOADING = 'USER_LOADING';
 export const USER_LOADED = 'USER_LOADED';
 export const ANONYMOUS_USER = 'ANONYMOUS_USER';
+export const PROFILE_PIC_LOADING = 'PROFILE_PIC_LOADING';
 
 // stared projects
 export const SPROJECTS_LOADING = 'SPROJECTS_LOADING';

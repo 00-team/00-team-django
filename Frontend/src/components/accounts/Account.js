@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 
 // icons
-import { FiAtSign, FiUser, FiHexagon, FiStar, FiLock, FiUnlock } from 'react-icons/fi'
+import { FiAtSign, FiUser, FiHexagon, FiStar, FiLock, FiCamera } from 'react-icons/fi'
 
 // router
 import { Redirect } from 'react-router-dom'
@@ -45,6 +45,7 @@ const Account = () => {
     
     const [userInfo, setUserInfo] = useState({username: '', nickname: ''});
     const [userPassword, setUserPassword] = useState('');
+    const [profilePic, setProfilePic] = useState(null)
 
     const LoaderCss = css`width:auto;height:auto;`;
 
@@ -63,7 +64,7 @@ const Account = () => {
     useEffect(() => {
         if (acc.user) {
             setUser(acc.user);
-            setInfo('info');
+            setInfo('edit');
         }
     }, [acc]);
 
@@ -96,10 +97,18 @@ const Account = () => {
                    onChange={e => setUserInfo({...userInfo, username: e.target.value})} />
         </div>
 
+        <div className='edit-input' >
+            <FiCamera className='icon' />
+            <label className="file-input dark">
+            <input style={{ display: 'none' }} type="file" accept=".png, .jpeg, .gif, .jpg" onChange={e => {setProfilePic(e.target.files[0]);e.target.value = null}} />
+                {profilePic ? profilePic.name : 'Chose a Profile Picture'}
+            </label>
+        </div>
+
         <div className='actions'>
             <Button onClick={() => {setInfo('info');setUserInfo({username: '', nickname: ''})}}>Back</Button>
             <Button onClick={() => {
-                dispatch(changeInfo(userInfo.username, userInfo.nickname))
+                setProfilePic(null);dispatch(changeInfo(userInfo.username, userInfo.nickname, profilePic));
             }}>Save</Button>
         </div>
     </>
@@ -133,7 +142,18 @@ const Account = () => {
         <div className='account'>
         {info === 'loading' ? loadingFrag :
             <div className='profile'>
-                <div className='pp' style={user.picture ? { '--bg-img': 'url(' + user.picture + ')' } : {}} ></div>
+                {console.log(acc)}
+                <div className='pp' style={
+                    acc.picloading ? { backgroundImage: 'none', padding: 0 } : 
+                    (profilePic ? { backgroundImage: `url(${window.URL.createObjectURL(profilePic)})` } :
+                    (user.picture ? { backgroundImage: `url(${user.picture})` } : {}))
+                } >
+                    {acc.picloading ? 
+                    <div className='loading-box' style={{ margin: '-25px 0 0 -25px' }}>
+                        <PacmanLoader color='#FFF' loading={true} css={LoaderCss} />
+                    </div> : <></>}
+                </div>
+
                 <div className='info'>
                     {info === 'info' && infoFrag}
                     {info === 'edit' && editFrag}

@@ -1,4 +1,4 @@
-import requests, json, string
+import requests, json, string, magic
 
 from django.contrib.auth import login as system_login, logout as system_logout, authenticate
 from django.contrib.auth.models import User
@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import EmailValidator
+from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.db.models.signals import pre_delete
 from django.db import IntegrityError
 from django.dispatch import receiver
@@ -356,6 +357,28 @@ def change_info(r):
             return JsonResponse({'error': 'this username is exists'}, status=400)
 
     return JsonResponse({'success': 'Your Info Changed Successfully', 'username': user.username, 'nickname': ua.nickname})
+
+
+@require_POST
+@login_required
+def change_picture(r):
+    user = r.user
+    f = r.FILES.get('file')
+    if isinstance(f, UploadedFile):
+        file_type = magic.from_buffer(f.read(), mime=True)
+        if not file_type in ['image/gif', 'image/png', 'image/jpeg']:
+            return JsonResponse({'error': 'FileType is Not Allowed'}, status=400)
+        
+        if f.size > 1000000:
+            return JsonResponse({'error': 'Maximum File Size is 1MB'}, status=400)
+
+        ua = GetOrMakeUA(user)
+        ua.picture = f
+        ua.save()
+        
+        return JsonResponse({'success': 'Your Profile Picture Changed Successfully'})
+    else:
+        return JsonResponse({'error': 'Error to Change Profile'}, status=400)
 
 
 @require_POST
