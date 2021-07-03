@@ -94,9 +94,9 @@ const Projects = () => {
                             </div>
                         </div>
                         <div className="sd">
-                            <div className="stars">
+                            <div className="stars" title={p.stars}>
                                 {p.self_star ? <BsStarFill /> : <BsStar />}
-                                <span title={p.stars}>{p.stars}</span>
+                                <span>{p.stars}</span>
                             </div>
                             <span className="date" title={p.date_start}>{p.date_start}</span>
                         </div>
