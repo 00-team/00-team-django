@@ -1,6 +1,6 @@
 import json
 
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -166,9 +166,28 @@ def get_stars(r):
     return JsonResponse({'data': ds})
 
 
+# @receiver(pre_delete, sender=DocumentImages)
+# def delete_images(sender, instance, **kwargs):
+#     instance.image.storage.delete(instance.image.name)
+
 @receiver(pre_delete, sender=DocumentImages)
+@receiver(pre_save, sender=DocumentImages)
 def delete_images(sender, instance, **kwargs):
-    instance.image.storage.delete(instance.image.name)
+    if sender.objects.filter(id=instance.id).exists():
+        s = sender.objects.get(id=instance.id)
+        s.image.storage.delete(s.image.name)
+
+
+@receiver(pre_save, sender=DocumentVideos)
+def delete_videos_onchange(sender, instance, **kwargs):
+    if sender.objects.filter(id=instance.id).exists():
+        s = sender.objects.get(id=instance.id)
+        
+        if s.video != instance.video:
+            s.video.storage.delete(s.video.name)
+
+        if s.thumbnail != instance.thumbnail:
+            s.thumbnail.storage.delete(s.thumbnail.name)
 
 
 @receiver(pre_delete, sender=DocumentVideos)

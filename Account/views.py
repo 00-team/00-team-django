@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import EmailValidator
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, pre_save
 from django.db import IntegrityError
 from django.dispatch import receiver
 from django.http import HttpResponseRedirect, JsonResponse
@@ -373,6 +373,8 @@ def change_picture(r):
             return JsonResponse({'error': 'Maximum File Size is 1MB'}, status=400)
 
         ua = GetOrMakeUA(user)
+        # if ua.picture:
+        #     ua.picture.storage.delete(ua.picture.name)
         ua.picture = f
         ua.save()
         
@@ -413,6 +415,9 @@ def change_password(r):
 
 
 @receiver(pre_delete, sender=UserAccount)
+@receiver(pre_save, sender=UserAccount)
 def delete_images(sender, instance, **kwargs):
-    if instance.picture:
-        instance.picture.storage.delete(instance.picture.name)
+    if sender.objects.filter(id=instance.id).exists():
+        ua = sender.objects.get(id=instance.id)
+        if ua.picture:
+            ua.picture.storage.delete(ua.picture.name)
