@@ -97,7 +97,7 @@ const VideoPlayer = ({ source, poster }) => {
                    onTimeUpdate={e => {UpdateTimeLine(e.target.currentTime);}}
             ></video>
 
-            <div className={'controls show' + (showControls ? ' show' : '')}>
+            <div className={'controls' + (showControls ? ' show' : '')}>
                 <div className="part play-volume">
 
                     <div className="cts play" onClick={() => togglePlay()} > 

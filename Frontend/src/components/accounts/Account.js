@@ -64,7 +64,7 @@ const Account = () => {
     useEffect(() => {
         if (acc.user) {
             setUser(acc.user);
-            setInfo('edit');
+            setInfo('info');
         }
     }, [acc]);
 
