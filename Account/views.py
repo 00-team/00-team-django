@@ -20,7 +20,7 @@ from django.middleware.csrf import get_token
 
 from Account.models import UserAccount, UserTemp
 from Projects.models import Project, Star
-from Projects.views import GetThumbnail
+from Projects.functions import GetThumbnail
 
 from .decorators import login_required
 
@@ -373,8 +373,6 @@ def change_picture(r):
             return JsonResponse({'error': 'Maximum File Size is 1MB'}, status=400)
 
         ua = GetOrMakeUA(user)
-        # if ua.picture:
-        #     ua.picture.storage.delete(ua.picture.name)
         ua.picture = f
         ua.save()
         
@@ -413,6 +411,8 @@ def change_password(r):
 
     return JsonResponse({'success': 'your password successfully changed'})
 
+
+# delete file when files change in db
 
 @receiver(pre_delete, sender=UserAccount)
 @receiver(pre_save, sender=UserAccount)

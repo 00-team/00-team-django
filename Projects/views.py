@@ -1,5 +1,3 @@
-import json
-
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
@@ -11,33 +9,7 @@ from .models import Project, Star, DocumentImages, DocumentVideos
 from Account.models import UserAccount, User
 from Account.decorators import login_required
 
-
-def GetThumbnail(project: Project) -> str:
-    pdv = DocumentVideos.objects.filter(project=project).last()
-    pdi = DocumentImages.objects.filter(project=project).last()
-
-    if pdv:
-        return pdv.thumbnail.url
-    elif pdi:
-        return pdi.image.url
-    else:
-        return None
-
-
-def BodyLoader(body):
-    try:
-        return json.loads(body)
-    except Exception:
-        return {}
-
-TS = lambda p: len(Star.objects.filter(project=p))
-SS = lambda u, p: Star.objects.filter(user=u, project=p).exists()
-def LV(p):
-    dv = DocumentVideos.objects.filter(project=p).last()
-    if dv:
-        return dv.video.url
-    
-    return None
+from .functions import *
 
 @require_GET
 def get_projects(r):
@@ -45,12 +17,12 @@ def get_projects(r):
         'name': p.name,
         'description': p.description,
         'thumbnail': GetThumbnail(p),
-        'video': LV(p),
+        'video': PROJECT_HAS_VIDEO(p),
         'slug': p.slug,
         'date_start': p.date_start.strftime('%Y-%m-%d'),
         'rawtime': int(p.date_start.timestamp()),
-        'stars': TS(p),
-        'self_star': SS(r.user, p),
+        'stars': TOTAL_STARS(p),
+        'self_star': USER_STARED(r.user, p),
         'language': p.language,
         'workspace': p.workspace,
     }, Project.objects.all()))
@@ -70,12 +42,12 @@ def get_project(r, slug):
         'name': project.name,
         'description': project.description,
         'date_start': project.date_start.strftime('%Y-%m-%d'),
-        'stars': TS(project),
+        'stars': TOTAL_STARS(project),
         'language': project.language,
         'workspace': project.workspace,
         'status': project.status_lable,
         'git': project.git,
-        'self_star': SS(r.user, project),
+        'self_star': USER_STARED(r.user, project),
         'docs': list(
             map(lambda dv: {
                 'type': 'video',
@@ -159,17 +131,14 @@ def get_stars(r):
 
     
     ds = {
-        'count': TS(project),
-        'self_star': SS(r.user, project),
+        'count': TOTAL_STARS(project),
+        'self_star': USER_STARED(r.user, project),
     }
     
     return JsonResponse({'data': ds})
 
 
-# @receiver(pre_delete, sender=DocumentImages)
-# def delete_images(sender, instance, **kwargs):
-#     instance.image.storage.delete(instance.image.name)
-
+# delete file when files change in db
 @receiver(pre_delete, sender=DocumentImages)
 @receiver(pre_save, sender=DocumentImages)
 def delete_images(sender, instance, **kwargs):
