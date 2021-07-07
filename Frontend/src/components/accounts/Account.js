@@ -32,6 +32,68 @@ import './sass/account.scss'
 
 const go = path => window.location.replace(path);
 
+
+const EditFlag = ({ setPP, user, PP }) => {
+    const dispatch = useDispatch();
+    const [userInfo, setUserInfo] = useState({username: '', nickname: ''});
+
+
+    return (<>
+        <div className='edit-input' >
+            <FiHexagon className='icon' />
+            <Input placeholder='Name' defaultVal={user.nickname || 'No Name'} maxLength={50} 
+                   onChange={e => setUserInfo({...userInfo, nickname: e.target.value})} />
+        </div>
+
+        <div className='edit-input' >
+            <FiUser className='icon' />
+            <Input placeholder='Username' defaultVal={user.username || 'No Username'} maxLength={140} 
+                   onChange={e => setUserInfo({...userInfo, username: e.target.value})} />
+        </div>
+
+        <div className='edit-input' >
+            <FiCamera className='icon' />
+            <label className="file-input dark">
+            <input style={{ display: 'none' }} type="file" accept=".png, .jpeg, .gif, .jpg" onChange={e => {setPP(e.target.files[0]);e.target.value = null}} />
+                {PP ? PP.name : 'Chose a Profile Picture'}
+            </label>
+        </div>
+
+        <div className='actions'>
+            <Button onClick={() => {setInfo('info');setUserInfo({username: '', nickname: ''})}}>Back</Button>
+            <Button onClick={() => {
+                setPP(null);dispatch(changeInfo(userInfo.username, userInfo.nickname, PP));
+            }}>Save</Button>
+        </div>
+    </>)
+}
+
+const ChangePasswordFlag = () => {
+    const dispatch = useDispatch();
+    const alert = useAlert();
+    const [userPassword, setUserPassword] = useState('');
+
+    return (<>
+        <span>Enter New Password</span>
+
+        <div className='edit-input' >
+            <FiLock className='icon' />
+
+            <form>
+                <PasswordInput maxLength={4096} onChange={e => setUserPassword(e.target.value)} />
+            </form>
+        </div>
+
+        <div className='actions'>
+            <Button onClick={() => {setInfo('info')}}>Back</Button>
+            <Button onClick={() => {
+                if (userPassword.length > 7) dispatch(changePassword(userPassword));
+                else alert.error('Your Password is too Short');
+            }}>Save</Button>
+        </div>
+    </>)
+}
+
 const Account = () => {
     const dispatch = useDispatch();
     const alert = useAlert();
@@ -43,9 +105,7 @@ const Account = () => {
     const [user, setUser] = useState({});
     const [info, setInfo] = useState('loading');
     
-    const [userInfo, setUserInfo] = useState({username: '', nickname: ''});
-    const [userPassword, setUserPassword] = useState('');
-    const [profilePic, setProfilePic] = useState(null)
+    const [profilePic, setProfilePic] = useState(null);
 
     const LoaderCss = css`width:auto;height:auto;`;
 
@@ -78,62 +138,15 @@ const Account = () => {
 
         <div className='actions'>
             {user.admin && <Button onClick={() => window.open(user.admin)}>Admin</Button>}
-            <Button onClick={() => {setUserInfo({username: '', nickname: ''});setInfo('edit')}}>Edit</Button>
-            <Button onClick={() => {setUserPassword({newPass: '', confNewPass: ''});setInfo('changepass')}}>Change Password</Button>
+            <Button onClick={() => {setInfo('edit')}}>Edit</Button>
+            <Button onClick={() => {setInfo('changepass')}}>Change Password</Button>
             <Button className='danger' onClick={() => go('/api/account/logout/')}>Logout</Button>
         </div>
     </>
 
-    let editFrag = <>
-        <div className='edit-input' >
-            <FiHexagon className='icon' />
-            <Input placeholder='Name' defaultVal={user.nickname || 'No Name'} maxLength={50} 
-                   onChange={e => setUserInfo({...userInfo, nickname: e.target.value})} />
-        </div>
 
-        <div className='edit-input' >
-            <FiUser className='icon' />
-            <Input placeholder='Username' defaultVal={user.username || 'No Username'} maxLength={140} 
-                   onChange={e => setUserInfo({...userInfo, username: e.target.value})} />
-        </div>
 
-        <div className='edit-input' >
-            <FiCamera className='icon' />
-            <label className="file-input dark">
-            <input style={{ display: 'none' }} type="file" accept=".png, .jpeg, .gif, .jpg" onChange={e => {setProfilePic(e.target.files[0]);e.target.value = null}} />
-                {profilePic ? profilePic.name : 'Chose a Profile Picture'}
-            </label>
-        </div>
-
-        <div className='actions'>
-            <Button onClick={() => {setInfo('info');setUserInfo({username: '', nickname: ''})}}>Back</Button>
-            <Button onClick={() => {
-                setProfilePic(null);dispatch(changeInfo(userInfo.username, userInfo.nickname, profilePic));
-            }}>Save</Button>
-        </div>
-    </>
-
-    let changePassFrag = <>
-        <span>Enter New Password</span>
-
-        <div className='edit-input' >
-            <FiLock className='icon' />
-
-            <form>
-                <PasswordInput maxLength={4096} onChange={e => setUserPassword(e.target.value)} />
-            </form>
-        </div>
-
-        <div className='actions'>
-            <Button onClick={() => {setInfo('info')}}>Back</Button>
-            <Button onClick={() => {
-                if (userPassword.length > 7) dispatch(changePassword(userPassword));
-                else alert.error('Your Password is too Short');
-            }}>Save</Button>
-        </div>
-    </>
-
-    let loadingFrag = 
+    const loadingFrag = 
         <div className='loading-box'>
             <PacmanLoader color='#FFF' loading={true} css={LoaderCss} />
         </div>
@@ -142,7 +155,6 @@ const Account = () => {
         <div className='account'>
         {info === 'loading' ? loadingFrag :
             <div className='profile'>
-                {console.log(acc)}
                 <div className='pp' style={
                     acc.picloading ? { backgroundImage: 'none', padding: 0 } : 
                     (profilePic ? { backgroundImage: `url(${window.URL.createObjectURL(profilePic)})` } :
@@ -156,10 +168,11 @@ const Account = () => {
 
                 <div className='info'>
                     {info === 'info' && infoFrag}
-                    {info === 'edit' && editFrag}
-                    {info === 'changepass' && changePassFrag}
+                    {info === 'edit' && <EditFlag setPP={setProfilePic} user={user} PP={profilePic} />}
+                    {info === 'changepass' && <ChangePasswordFlag />}
                 </div>
             </div>}
+
             <Sprojects />
         </div>
     )
