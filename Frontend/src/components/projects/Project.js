@@ -32,6 +32,37 @@ const StarLord = ({ pid }) => {
     }}>{sp.selfStar ? <BsStarFill /> : <BsStar />} <span>{sp.count}</span></div>)
 }
 
+const DocMaster = ({ docs }) => {
+    const [cDocIndex, setCDocIndex] = useState(0)
+    const [cDoc, setCDoc] = useState({ type: 'NaN' })
+
+    const docIndexHandle = (x) => {
+        let cdi = (cDocIndex + x);
+        if (cdi >= docs.length) cdi = 0;
+        if (cdi < 0) cdi = docs.length - 1;
+
+        setCDocIndex(cdi);
+        setCDoc(docs[cdi]);
+    }
+
+    useEffect(() => {
+        if (docs.length > 0) setCDoc(docs[0]);
+    }, [docs])
+
+
+    return (<div className='docs'>
+        {docs.length > 1 && <>
+            <div className="next" onClick={() => {docIndexHandle(+1)}} ><FiChevronRight /></div>
+            <div className="previous" onClick={() => {docIndexHandle(-1)}} ><FiChevronLeft /></div>
+        </>}
+
+        {cDoc.type === 'image' && <div className='image-doc' style={{ backgroundImage: `url(${cDoc.image})` }}></div>}
+        {cDoc.type === 'video' && <div className='video-doc'>
+            <VideoPlayer source={cDoc.video} poster={cDoc.thumbnail} />
+        </div>}
+    </div>)
+}
+
 const Project = () => {
     const { slug } = useParams();
     const dispatch = useDispatch();
@@ -39,8 +70,7 @@ const Project = () => {
     const project = useSelector(s => s.project)
     const alerts = useSelector((state) => state.alerts);
     const [p, setProject] = useState(null)
-    const [cDocIndex, setCDocIndex] = useState(0)
-    const [cDoc, setCDoc] = useState({})
+    
 
     useEffect(() => {
         dispatch(LoadProject(slug));
@@ -55,7 +85,6 @@ const Project = () => {
     useEffect(() => {
         if (!project.loading && project.project) {
             setProject(project.project);
-            setCDoc(project.project.docs[0]);
         }
     }, [project])
 
@@ -63,27 +92,8 @@ const Project = () => {
         <PacmanLoader color='#FFF' loading={true} css={css`width:auto;height:auto;`} />
     </div>
 
-    const docIndexHandle = (x) => {
-        let cdi = (cDocIndex + x);
-        if (cdi >= p.docs.length) cdi = 0;
-        if (cdi < 0) cdi = p.docs.length - 1;
-
-        setCDocIndex(cdi);
-        setCDoc(p.docs[cdi]);
-    }
-
     const ProjectFlag = p && <>
-        <div className='docs'>
-            {p.docs.length > 1 && <>
-                <div className="next" onClick={() => {docIndexHandle(+1)}} ><FiChevronRight /></div>
-                <div className="previous" onClick={() => {docIndexHandle(-1)}} ><FiChevronLeft /></div>
-            </>}
-
-            {cDoc.type === 'image' && <div className='image-doc' style={{ backgroundImage: `url(${cDoc.image})` }}></div>}
-            {cDoc.type === 'video' && <div className='video-doc'>
-                <VideoPlayer source={cDoc.video} poster={cDoc.thumbnail} />
-            </div>}
-        </div>
+        <DocMaster docs={p.docs} />
 
         <div className='info'>
             <span className='name' title={p.name}>{p.name}</span>

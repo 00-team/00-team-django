@@ -33,7 +33,7 @@ import './sass/account.scss'
 const go = path => window.location.replace(path);
 
 
-const EditFlag = ({ setPP, user, PP }) => {
+const EditFlag = ({ setPP, user, PP, setInfo }) => {
     const dispatch = useDispatch();
     const [userInfo, setUserInfo] = useState({username: '', nickname: ''});
 
@@ -68,7 +68,7 @@ const EditFlag = ({ setPP, user, PP }) => {
     </>)
 }
 
-const ChangePasswordFlag = () => {
+const ChangePasswordFlag = ({ setInfo }) => {
     const dispatch = useDispatch();
     const alert = useAlert();
     const [userPassword, setUserPassword] = useState('');
@@ -130,7 +130,7 @@ const Account = () => {
 
     if (acc.anonymous) return <Redirect to='/login' />
 
-    let infoFrag = <>
+    const infoFrag = <>
         <span> <FiHexagon className='icon' /> {user.nickname || 'No Name'} </span>
         <span> <FiUser className='icon' /> {user.username || 'No Username'} </span>
         <span> <FiAtSign className='icon' /> {user.email || 'No Email'} </span>
@@ -168,8 +168,8 @@ const Account = () => {
 
                 <div className='info'>
                     {info === 'info' && infoFrag}
-                    {info === 'edit' && <EditFlag setPP={setProfilePic} user={user} PP={profilePic} />}
-                    {info === 'changepass' && <ChangePasswordFlag />}
+                    {info === 'edit' && <EditFlag setPP={setProfilePic} user={user} PP={profilePic} setInfo={setInfo} />}
+                    {info === 'changepass' && <ChangePasswordFlag setInfo={setInfo} />}
                 </div>
             </div>}
 
