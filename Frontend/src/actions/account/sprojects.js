@@ -75,6 +75,11 @@ export const toggleSproject = (projectId, callback) => (dispatch) => {
             if (typeof callback === 'function') {
                 callback()
             }
+        } else if (res.status === 203) {
+            dispatch({
+                type: INFO_ALERT,
+                payload: 'Login first and then try again.',
+            });
         }
 
     })
