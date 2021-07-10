@@ -1,12 +1,9 @@
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from django.shortcuts import render
-from django.template import loader
+from django.http import JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 
 from .models import Project, Star, DocumentImages, DocumentVideos
-from Account.models import UserAccount, User
 from Account.decorators import login_required
 
 from .functions import *

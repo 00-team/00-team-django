@@ -1,4 +1,4 @@
-import requests, json, string, magic
+import requests, string, magic
 
 from django.contrib.auth import login as system_login, logout as system_logout, authenticate
 from django.contrib.auth.models import User
@@ -6,20 +6,16 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import EmailValidator
-from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
+from django.core.files.uploadedfile import UploadedFile
 from django.db.models.signals import pre_delete, pre_save
 from django.db import IntegrityError
 from django.dispatch import receiver
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.crypto import get_random_string
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
-from django.middleware.csrf import get_token
-
-
 from Account.models import UserAccount, UserTemp
-from Projects.models import Project, Star
+from Projects.models import Star
 from Projects.functions import *
 
 from .decorators import login_required
