@@ -24,7 +24,10 @@ def TOTAL_STARS(p):
     return len(Star.objects.filter(project=p))
 
 def USER_STARED(u, p):
-    return Star.objects.filter(user=u, project=p).exists()
+    if u.is_authenticated:
+        return Star.objects.filter(user=u, project=p).exists()
+    else:
+        return False
 
 def PROJECT_HAS_VIDEO(p):
     dv = DocumentVideos.objects.filter(project=p).last()
