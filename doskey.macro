@@ -11,4 +11,4 @@ run=python manage.py runserver --insecure
 
 dev=npm run dev
 
-;= doskey /macrofile=django.macro
+;= doskey /macrofile=doskey.macro
