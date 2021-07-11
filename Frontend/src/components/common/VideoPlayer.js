@@ -16,7 +16,9 @@ import './sass/video-player.scss'
 const VideoPlayer = ({ source, poster }) => {
     const vide = useRef(null);
     const baseVide = useRef(null);
-    const timeline = useRef(null)
+    const timeline = useRef(null);
+    const timelinePointer = useRef(null);
+    const timelineBase = useRef(null);
 
     const [showControls, setShowControls] = useState(true);
     const [paused, setPaused] = useState(false);
@@ -37,10 +39,6 @@ const VideoPlayer = ({ source, poster }) => {
         }
     }, [baseVide])
 
-
-    const LoadTimeLine = (d) => {
-        if (timeline) if (timeline.current) timeline.current.max = d;
-    }
 
     const togglePlay = () => {
         vide.current.paused ? vide.current.play() : vide.current.pause();
@@ -71,19 +69,32 @@ const VideoPlayer = ({ source, poster }) => {
         vide.current.volume = v;
     }
 
-    const UpdateTimeLine = (t) => {
-        if (timeline) if (timeline.current) timeline.current.value = t;
+    const UpdateTimeLine = (t, d) => {
+        if (typeof t === 'number' && typeof d === 'number') {
+            if (timeline) if (timeline.current) timeline.current.style.transform = `scaleX(${((1 / d) * t)})`;
+            if (timelinePointer && timelineBase) {
+                if (timelinePointer.current && timelineBase.current) {
+                    timelinePointer.current.style.transform = `translateX(${((1 / d) * t) * timelineBase.current.offsetWidth}px)`;
+                }
+            }
+                
+        }
     }
 
     const UpdateVideoTimeLine = (t) => {
-        if (vide) if (vide.current) vide.current.currentTime = t;
+        if (vide) if (vide.current) {
+            const ct = t * vide.current.duration
+            UpdateTimeLine(ct, vide.current.duration)
+
+            vide.current.currentTime = ct
+        }
     }
 
 
     return (
         <div className='video-player' ref={baseVide} 
-             onMouseEnter={() => setShowControls(true)} 
-             onMouseLeave={() => setShowControls(false)}
+            onMouseEnter={() => setShowControls(true)} 
+            onMouseLeave={() => setShowControls(false)}
         >
             <div className="poster" 
                  style={{ backgroundImage: `url(${poster})`, display: (paused ? '' : 'none') }} 
@@ -93,11 +104,10 @@ const VideoPlayer = ({ source, poster }) => {
             <video src={source} ref={vide} 
                    onClick={() => togglePlay()} 
                    onEnded={e => {e.target.currentTime = 0;setPaused(e.target.paused);}}
-                   onLoadedData={e => {LoadTimeLine(e.target.duration)}}
-                   onTimeUpdate={e => {UpdateTimeLine(e.target.currentTime);}}
+                   onTimeUpdate={e => {UpdateTimeLine(e.target.currentTime, e.target.duration);}}
             ></video>
 
-            <div className={'controls' + (showControls ? ' show' : '')}>
+            <div className={'controls show ' + (showControls ? ' show' : '')}>
                 <div className="part play-volume">
 
                     <div className="cts play" onClick={() => togglePlay()} > 
@@ -119,11 +129,29 @@ const VideoPlayer = ({ source, poster }) => {
                 </div>
 
                 <div className="part timeline">
-                    <input ref={timeline} type="range" min='0' max='1' step='0.01' className='input-range' 
-                           style={{ width: '100%' }}
-                           onChange={e => {UpdateVideoTimeLine(e.target.value)}}
-                           defaultValue={0}
-                    />
+                    <div ref={timelineBase} className='timeline-range' 
+                        onClick={e => UpdateVideoTimeLine(e.nativeEvent.layerX / e.target.offsetWidth)}
+                        onMouseDown={
+                            e => {
+                                e.preventDefault()
+
+                                if (timeline) if (timeline.current) timeline.current.style.transition = 'none'
+
+                                e.target.onmousemove = de => {
+                                    de.preventDefault()
+                                    UpdateVideoTimeLine(de.layerX / de.target.offsetWidth)
+                                }
+
+                                document.onmouseup = () => {
+                                    e.target.onmousemove = null;
+                                    document.onmouseup = null;
+                                    if (timeline) if (timeline.current) timeline.current.style.transition = ''
+                                }
+                            }
+                        }
+                        >
+                        <div ref={timeline} className="process"></div>
+                    </div>
                 </div>
                     
                 <div className="part settings-fullscreen">
