@@ -1,0 +1,4 @@
+[cli]
+bears = PEP8Bear,PyUnusedCodeBear
+default_actions = *: ApplyPatchAction
+files = ***.py

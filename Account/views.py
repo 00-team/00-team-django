@@ -1,4 +1,6 @@
-import requests, string, magic
+import requests
+import string
+import magic
 
 from django.contrib.auth import login as system_login, logout as system_logout, authenticate
 from django.contrib.auth.models import User
@@ -22,14 +24,16 @@ from .decorators import login_required
 
 GOOGLE = settings.GOOGLE
 
+
 def ValidPassword(password) -> str:
     if password:
         if type(password) == str:
             if len(password) > 7:
                 if len(password) < 4096:
                     return password
-    
+
     return None
+
 
 def ValidUsername(username) -> str:
     if username:
@@ -41,6 +45,7 @@ def ValidUsername(username) -> str:
                             return None
                     return username
     return None
+
 
 def googleRedirect(r):
     return f'{r.scheme}://{r.get_host()}' + GOOGLE['redirect_uri']
@@ -56,7 +61,8 @@ def authorize(r):
     state = get_random_string(length=20)
     r.session['google_state'] = state
 
-    url = google_auth + f"?redirect_uri={googleRedirect(r)}&response_type=code&scope={scope}&state={state}&client_id={GOOGLE['client_id']}"
+    url = google_auth + \
+        f"?redirect_uri={googleRedirect(r)}&response_type=code&scope={scope}&state={state}&client_id={GOOGLE['client_id']}"
 
     return HttpResponseRedirect(url)
 
@@ -68,7 +74,7 @@ def google_callback(r):
 
     if r.GET.get('state') != r.session.get('google_state'):
         return JsonResponse({'Error': 'state not valid'}, status=403)
-    
+
     code = r.GET.get('code')
 
     url = f"https://oauth2.googleapis.com/token?code={code}&client_id={GOOGLE['client_id']}&client_secret={GOOGLE['client_secret']}&redirect_uri={googleRedirect(r)}&grant_type=authorization_code"
@@ -95,16 +101,17 @@ def google_callback(r):
     except User.DoesNotExist:
         while True:
             try:
-                user = User.objects.create_user(username=get_random_string(length=20), email=email)
+                user = User.objects.create_user(
+                    username=get_random_string(length=20), email=email)
                 break
             except IntegrityError:
                 continue
-    
+
     ua = GetOrMakeUA(user)
     ua.nickname = name
     ua.get_picture(picture)
     ua.save()
-    
+
     system_login(r, user)
 
     return HttpResponseRedirect(NextPath(r))
@@ -123,14 +130,13 @@ def logout(r):
 def login(r):
     if r.user.is_authenticated:
         system_logout(r)
-    
+
     data = {}
-    
+
     if r.POST:
         data = r.POST
     elif r.body:
         data = BodyLoader(r.body)
-
 
     username = data.get('username')
     password = data.get('password')
@@ -140,11 +146,11 @@ def login(r):
     if user:
         GetOrMakeUA(user)
         system_login(r, user)
-            
+
         return JsonResponse({'status': 'success'})
     else:
-        return JsonResponse({'error': 'Username and password not match', 'status':'error'}, status=405)
-    
+        return JsonResponse({'error': 'Username and password not match', 'status': 'error'}, status=405)
+
 
 @require_POST
 def register(r):
@@ -152,14 +158,13 @@ def register(r):
 
     if r.user.is_authenticated:
         system_logout(r)
-    
+
     data = {}
-    
+
     if r.POST:
         data = r.POST
     elif r.body:
         data = BodyLoader(r.body)
-    
 
     email = data.get('email')
     username = ValidUsername(data.get('username'))
@@ -167,7 +172,7 @@ def register(r):
 
     if not password:
         return JsonResponse({'error': 'your password is not valid', 'field': 'password'}, status=403)
-    
+
     if not username:
         return JsonResponse({'error': 'your username is not valid', 'field': 'username'}, status=403)
 
@@ -175,20 +180,16 @@ def register(r):
         validator = EmailValidator(allowlist=['gmail'])
         validator(email)
     except ValidationError:
-        return JsonResponse({'error':'your emal addr is not valid', 'field': 'email'}, status=403)
+        return JsonResponse({'error': 'your emal addr is not valid', 'field': 'email'}, status=403)
 
-    
     if User.objects.filter(email=email).exists():
-        return JsonResponse({'error':'you have account with this email', 'field': 'email'}, status=403)
-    
+        return JsonResponse({'error': 'you have account with this email', 'field': 'email'}, status=403)
 
     if UserTemp.objects.filter(email=email).exists():
-        return JsonResponse({'error':'we send a code for your email pls verify your code'}, status=406)
+        return JsonResponse({'error': 'we send a code for your email pls verify your code'}, status=406)
 
-    
     if User.objects.filter(username=username).exists():
         return JsonResponse({'error': 'this username is exists', 'field': 'username'}, status=403)
-    
 
     ut = UserTemp(
         username=username,
@@ -216,14 +217,13 @@ def verify_code(r):
 
     if r.user.is_authenticated:
         system_logout(r)
-    
+
     data = {}
-    
+
     if r.POST:
         data = r.POST
     elif r.body:
         data = BodyLoader(r.body)
-    
 
     email = data.get('email')
     code = data.get('code')
@@ -231,17 +231,17 @@ def verify_code(r):
     try:
         ut = UserTemp.objects.get(email=email, code=code)
     except UserTemp.DoesNotExist:
-        return JsonResponse({'error':'your data is not valid'}, status=403)
-    
+        return JsonResponse({'error': 'your data is not valid'}, status=403)
+
     try:
         user = User.objects.get(email=email)
     except User.DoesNotExist:
         user = User.objects.create_user(ut.username, ut.email, ut.password)
-    
+
     system_login(r, user)
     ut.delete()
 
-    return JsonResponse({'success':'Successfully logined'})
+    return JsonResponse({'success': 'Successfully logined'})
 
 
 @login_required
@@ -253,7 +253,8 @@ def account(r):
         'username': user.username,
         'nickname': ua.nickname or 'No Name',
         'email': user.email,
-        'picture': ua.picture.url if ua.picture else None, # js: ua.picture ? ua.picture.url : null
+        # js: ua.picture ? ua.picture.url : null
+        'picture': ua.picture.url if ua.picture else None,
         'token': ua.token,
         'admin': f'/{settings.ADMIN_URL_PATH}' if user.is_staff else None,
     }
@@ -264,7 +265,7 @@ def account(r):
 @login_required
 def stared_projects(r):
     sp = list(map(
-        lambda s : {
+        lambda s: {
             'id': s.project.id,
             'name': s.project.name,
             'slug': s.project.slug,
@@ -291,7 +292,7 @@ def change_info(r):
 
     username = str(data.get('username'))[:100]
     nickname = str(data.get('nickname'))[:50]
-    
+
     ua = GetOrMakeUA(user)
 
     if nickname:
@@ -302,7 +303,7 @@ def change_info(r):
         for x in username:
             if x not in (string.ascii_letters + string.digits + '_'):
                 return JsonResponse({'error': 'username is not valid'}, status=400)
-        
+
         try:
             user.username = username
             user.save()
@@ -321,14 +322,14 @@ def change_picture(r):
         file_type = magic.from_buffer(f.read(), mime=True)
         if not file_type in ['image/gif', 'image/png', 'image/jpeg']:
             return JsonResponse({'error': 'FileType is Not Allowed'}, status=400)
-        
+
         if f.size > 1000000:
             return JsonResponse({'error': 'Maximum File Size is 1MB'}, status=400)
 
         ua = GetOrMakeUA(user)
         ua.picture = f
         ua.save()
-        
+
         return JsonResponse({'success': 'Your Profile Picture Changed Successfully'})
     else:
         return JsonResponse({'error': 'Error to Change Profile'}, status=400)
@@ -344,23 +345,23 @@ def change_password(r):
         data = r.POST
     elif r.body:
         data = BodyLoader(r.body)
-    
+
     password = data.get('password')
 
     if type(password) != str:
-        return JsonResponse({'error':'Send a valid password'}, status=406)
-    
+        return JsonResponse({'error': 'Send a valid password'}, status=406)
+
     if len(password) > 4096:
-        return JsonResponse({'error':'your password is too long'}, status=406)
-    
+        return JsonResponse({'error': 'your password is too long'}, status=406)
+
     if len(password) < 8:
-        return JsonResponse({'error':'your password is too short'}, status=406)
-    
+        return JsonResponse({'error': 'your password is too short'}, status=406)
+
     try:
         user.set_password(password)
         user.save()
     except Exception:
-        return JsonResponse({'error':'we cant save this password for you'}, status=400)
+        return JsonResponse({'error': 'we cant save this password for you'}, status=400)
 
     return JsonResponse({'success': 'your password successfully changed'})
 
