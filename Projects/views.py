@@ -8,6 +8,7 @@ from Account.decorators import login_required
 
 from .functions import *
 
+
 @require_GET
 def get_projects(r):
     ps = list(map(lambda p: {
@@ -32,8 +33,8 @@ def get_project(r, slug):
     try:
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
-        return JsonResponse({'error':'project not found'}, status=404)
-    
+        return JsonResponse({'error': 'project not found'}, status=404)
+
     p = {
         'id': project.id,
         'name': project.name,
@@ -53,12 +54,11 @@ def get_project(r, slug):
             }, DocumentVideos.objects.filter(project=project))
         ) + list(
             map(lambda di: {
-                'type':'image',
+                'type': 'image',
                 'image': di.image.url
             }, DocumentImages.objects.filter(project=project))
         )
     }
-
 
     return JsonResponse({'project': p})
 
@@ -79,12 +79,11 @@ def modify_star(r):
     try:
         project = Project.objects.get(id=project_id)
     except Project.DoesNotExist:
-        return JsonResponse({'error':f'Project with project id: {project_id} does not exist.'}, status=404)
-
+        return JsonResponse({'error': f'Project with project id: {project_id} does not exist.'}, status=404)
 
     try:
         Star.objects.get(user=user, project=project).delete()
-        return JsonResponse({'action':'remove', 'project_id': project.id})
+        return JsonResponse({'action': 'remove', 'project_id': project.id})
 
     except Star.DoesNotExist:
         s = Star(user=user, project=project)
@@ -106,7 +105,7 @@ def modify_star(r):
         elif pdi:
             p['thumbnail'] = pdi.image.url
 
-        return JsonResponse({'action':'add', 'project': p})
+        return JsonResponse({'action': 'add', 'project': p})
 
 
 @require_POST
@@ -124,14 +123,13 @@ def get_stars(r):
     try:
         project = Project.objects.get(id=project_id)
     except Project.DoesNotExist:
-        return JsonResponse({'error':f'Project with project id: {project_id} does not exist.'}, status=404)
+        return JsonResponse({'error': f'Project with project id: {project_id} does not exist.'}, status=404)
 
-    
     ds = {
         'count': TOTAL_STARS(project),
         'self_star': USER_STARED(r.user, project),
     }
-    
+
     return JsonResponse({'data': ds})
 
 
@@ -148,7 +146,7 @@ def delete_images(sender, instance, **kwargs):
 def delete_videos_onchange(sender, instance, **kwargs):
     if sender.objects.filter(id=instance.id).exists():
         s = sender.objects.get(id=instance.id)
-        
+
         if s.video != instance.video:
             s.video.storage.delete(s.video.name)
 

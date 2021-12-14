@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import UserAccount, UserTemp
 
+
 @admin.register(UserAccount)
 class UserAccountAdmin(admin.ModelAdmin):
     list_display = ('user', 'nick', 'email')
@@ -10,7 +11,6 @@ class UserAccountAdmin(admin.ModelAdmin):
     @admin.display(description='Nickname')
     def nick(self, obj):
         return obj.nickname or 'No Name'
-    
 
     @admin.display
     def email(self, o):

@@ -3,6 +3,7 @@ import json
 from .models import Project, Star, DocumentImages, DocumentVideos
 from Account.models import UserAccount, User, UserTemp
 
+
 def GetThumbnail(project: Project) -> str:
     pdv = DocumentVideos.objects.filter(project=project).last()
     pdi = DocumentImages.objects.filter(project=project).last()
@@ -14,14 +15,17 @@ def GetThumbnail(project: Project) -> str:
     else:
         return None
 
+
 def BodyLoader(body):
     try:
         return json.loads(body)
     except Exception:
         return {}
 
+
 def TOTAL_STARS(p):
     return len(Star.objects.filter(project=p))
+
 
 def USER_STARED(u, p):
     if u.is_authenticated:
@@ -29,13 +33,15 @@ def USER_STARED(u, p):
     else:
         return False
 
+
 def PROJECT_HAS_VIDEO(p):
     dv = DocumentVideos.objects.filter(project=p).last()
 
     if dv:
         return dv.video.url
-    
+
     return None
+
 
 def NextPath(r):
     data = {}
@@ -46,13 +52,14 @@ def NextPath(r):
         data = r.POST
     elif r.body:
         data = BodyLoader(r.body)
-    
+
     if data.get('next'):
         return data.get('next')
     elif r.session.get('next'):
         return r.session.get('next')
-    
+
     return '/'
+
 
 def RequestData(response):
     try:
@@ -62,6 +69,7 @@ def RequestData(response):
             'error': 'can`t get data'
         }
 
+
 def GetOrMakeUA(user: User) -> UserAccount:
     try:
         return UserAccount.objects.get(user=user)
@@ -69,6 +77,7 @@ def GetOrMakeUA(user: User) -> UserAccount:
         ua = UserAccount(user=user)
         ua.save()
         return ua
+
 
 def CheckTmeps():
     for ut in UserTemp.objects.all():
