@@ -7,6 +7,10 @@ from .models import UserAccount, UserTemp
 class UserAccountAdmin(admin.ModelAdmin):
     list_display = ('user', 'nick', 'email')
     list_per_page = 15
+    list_display_links = ('user', 'nick')
+    list_filter = ('nickname', )
+    search_fields = ('nickname', )
+    search_help_text = 'search by nickname'
 
     @admin.display(description='Nickname')
     def nick(self, obj):
